@@ -1,100 +1,117 @@
 /**
  * @author mrdoob / http://mrdoob.com/
- * @author Larry Battle / http://bateru.com/news
- * @author bhouston / http://exocortex.com
  */
 
-var THREE = THREE || { REVISION: '60' };
+var THREE = { REVISION: '74' };
 
-self.console = self.console || {
+//
 
-	info: function () {},
-	log: function () {},
-	debug: function () {},
-	warn: function () {},
-	error: function () {}
+if ( typeof define === 'function' && define.amd ) {
 
-};
+	define( 'three', THREE );
 
-String.prototype.trim = String.prototype.trim || function () {
+} else if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
 
-	return this.replace( /^\s+|\s+$/g, '' );
+	module.exports = THREE;
 
-};
+}
 
-// based on https://github.com/documentcloud/underscore/blob/bf657be243a075b5e72acc8a83e6f12a564d8f55/underscore.js#L767
-THREE.extend = function ( obj, source ) {
+//
 
-	// ECMAScript5 compatibility based on: http://www.nczonline.net/blog/2012/12/11/are-your-mixins-ecmascript-5-compatible/
-	if ( Object.keys ) {
+if ( Number.EPSILON === undefined ) {
 
-		var keys = Object.keys( source );
+	Number.EPSILON = Math.pow( 2, - 52 );
 
-		for (var i = 0, il = keys.length; i < il; i++) {
+}
 
-			var prop = keys[i];
-			Object.defineProperty( obj, prop, Object.getOwnPropertyDescriptor( source, prop ) );
+//
+
+if ( Math.sign === undefined ) {
+
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
+
+	Math.sign = function ( x ) {
+
+		return ( x < 0 ) ? - 1 : ( x > 0 ) ? 1 : + x;
+
+	};
+
+}
+
+if ( Function.prototype.name === undefined && Object.defineProperty !== undefined ) {
+
+	// Missing in IE9-11.
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name
+
+	Object.defineProperty( Function.prototype, 'name', {
+
+		get: function () {
+
+			return this.toString().match( /^\s*function\s*(\S*)\s*\(/ )[ 1 ];
 
 		}
 
-	} else {
+	} );
 
-		var safeHasOwnProperty = {}.hasOwnProperty;
+}
 
-		for ( var prop in source ) {
+if ( Object.assign === undefined ) {
 
-			if ( safeHasOwnProperty.call( source, prop ) ) {
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-				obj[prop] = source[prop];
+	Object.defineProperty( Object, 'assign', {
+
+		writable: true,
+		configurable: true,
+
+		value: function ( target ) {
+
+			'use strict';
+
+			if ( target === undefined || target === null ) {
+
+				throw new TypeError( "Cannot convert first argument to object" );
 
 			}
 
+			var to = Object( target );
+
+			for ( var i = 1, n = arguments.length; i !== n; ++ i ) {
+
+				var nextSource = arguments[ i ];
+
+				if ( nextSource === undefined || nextSource === null ) continue;
+
+				nextSource = Object( nextSource );
+
+				var keysArray = Object.keys( nextSource );
+
+				for ( var nextIndex = 0, len = keysArray.length; nextIndex !== len; ++ nextIndex ) {
+
+					var nextKey = keysArray[ nextIndex ];
+					var desc = Object.getOwnPropertyDescriptor( nextSource, nextKey );
+
+					if ( desc !== undefined && desc.enumerable ) {
+
+						to[ nextKey ] = nextSource[ nextKey ];
+
+					}
+
+				}
+
+			}
+
+			return to;
+
 		}
 
-	}
+	} );
 
-	return obj;
+}
 
-};
+// https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent.button
 
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-
-// requestAnimationFrame polyfill by Erik Möller
-// fixes from Paul Irish and Tino Zijdel
-// using 'self' instead of 'window' for compatibility with both NodeJS and IE10.
-( function () {
-
-	var lastTime = 0;
-	var vendors = [ 'ms', 'moz', 'webkit', 'o' ];
-
-	for ( var x = 0; x < vendors.length && !self.requestAnimationFrame; ++ x ) {
-
-		self.requestAnimationFrame = self[ vendors[ x ] + 'RequestAnimationFrame' ];
-		self.cancelAnimationFrame = self[ vendors[ x ] + 'CancelAnimationFrame' ] || self[ vendors[ x ] + 'CancelRequestAnimationFrame' ];
-
-	}
-
-	if ( self.requestAnimationFrame === undefined && self['setTimeout'] !== undefined ) {
-
-		self.requestAnimationFrame = function ( callback ) {
-
-			var currTime = Date.now(), timeToCall = Math.max( 0, 16 - ( currTime - lastTime ) );
-			var id = self.setTimeout( function() { callback( currTime + timeToCall ); }, timeToCall );
-			lastTime = currTime + timeToCall;
-			return id;
-
-		};
-
-	}
-
-	if( self.cancelAnimationFrame === undefined && self['clearTimeout'] !== undefined ) {
-
-		self.cancelAnimationFrame = function ( id ) { self.clearTimeout( id ) };
-
-	}
-
-}() );
+THREE.MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
 
 // GL STATE CONSTANTS
 
@@ -122,7 +139,6 @@ THREE.DoubleSide = 2;
 
 // shading
 
-THREE.NoShading = 0;
 THREE.FlatShading = 1;
 THREE.SmoothShading = 2;
 
@@ -143,11 +159,13 @@ THREE.CustomBlending = 5;
 
 // custom blending equations
 // (numbers start from 100 not to clash with other
-//  mappings to OpenGL constants defined in Texture.js)
+// mappings to OpenGL constants defined in Texture.js)
 
 THREE.AddEquation = 100;
 THREE.SubtractEquation = 101;
 THREE.ReverseSubtractEquation = 102;
+THREE.MinEquation = 103;
+THREE.MaxEquation = 104;
 
 // custom blending destination factors
 
@@ -172,6 +190,17 @@ THREE.DstColorFactor = 208;
 THREE.OneMinusDstColorFactor = 209;
 THREE.SrcAlphaSaturateFactor = 210;
 
+// depth modes
+
+THREE.NeverDepth = 0;
+THREE.AlwaysDepth = 1;
+THREE.LessDepth = 2;
+THREE.LessEqualDepth = 3;
+THREE.EqualDepth = 4;
+THREE.GreaterEqualDepth = 5;
+THREE.GreaterDepth = 6;
+THREE.NotEqualDepth = 7;
+
 
 // TEXTURE CONSTANTS
 
@@ -181,13 +210,15 @@ THREE.AddOperation = 2;
 
 // Mapping modes
 
-THREE.UVMapping = function () {};
+THREE.UVMapping = 300;
 
-THREE.CubeReflectionMapping = function () {};
-THREE.CubeRefractionMapping = function () {};
+THREE.CubeReflectionMapping = 301;
+THREE.CubeRefractionMapping = 302;
 
-THREE.SphericalReflectionMapping = function () {};
-THREE.SphericalRefractionMapping = function () {};
+THREE.EquirectangularReflectionMapping = 303;
+THREE.EquirectangularRefractionMapping = 304;
+
+THREE.SphericalReflectionMapping = 305;
 
 // Wrapping modes
 
@@ -213,6 +244,7 @@ THREE.UnsignedShortType = 1012;
 THREE.IntType = 1013;
 THREE.UnsignedIntType = 1014;
 THREE.FloatType = 1015;
+THREE.HalfFloatType = 1025;
 
 // Pixel types
 
@@ -228,18 +260,48 @@ THREE.RGBFormat = 1020;
 THREE.RGBAFormat = 1021;
 THREE.LuminanceFormat = 1022;
 THREE.LuminanceAlphaFormat = 1023;
+// THREE.RGBEFormat handled as THREE.RGBAFormat in shaders
+THREE.RGBEFormat = THREE.RGBAFormat; //1024;
 
-// Compressed texture formats
+// DDS / ST3C Compressed texture formats
 
 THREE.RGB_S3TC_DXT1_Format = 2001;
 THREE.RGBA_S3TC_DXT1_Format = 2002;
 THREE.RGBA_S3TC_DXT3_Format = 2003;
 THREE.RGBA_S3TC_DXT5_Format = 2004;
 
-/*
-// Potential future PVRTC compressed texture formats
+
+// PVRTC compressed texture formats
+
 THREE.RGB_PVRTC_4BPPV1_Format = 2100;
 THREE.RGB_PVRTC_2BPPV1_Format = 2101;
 THREE.RGBA_PVRTC_4BPPV1_Format = 2102;
 THREE.RGBA_PVRTC_2BPPV1_Format = 2103;
-*/
+
+// ETC compressed texture formats
+
+THREE.RGB_ETC1_Format = 2151;
+
+// Loop styles for AnimationAction
+
+THREE.LoopOnce = 2200;
+THREE.LoopRepeat = 2201;
+THREE.LoopPingPong = 2202;
+
+// Interpolation
+
+THREE.InterpolateDiscrete = 2300;
+THREE.InterpolateLinear = 2301;
+THREE.InterpolateSmooth = 2302;
+
+// Interpolant ending modes
+
+THREE.ZeroCurvatureEnding = 2400;
+THREE.ZeroSlopeEnding = 2401;
+THREE.WrapAroundEnding = 2402;
+
+// Triangle Draw modes
+
+THREE.TrianglesDrawMode = 0;
+THREE.TriangleStripDrawMode = 1;
+THREE.TriangleFanDrawMode = 2;

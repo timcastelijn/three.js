@@ -1,52 +1,109 @@
+/**
+ * @author mrdoob / http://mrdoob.com/
+ */
+
 Sidebar.Geometry = function ( editor ) {
 
 	var signals = editor.signals;
 
-	var geometryClasses = {
-
-		"CircleGeometry": THREE.CircleGeometry,
-		"CubeGeometry": THREE.CubeGeometry,
-		"CylinderGeometry": THREE.CylinderGeometry,
-		"ExtrudeGeometry": THREE.ExtrudeGeometry,
-		"IcosahedronGeometry": THREE.IcosahedronGeometry,
-		"LatheGeometry": THREE.LatheGeometry,
-		"OctahedronGeometry": THREE.OctahedronGeometry,
-		"ParametricGeometry": THREE.ParametricGeometry,
-		"PlaneGeometry": THREE.PlaneGeometry,
-		"PolyhedronGeometry": THREE.PolyhedronGeometry,
-		"ShapeGeometry": THREE.ShapeGeometry,
-		"SphereGeometry": THREE.SphereGeometry,
-		"TetrahedronGeometry": THREE.TetrahedronGeometry,
-		"TextGeometry": THREE.TextGeometry,
-		"TorusGeometry": THREE.TorusGeometry,
-		"TorusKnotGeometry": THREE.TorusKnotGeometry,
-		"TubeGeometry": THREE.TubeGeometry,
-		"Geometry": THREE.Geometry,
-		"BufferGeometry": THREE.BufferGeometry
-
-	};
-
 	var container = new UI.Panel();
-	container.setBorderTop( '1px solid #ccc' );
-	container.setPadding( '10px' );
-	container.setDisplay( 'none' );
+	container.setBorderTop( '0' );
+	container.setPaddingTop( '20px' );
 
-	var objectType = new UI.Text().setColor( '#666' ).setTextTransform( 'uppercase' );
-	container.add( objectType );
-	container.add( new UI.Break(), new UI.Break() );
+	// Actions
+
+	var objectActions = new UI.Select().setPosition( 'absolute' ).setRight( '8px' ).setFontSize( '11px' );
+	objectActions.setOptions( {
+
+		'Actions': 'Actions',
+		'Center': 'Center',
+		'Convert': 'Convert',
+		'Flatten': 'Flatten'
+
+	} );
+	objectActions.onClick( function ( event ) {
+
+		event.stopPropagation(); // Avoid panel collapsing
+
+	} );
+	objectActions.onChange( function ( event ) {
+
+		var action = this.getValue();
+
+		var object = editor.selected;
+		var geometry = object.geometry;
+
+		if ( confirm( action + ' ' + object.name + '?' ) === false ) return;
+
+		switch ( action ) {
+
+			case 'Center':
+
+				var offset = geometry.center();
+
+				var newPosition = object.position.clone();
+				newPosition.sub( offset );
+				editor.execute( new SetPositionCommand( object, newPosition ) );
+
+				editor.signals.geometryChanged.dispatch( object );
+
+				break;
+
+			case 'Convert':
+
+				if ( geometry instanceof THREE.Geometry ) {
+
+					editor.execute( new SetGeometryCommand( object, new THREE.BufferGeometry().fromGeometry( geometry ) ) );
+
+				}
+
+				break;
+
+			case 'Flatten':
+
+				var newGeometry = geometry.clone();
+				newGeometry.uuid = geometry.uuid;
+				newGeometry.applyMatrix( object.matrix );
+
+				var cmds = [ new SetGeometryCommand( object, newGeometry ),
+					new SetPositionCommand( object, new THREE.Vector3( 0, 0, 0 ) ),
+					new SetRotationCommand( object, new THREE.Euler( 0, 0, 0 ) ),
+					new SetScaleCommand( object, new THREE.Vector3( 1, 1, 1 ) ) ];
+
+				editor.execute( new MultiCmdsCommand( cmds ), 'Flatten Geometry' );
+
+				break;
+
+		}
+
+		this.setValue( 'Actions' );
+
+	} );
+	// container.addStatic( objectActions );
+
+	// type
+
+	var geometryTypeRow = new UI.Row();
+	var geometryType = new UI.Text();
+
+	geometryTypeRow.add( new UI.Text( 'Type' ).setWidth( '90px' ) );
+	geometryTypeRow.add( geometryType );
+
+	container.add( geometryTypeRow );
 
 	// uuid
 
-	var geometryUUIDRow = new UI.Panel();
-	var geometryUUID = new UI.Input().setWidth( '115px' ).setColor( '#444' ).setFontSize( '12px' ).setDisabled( true );
+	var geometryUUIDRow = new UI.Row();
+	var geometryUUID = new UI.Input().setWidth( '115px' ).setFontSize( '12px' ).setDisabled( true );
 	var geometryUUIDRenew = new UI.Button( '⟳' ).setMarginLeft( '7px' ).onClick( function () {
 
 		geometryUUID.setValue( THREE.Math.generateUUID() );
-		update();
+
+		editor.execute( new SetGeometryValueCommand( editor.selected, 'uuid', geometryUUID.getValue() ) );
 
 	} );
 
-	geometryUUIDRow.add( new UI.Text( 'UUID' ).setWidth( '90px' ).setColor( '#666' ) );
+	geometryUUIDRow.add( new UI.Text( 'UUID' ).setWidth( '90px' ) );
 	geometryUUIDRow.add( geometryUUID );
 	geometryUUIDRow.add( geometryUUIDRenew );
 
@@ -54,49 +111,33 @@ Sidebar.Geometry = function ( editor ) {
 
 	// name
 
-	var geometryNameRow = new UI.Panel();
-	var geometryName = new UI.Input().setWidth( '150px' ).setColor( '#444' ).setFontSize( '12px' ).onChange( update );
+	var geometryNameRow = new UI.Row();
+	var geometryName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange( function () {
 
-	geometryNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ).setColor( '#666' ) );
+		editor.execute( new SetGeometryValueCommand( editor.selected, 'name', geometryName.getValue() ) );
+
+	} );
+
+	geometryNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ) );
 	geometryNameRow.add( geometryName );
 
 	container.add( geometryNameRow );
 
-	// vertices
+	// geometry
 
-	var geometryVerticesRow = new UI.Panel();
-	var geometryVertices = new UI.Text().setColor( '#444' ).setFontSize( '12px' );
+	container.add( new Sidebar.Geometry.Geometry( editor ) );
 
-	geometryVerticesRow.add( new UI.Text( 'Vertices' ).setWidth( '90px' ).setColor( '#666' ) );
-	geometryVerticesRow.add( geometryVertices );
+	// buffergeometry
 
-	container.add( geometryVerticesRow );
-
-	// faces
-
-	var geometryFacesRow = new UI.Panel();
-	var geometryFaces = new UI.Text().setColor( '#444' ).setFontSize( '12px' );
-
-	geometryFacesRow.add( new UI.Text( 'Faces' ).setWidth( '90px' ).setColor( '#666' ) );
-	geometryFacesRow.add( geometryFaces );
-
-	container.add( geometryFacesRow );
+	container.add( new Sidebar.Geometry.BufferGeometry( editor ) );
 
 	// parameters
 
-	var parameters;
+	var parameters = new UI.Span();
+	container.add( parameters );
 
 
 	//
-
-	function update() {
-
-		var geometry = editor.selected.geometry;
-
-		geometry.uuid = geometryUUID.getValue();
-		geometry.name = geometryName.getValue();
-
-	}
 
 	function build() {
 
@@ -108,53 +149,22 @@ Sidebar.Geometry = function ( editor ) {
 
 			container.setDisplay( 'block' );
 
-			objectType.setValue( getGeometryInstanceName( object.geometry ) );
+			geometryType.setValue( geometry.type );
 
-			updateFields( geometry );
+			geometryUUID.setValue( geometry.uuid );
+			geometryName.setValue( geometry.name );
 
 			//
 
-			if ( parameters !== undefined ) {
+			parameters.clear();
 
-				container.remove( parameters );
-				parameters = undefined;
+			if ( geometry.type === 'BufferGeometry' || geometry.type === 'Geometry' ) {
 
-			}
+				parameters.add( new Sidebar.Geometry.Modifiers( editor, object ) );
 
-			if ( geometry instanceof THREE.PlaneGeometry ) {
+			} else if ( Sidebar.Geometry[ geometry.type ] !== undefined ) {
 
-				parameters = new Sidebar.Geometry.PlaneGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.CubeGeometry ) {
-
-				parameters = new Sidebar.Geometry.CubeGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.CylinderGeometry ) {
-
-				parameters = new Sidebar.Geometry.CylinderGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.SphereGeometry ) {
-
-				parameters = new Sidebar.Geometry.SphereGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.IcosahedronGeometry ) {
-
-				parameters = new Sidebar.Geometry.IcosahedronGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.TorusGeometry ) {
-
-				parameters = new Sidebar.Geometry.TorusGeometry( signals, object );
-				container.add( parameters );
-
-			} else if ( geometry instanceof THREE.TorusKnotGeometry ) {
-
-				parameters = new Sidebar.Geometry.TorusKnotGeometry( signals, object );
-				container.add( parameters );
+				parameters.add( new Sidebar.Geometry[ geometry.type ]( editor, object ) );
 
 			}
 
@@ -167,49 +177,8 @@ Sidebar.Geometry = function ( editor ) {
 	}
 
 	signals.objectSelected.add( build );
-	signals.objectChanged.add( build );
-
-	//
-
-	function updateFields( geometry ) {
-
-		geometryUUID.setValue( geometry.uuid );
-		geometryName.setValue( geometry.name );
-
-		if ( geometry instanceof THREE.Geometry ) {
-
-			geometryVertices.setValue( geometry.vertices.length );
-			geometryFaces.setValue( geometry.faces.length );
-
-		} else if ( geometry instanceof THREE.BufferGeometry ) {
-
-			geometryVertices.setValue( geometry.attributes.position.numItems / 3 );
-
-			if ( geometry.attributes.index !== undefined ) {
-
-				geometryFaces.setValue( geometry.attributes.index.numItems / 3 );
-
-			} else {
-
-				geometryFaces.setValue( geometry.attributes.position.numItems / 3 / 3 );
-
-			}
-
-
-		}
-
-	}
-
-	function getGeometryInstanceName( geometry ) {
-
-		for ( var key in geometryClasses ) {
-
-			if ( geometry instanceof geometryClasses[ key ] ) return key;
-
-		}
-
-	}
+	signals.geometryChanged.add( build );
 
 	return container;
 
-}
+};

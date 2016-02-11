@@ -14,19 +14,47 @@ THREE.ImageLoader.prototype = {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
+		if ( this.path !== undefined ) url = this.path + url;
+
 		var scope = this;
-		var image = document.createElement( 'img' );
 
-		if ( onLoad !== undefined ) {
+		var cached = THREE.Cache.get( url );
 
-			image.addEventListener( 'load', function ( event ) {
+		if ( cached !== undefined ) {
+
+			scope.manager.itemStart( url );
+
+			if ( onLoad ) {
+
+				setTimeout( function () {
+
+					onLoad( cached );
+
+					scope.manager.itemEnd( url );
+
+				}, 0 );
+
+			} else {
 
 				scope.manager.itemEnd( url );
-				onLoad( this );
 
-			}, false );
+			}
+
+			return cached;
 
 		}
+
+		var image = document.createElement( 'img' );
+
+		image.addEventListener( 'load', function ( event ) {
+
+			THREE.Cache.add( url, this );
+
+			if ( onLoad ) onLoad( this );
+
+			scope.manager.itemEnd( url );
+
+		}, false );
 
 		if ( onProgress !== undefined ) {
 
@@ -38,21 +66,21 @@ THREE.ImageLoader.prototype = {
 
 		}
 
-		if ( onError !== undefined ) {
+		image.addEventListener( 'error', function ( event ) {
 
-			image.addEventListener( 'error', function ( event ) {
+			if ( onError ) onError( event );
 
-				onError( event );
+			scope.manager.itemError( url );
 
-			}, false );
-
-		}
+		}, false );
 
 		if ( this.crossOrigin !== undefined ) image.crossOrigin = this.crossOrigin;
 
+		scope.manager.itemStart( url );
+
 		image.src = url;
 
-		scope.manager.itemStart( url );
+		return image;
 
 	},
 
@@ -60,6 +88,12 @@ THREE.ImageLoader.prototype = {
 
 		this.crossOrigin = value;
 
+	},
+
+	setPath: function ( value ) {
+
+		this.path = value;
+
 	}
 
-}
+};

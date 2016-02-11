@@ -8,6 +8,11 @@ THREE.PerspectiveCamera = function ( fov, aspect, near, far ) {
 
 	THREE.Camera.call( this );
 
+	this.type = 'PerspectiveCamera';
+
+	this.focalLength = 10;
+	this.zoom = 1;
+
 	this.fov = fov !== undefined ? fov : 50;
 	this.aspect = aspect !== undefined ? aspect : 1;
 	this.near = near !== undefined ? near : 0.1;
@@ -18,11 +23,12 @@ THREE.PerspectiveCamera = function ( fov, aspect, near, far ) {
 };
 
 THREE.PerspectiveCamera.prototype = Object.create( THREE.Camera.prototype );
+THREE.PerspectiveCamera.prototype.constructor = THREE.PerspectiveCamera;
 
 
 /**
  * Uses Focal Length (in mm) to estimate and set FOV
- * 35mm (fullframe) camera is used if frame size is not specified;
+ * 35mm (full-frame) camera is used if frame size is not specified;
  * Formula based on http://www.bobatkins.com/photography/technical/field_of_view.html
  */
 
@@ -33,7 +39,7 @@ THREE.PerspectiveCamera.prototype.setLens = function ( focalLength, frameHeight 
 	this.fov = 2 * THREE.Math.radToDeg( Math.atan( frameHeight / ( focalLength * 2 ) ) );
 	this.updateProjectionMatrix();
 
-}
+};
 
 
 /**
@@ -88,11 +94,13 @@ THREE.PerspectiveCamera.prototype.setViewOffset = function ( fullWidth, fullHeig
 
 THREE.PerspectiveCamera.prototype.updateProjectionMatrix = function () {
 
+	var fov = THREE.Math.radToDeg( 2 * Math.atan( Math.tan( THREE.Math.degToRad( this.fov ) * 0.5 ) / this.zoom ) );
+
 	if ( this.fullWidth ) {
 
 		var aspect = this.fullWidth / this.fullHeight;
-		var top = Math.tan( THREE.Math.degToRad( this.fov * 0.5 ) ) * this.near;
-		var bottom = -top;
+		var top = Math.tan( THREE.Math.degToRad( fov * 0.5 ) ) * this.near;
+		var bottom = - top;
 		var left = aspect * bottom;
 		var right = aspect * top;
 		var width = Math.abs( right - left );
@@ -109,22 +117,40 @@ THREE.PerspectiveCamera.prototype.updateProjectionMatrix = function () {
 
 	} else {
 
-		this.projectionMatrix.makePerspective( this.fov, this.aspect, this.near, this.far );
+		this.projectionMatrix.makePerspective( fov, this.aspect, this.near, this.far );
 
 	}
 
 };
 
-THREE.PerspectiveCamera.prototype.clone = function () {
+THREE.PerspectiveCamera.prototype.copy = function ( source ) {
 
-	var camera = new THREE.PerspectiveCamera();
+	THREE.Camera.prototype.copy.call( this, source );
 
-	THREE.Camera.prototype.clone.call( this, camera );
+	this.focalLength = source.focalLength;
+	this.zoom = source.zoom;
 
-	camera.fov = this.fov;
-	camera.aspect = this.aspect;
-	camera.near = this.near;
-	camera.far = this.far;
+	this.fov = source.fov;
+	this.aspect = source.aspect;
+	this.near = source.near;
+	this.far = source.far;
 
-	return camera;
+	return this;
+
+};
+
+THREE.PerspectiveCamera.prototype.toJSON = function ( meta ) {
+
+	var data = THREE.Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.focalLength = this.focalLength;
+	data.object.zoom = this.zoom;
+
+	data.object.fov = this.fov;
+	data.object.aspect = this.aspect;
+	data.object.near = this.near;
+	data.object.far = this.far;
+
+	return data;
+
 };

@@ -4,8 +4,6 @@
  *
  * parameters = {
  *  color: <hex>,
- *  ambient: <hex>,
- *  emissive: <hex>,
  *  specular: <hex>,
  *  shininess: <float>,
  *  opacity: <float>,
@@ -13,6 +11,14 @@
  *  map: new THREE.Texture( <Image> ),
  *
  *  lightMap: new THREE.Texture( <Image> ),
+ *  lightMapIntensity: <float>
+ *
+ *  aoMap: new THREE.Texture( <Image> ),
+ *  aoMapIntensity: <float>
+ *
+ *  emissive: <hex>,
+ *  emissiveIntensity: <float>
+ *  emissiveMap: new THREE.Texture( <Image> ),
  *
  *  bumpMap: new THREE.Texture( <Image> ),
  *  bumpScale: <float>,
@@ -20,7 +26,13 @@
  *  normalMap: new THREE.Texture( <Image> ),
  *  normalScale: <Vector2>,
  *
+ *  displacementMap: new THREE.Texture( <Image> ),
+ *  displacementScale: <float>,
+ *  displacementBias: <float>,
+ *
  *  specularMap: new THREE.Texture( <Image> ),
+ *
+ *  alphaMap: new THREE.Texture( <Image> ),
  *
  *  envMap: new THREE.TextureCube( [posx, negx, posy, negy, posz, negz] ),
  *  combine: THREE.Multiply,
@@ -49,21 +61,23 @@ THREE.MeshPhongMaterial = function ( parameters ) {
 
 	THREE.Material.call( this );
 
+	this.type = 'MeshPhongMaterial';
+
 	this.color = new THREE.Color( 0xffffff ); // diffuse
-	this.ambient = new THREE.Color( 0xffffff );
-	this.emissive = new THREE.Color( 0x000000 );
 	this.specular = new THREE.Color( 0x111111 );
 	this.shininess = 30;
-
-	this.metal = false;
-	this.perPixel = true;
-
-	this.wrapAround = false;
-	this.wrapRGB = new THREE.Vector3( 1, 1, 1 );
 
 	this.map = null;
 
 	this.lightMap = null;
+	this.lightMapIntensity = 1.0;
+
+	this.aoMap = null;
+	this.aoMapIntensity = 1.0;
+
+	this.emissive = new THREE.Color( 0x000000 );
+	this.emissiveIntensity = 1.0;
+	this.emissiveMap = null;
 
 	this.bumpMap = null;
 	this.bumpScale = 1;
@@ -71,7 +85,13 @@ THREE.MeshPhongMaterial = function ( parameters ) {
 	this.normalMap = null;
 	this.normalScale = new THREE.Vector2( 1, 1 );
 
+	this.displacementMap = null;
+	this.displacementScale = 1;
+	this.displacementBias = 0;
+
 	this.specularMap = null;
+
+	this.alphaMap = null;
 
 	this.envMap = null;
 	this.combine = THREE.MultiplyOperation;
@@ -98,57 +118,62 @@ THREE.MeshPhongMaterial = function ( parameters ) {
 };
 
 THREE.MeshPhongMaterial.prototype = Object.create( THREE.Material.prototype );
+THREE.MeshPhongMaterial.prototype.constructor = THREE.MeshPhongMaterial;
 
-THREE.MeshPhongMaterial.prototype.clone = function () {
+THREE.MeshPhongMaterial.prototype.copy = function ( source ) {
 
-	var material = new THREE.MeshPhongMaterial();
+	THREE.Material.prototype.copy.call( this, source );
 
-	THREE.Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
+	this.specular.copy( source.specular );
+	this.shininess = source.shininess;
 
-	material.color.copy( this.color );
-	material.ambient.copy( this.ambient );
-	material.emissive.copy( this.emissive );
-	material.specular.copy( this.specular );
-	material.shininess = this.shininess;
+	this.map = source.map;
 
-	material.metal = this.metal;
-	material.perPixel = this.perPixel;
+	this.lightMap = source.lightMap;
+	this.lightMapIntensity = source.lightMapIntensity;
 
-	material.wrapAround = this.wrapAround;
-	material.wrapRGB.copy( this.wrapRGB );
+	this.aoMap = source.aoMap;
+	this.aoMapIntensity = source.aoMapIntensity;
 
-	material.map = this.map;
+	this.emissive.copy( source.emissive );
+	this.emissiveMap = source.emissiveMap;
+	this.emissiveIntensity = source.emissiveIntensity;
 
-	material.lightMap = this.lightMap;
+	this.bumpMap = source.bumpMap;
+	this.bumpScale = source.bumpScale;
 
-	material.bumpMap = this.bumpMap;
-	material.bumpScale = this.bumpScale;
+	this.normalMap = source.normalMap;
+	this.normalScale.copy( source.normalScale );
 
-	material.normalMap = this.normalMap;
-	material.normalScale.copy( this.normalScale );
+	this.displacementMap = source.displacementMap;
+	this.displacementScale = source.displacementScale;
+	this.displacementBias = source.displacementBias;
 
-	material.specularMap = this.specularMap;
+	this.specularMap = source.specularMap;
 
-	material.envMap = this.envMap;
-	material.combine = this.combine;
-	material.reflectivity = this.reflectivity;
-	material.refractionRatio = this.refractionRatio;
+	this.alphaMap = source.alphaMap;
 
-	material.fog = this.fog;
+	this.envMap = source.envMap;
+	this.combine = source.combine;
+	this.reflectivity = source.reflectivity;
+	this.refractionRatio = source.refractionRatio;
 
-	material.shading = this.shading;
+	this.fog = source.fog;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-	material.wireframeLinecap = this.wireframeLinecap;
-	material.wireframeLinejoin = this.wireframeLinejoin;
+	this.shading = source.shading;
 
-	material.vertexColors = this.vertexColors;
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
+	this.wireframeLinecap = source.wireframeLinecap;
+	this.wireframeLinejoin = source.wireframeLinejoin;
 
-	material.skinning = this.skinning;
-	material.morphTargets = this.morphTargets;
-	material.morphNormals = this.morphNormals;
+	this.vertexColors = source.vertexColors;
 
-	return material;
+	this.skinning = source.skinning;
+	this.morphTargets = source.morphTargets;
+	this.morphNormals = source.morphNormals;
+
+	return this;
 
 };

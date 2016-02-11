@@ -104,21 +104,23 @@
 				scene1.add( light1 );
 
 				var light2 = new THREE.DirectionalLight( 0xffffff, 2 );
-				light2.position = light1.position;
+				light2.position.set( 1, 1, 1 );
 				scene2.add( light2 );
 
 				// GROUND
 
+				var textureLoader = new THREE.TextureLoader();
+
 				var maxAnisotropy = renderer.getMaxAnisotropy();
 
-				var texture1 = THREE.ImageUtils.loadTexture( "textures/crate.gif" );
+				var texture1 = textureLoader.load( "textures/crate.gif" );
 				var material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture1 } );
 
 				texture1.anisotropy = maxAnisotropy;
 				texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
 				texture1.repeat.set( 512, 512 );
 
-				var texture2 = THREE.ImageUtils.loadTexture( "textures/crate.gif" );
+				var texture2 = textureLoader.load( "textures/crate.gif" );
 				var material2 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture2 } );
 
 				texture2.anisotropy = 1;
@@ -139,7 +141,7 @@
 
 				//
 
-				var geometry = new THREE.PlaneGeometry( 100, 100 );
+				var geometry = new THREE.PlaneBufferGeometry( 100, 100 );
 
 				var mesh1 = new THREE.Mesh( geometry, material1 );
 				mesh1.rotation.x = - Math.PI / 2;
@@ -154,8 +156,9 @@
 
 				// RENDERER
 
+				renderer.setClearColor( scene1.fog.color );
+				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-				renderer.setClearColor( scene1.fog.color, 1 );
 				renderer.autoClear = false;
 
 				renderer.domElement.style.position = "relative";
@@ -195,15 +198,16 @@
 
 				camera.lookAt( scene1.position );
 
-				renderer.enableScissorTest( false );
 				renderer.clear();
-				renderer.enableScissorTest( true );
+				renderer.setScissorTest( true );
 
 				renderer.setScissor( 0, 0, SCREEN_WIDTH/2 - 2, SCREEN_HEIGHT );
 				renderer.render( scene1, camera );
 
 				renderer.setScissor( SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2 - 2, SCREEN_HEIGHT  );
 				renderer.render( scene2, camera );
+
+				renderer.setScissorTest( false );
 
 
 			}

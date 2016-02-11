@@ -4,11 +4,9 @@
  * @author angelxuanchang
  */
 
-THREE.MTLLoader = function( baseUrl, options, crossOrigin ) {
+THREE.MTLLoader = function( manager ) {
 
-	this.baseUrl = baseUrl;
-	this.options = options;
-	this.crossOrigin = crossOrigin;
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
 
 };
 
@@ -16,56 +14,44 @@ THREE.MTLLoader.prototype = {
 
 	constructor: THREE.MTLLoader,
 
-	/**
-	 * Loads a MTL file
-	 *
-	 * Loading progress is indicated by the following events:
-	 *   "load" event (successful loading): type = 'load', content = THREE.MTLLoader.MaterialCreator
-	 *   "error" event (error loading): type = 'load', message
-	 *   "progress" event (progress loading): type = 'progress', loaded, total
-	 *
-	 * @param url - location of MTL file
-	 */
-	load: function( url ) {
+	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
-		var xhr = new XMLHttpRequest();
 
-		function onloaded( event ) {
+		var loader = new THREE.XHRLoader( this.manager );
+		loader.setPath( this.path );
+		loader.load( url, function ( text ) {
 
-			if ( event.target.status === 200 || event.target.status === 0 ) {
+			onLoad( scope.parse( text ) );
 
-				var materialCreator = scope.parse( event.target.responseText );
+		}, onProgress, onError );
 
-				// Notify caller, that I'm done
+	},
 
-				scope.dispatchEvent( { type: 'load', content: materialCreator } );
+	setPath: function ( value ) {
 
-			} else {
+		this.path = value;
 
-				scope.dispatchEvent( { type: 'error', message: 'Couldn\'t load URL [' + url + ']',
-					response: event.target.responseText } );
+	},
 
-			}
+	setBaseUrl: function( value ) {
 
-		}
+		// TODO: Merge with setPath()? Or rename to setTexturePath?
 
-		xhr.addEventListener( 'load', onloaded, false );
+		this.baseUrl = value;
 
-		xhr.addEventListener( 'progress', function ( event ) {
+	},
 
-			scope.dispatchEvent( { type: 'progress', loaded: event.loaded, total: event.total } );
+	setCrossOrigin: function ( value ) {
 
-		}, false );
+		this.crossOrigin = value;
 
-		xhr.addEventListener( 'error', function () {
+	},
 
-			scope.dispatchEvent( { type: 'error', message: 'Couldn\'t load URL [' + url + ']' } );
+	setMaterialOptions: function ( value ) {
 
-		}, false );
+		this.materialOptions = value;
 
-		xhr.open( 'GET', url, true );
-		xhr.send( null );
 	},
 
 	/**
@@ -73,14 +59,14 @@ THREE.MTLLoader.prototype = {
 	 * @param text - Content of MTL file
 	 * @return {THREE.MTLLoader.MaterialCreator}
 	 */
-	parse: function( text ) {
+	parse: function ( text ) {
 
 		var lines = text.split( "\n" );
 		var info = {};
 		var delimiter_pattern = /\s+/;
 		var materialsInfo = {};
 
-			for ( var i = 0; i < lines.length; i ++ ) {
+		for ( var i = 0; i < lines.length; i ++ ) {
 
 			var line = lines[ i ];
 			line = line.trim();
@@ -94,7 +80,7 @@ THREE.MTLLoader.prototype = {
 
 			var pos = line.indexOf( ' ' );
 
-			var key = ( pos >= 0 ) ? line.substring( 0, pos) : line;
+			var key = ( pos >= 0 ) ? line.substring( 0, pos ) : line;
 			key = key.toLowerCase();
 
 			var value = ( pos >= 0 ) ? line.substring( pos + 1 ) : "";
@@ -112,7 +98,7 @@ THREE.MTLLoader.prototype = {
 				if ( key === "ka" || key === "kd" || key === "ks" ) {
 
 					var ss = value.split( delimiter_pattern, 3 );
-					info[ key ] = [ parseFloat( ss[0] ), parseFloat( ss[1] ), parseFloat( ss[2] ) ];
+					info[ key ] = [ parseFloat( ss[ 0 ] ), parseFloat( ss[ 1 ] ), parseFloat( ss[ 2 ] ) ];
 
 				} else {
 
@@ -124,7 +110,9 @@ THREE.MTLLoader.prototype = {
 
 		}
 
-		var materialCreator = new THREE.MTLLoader.MaterialCreator( this.baseUrl, this.options );
+		var materialCreator = new THREE.MTLLoader.MaterialCreator( this.baseUrl, this.materialOptions );
+		materialCreator.setCrossOrigin( this.crossOrigin );
+		materialCreator.setManager( this.manager );
 		materialCreator.setMaterials( materialsInfo );
 		return materialCreator;
 
@@ -144,8 +132,6 @@ THREE.MTLLoader.prototype = {
  *                                Default: false, assumed to be already normalized
  *                  ignoreZeroRGBs: Ignore values of RGBs (Ka,Kd,Ks) that are all 0's
  *                                  Default: false
- *                  invertTransparency: If transparency need to be inverted (inversion is needed if d = 0 is fully opaque)
- *                                      Default: false (d = 1 is fully opaque)
  * @constructor
  */
 
@@ -158,14 +144,26 @@ THREE.MTLLoader.MaterialCreator = function( baseUrl, options ) {
 	this.materialsArray = [];
 	this.nameLookup = {};
 
-	this.side = ( this.options && this.options.side )? this.options.side: THREE.FrontSide;
-	this.wrap = ( this.options && this.options.wrap )? this.options.wrap: THREE.RepeatWrapping;
+	this.side = ( this.options && this.options.side ) ? this.options.side : THREE.FrontSide;
+	this.wrap = ( this.options && this.options.wrap ) ? this.options.wrap : THREE.RepeatWrapping;
 
 };
 
 THREE.MTLLoader.MaterialCreator.prototype = {
 
 	constructor: THREE.MTLLoader.MaterialCreator,
+
+	setCrossOrigin: function ( value ) {
+
+		this.crossOrigin = value;
+
+	},
+
+	setManager: function ( value ) {
+
+		this.manager = value;
+
+	},
 
 	setMaterials: function( materialsInfo ) {
 
@@ -178,7 +176,7 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 	convert: function( materialsInfo ) {
 
-		if ( !this.options ) return materialsInfo;
+		if ( ! this.options ) return materialsInfo;
 
 		var converted = {};
 
@@ -221,19 +219,6 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 								save = false;
 
 							}
-						}
-
-						break;
-
-					case 'd':
-
-						// According to MTL format (http://paulbourke.net/dataformats/mtl/):
-						//   d is dissolve for current material
-						//   factor of 1.0 is fully opaque, a factor of 0 is fully dissolved (completely transparent)
-
-						if ( this.options && this.options.invertTransparency ) {
-
-							value = 1 - value;
 
 						}
 
@@ -318,6 +303,10 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 			var value = mat[ prop ];
 
+			if ( value === '' ) {
+				continue;
+			}
+
 			switch ( prop.toLowerCase() ) {
 
 				// Ns is material specular exponent
@@ -326,22 +315,14 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 					// Diffuse color (color under white light) using RGB values
 
-					params[ 'diffuse' ] = new THREE.Color().setRGB( value[0], value[1], value[2] );
-
-					break;
-
-				case 'ka':
-
-					// Ambient color (color under shadow) using RGB values
-
-					params[ 'ambient' ] = new THREE.Color().setRGB( value[0], value[1], value[2] );
+					params[ 'color' ] = new THREE.Color().fromArray( value );
 
 					break;
 
 				case 'ks':
 
 					// Specular color (color when light is reflected from shiny surface) using RGB values
-					params[ 'specular' ] = new THREE.Color().setRGB( value[0], value[1], value[2] );
+					params[ 'specular' ] = new THREE.Color().fromArray( value );
 
 					break;
 
@@ -360,22 +341,42 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 					// The specular exponent (defines the focus of the specular highlight)
 					// A high exponent results in a tight, concentrated highlight. Ns values normally range from 0 to 1000.
 
-					params['shininess'] = value;
+					params[ 'shininess' ] = parseFloat( value );
 
 					break;
 
 				case 'd':
 
-					// According to MTL format (http://paulbourke.net/dataformats/mtl/):
-					//   d is dissolve for current material
-					//   factor of 1.0 is fully opaque, a factor of 0 is fully dissolved (completely transparent)
-
 					if ( value < 1 ) {
 
-						params['transparent'] = true;
-						params['opacity'] = value;
+						params[ 'opacity' ] = value;
+						params[ 'transparent' ] = true;
 
 					}
+
+					break;
+
+				case 'Tr':
+
+					if ( value > 0 ) {
+
+						params[ 'opacity' ] = 1 - value;
+						params[ 'transparent' ] = true;
+
+					}
+
+					break;
+
+				case 'map_bump':
+				case 'bump':
+
+					// Bump texture map
+
+					if ( params[ 'bumpMap' ] ) break; // Avoid loading twice.
+
+					params[ 'bumpMap' ] = this.loadTexture( this.baseUrl + value );
+					params[ 'bumpMap' ].wrapS = this.wrap;
+					params[ 'bumpMap' ].wrapT = this.wrap;
 
 					break;
 
@@ -386,86 +387,32 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 		}
 
-		if ( params[ 'diffuse' ] ) {
-
-			if ( !params[ 'ambient' ]) params[ 'ambient' ] = params[ 'diffuse' ];
-			params[ 'color' ] = params[ 'diffuse' ];
-
-		}
-
 		this.materials[ materialName ] = new THREE.MeshPhongMaterial( params );
 		return this.materials[ materialName ];
 
 	},
 
 
-	loadTexture: function ( url, mapping, onLoad, onError ) {
+	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {
 
-		var isCompressed = /\.dds$/i.test( url );
+		var texture;
+		var loader = THREE.Loader.Handlers.get( url );
+		var manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
 
-		if ( isCompressed ) {
+		if ( loader === null ) {
 
-			var texture = THREE.ImageUtils.loadCompressedTexture( url, mapping, onLoad, onError );
-
-		} else {
-
-			var image = new Image();
-			var texture = new THREE.Texture( image, mapping );
-
-			var loader = new THREE.ImageLoader();
-			loader.crossOrigin = this.crossOrigin;
-			loader.load( url, function ( image ) {
-
-				texture.image = THREE.MTLLoader.ensurePowerOfTwo_( image );
-				texture.needsUpdate = true;
-
-				if ( onLoad ) onLoad( texture );
-
-			} );
+			loader = new THREE.TextureLoader( manager );
 
 		}
+
+		if ( loader.setCrossOrigin ) loader.setCrossOrigin( this.crossOrigin );
+		texture = loader.load( url, onLoad, onProgress, onError );
+
+		if ( mapping !== undefined ) texture.mapping = mapping;
 
 		return texture;
 
 	}
-
-};
-
-THREE.MTLLoader.ensurePowerOfTwo_ = function ( image ) {
-
-	if ( ! THREE.MTLLoader.isPowerOfTwo_( image.width ) || ! THREE.MTLLoader.isPowerOfTwo_( image.height ) ) {
-
-		var canvas = document.createElement( "canvas" );
-		canvas.width = THREE.MTLLoader.nextHighestPowerOfTwo_( image.width );
-		canvas.height = THREE.MTLLoader.nextHighestPowerOfTwo_( image.height );
-
-		var ctx = canvas.getContext("2d");
-		ctx.drawImage( image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height );
-		return canvas;
-
-	}
-
-	return image;
-
-};
-
-THREE.MTLLoader.isPowerOfTwo_ = function ( x ) {
-
-	return ( x & ( x - 1 ) ) === 0;
-
-};
-
-THREE.MTLLoader.nextHighestPowerOfTwo_ = function( x ) {
-
-	--x;
-
-	for ( var i = 1; i < 32; i <<= 1 ) {
-
-		x = x | x >> i;
-
-	}
-
-	return x + 1;
 
 };
 

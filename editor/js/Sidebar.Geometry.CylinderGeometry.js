@@ -1,67 +1,71 @@
-Sidebar.Geometry.CylinderGeometry = function ( signals, object ) {
+/**
+ * @author mrdoob / http://mrdoob.com/
+ */
 
-	var container = new UI.Panel();
-	container.setBorderTop( '1px solid #ccc' );
-	container.setPaddingTop( '10px' );
+Sidebar.Geometry.CylinderGeometry = function ( editor, object ) {
 
-	var geometry = object.geometry;
+	var signals = editor.signals;
+
+	var container = new UI.Row();
+
+	var parameters = object.geometry.parameters;
 
 	// radiusTop
 
-	var radiusTopRow = new UI.Panel();
-	var radiusTop = new UI.Number( geometry.radiusTop ).onChange( update );
+	var radiusTopRow = new UI.Row();
+	var radiusTop = new UI.Number( parameters.radiusTop ).onChange( update );
 
-	radiusTopRow.add( new UI.Text( 'Radius top' ).setWidth( '90px' ).setColor( '#666' ) );
+	radiusTopRow.add( new UI.Text( 'Radius top' ).setWidth( '90px' ) );
 	radiusTopRow.add( radiusTop );
 
 	container.add( radiusTopRow );
 
 	// radiusBottom
 
-	var radiusBottomRow = new UI.Panel();
-	var radiusBottom = new UI.Number( geometry.radiusBottom ).onChange( update );
+	var radiusBottomRow = new UI.Row();
+	var radiusBottom = new UI.Number( parameters.radiusBottom ).onChange( update );
 
-	radiusBottomRow.add( new UI.Text( 'Radius bottom' ).setWidth( '90px' ).setColor( '#666' ) );
+	radiusBottomRow.add( new UI.Text( 'Radius bottom' ).setWidth( '90px' ) );
 	radiusBottomRow.add( radiusBottom );
 
 	container.add( radiusBottomRow );
 
 	// height
 
-	var heightRow = new UI.Panel();
-	var height = new UI.Number( geometry.height ).onChange( update );
+	var heightRow = new UI.Row();
+	var height = new UI.Number( parameters.height ).onChange( update );
 
-	heightRow.add( new UI.Text( 'Height' ).setWidth( '90px' ).setColor( '#666' ) );
+	heightRow.add( new UI.Text( 'Height' ).setWidth( '90px' ) );
 	heightRow.add( height );
 
 	container.add( heightRow );
 
-	// radiusSegments
+	// radialSegments
 
-	var radiusSegmentsRow = new UI.Panel();
-	var radiusSegments = new UI.Integer( geometry.radiusSegments ).setRange( 1, Infinity ).onChange( update );
+	var radialSegmentsRow = new UI.Row();
+	var radialSegments = new UI.Integer( parameters.radialSegments ).setRange( 1, Infinity ).onChange( update );
 
-	radiusSegmentsRow.add( new UI.Text( 'Radius segments' ).setWidth( '90px' ).setColor( '#666' ) );
-	radiusSegmentsRow.add( radiusSegments );
+	radialSegmentsRow.add( new UI.Text( 'Radial segments' ).setWidth( '90px' ) );
+	radialSegmentsRow.add( radialSegments );
 
-	container.add( radiusSegmentsRow );
+	container.add( radialSegmentsRow );
 
 	// heightSegments
 
-	var heightSegmentsRow = new UI.Panel();
-	var heightSegments = new UI.Integer( geometry.heightSegments ).setRange( 1, Infinity ).onChange( update );
+	var heightSegmentsRow = new UI.Row();
+	var heightSegments = new UI.Integer( parameters.heightSegments ).setRange( 1, Infinity ).onChange( update );
 
-	heightSegmentsRow.add( new UI.Text( 'Height segments' ).setWidth( '90px' ).setColor( '#666' ) );
+	heightSegmentsRow.add( new UI.Text( 'Height segments' ).setWidth( '90px' ) );
 	heightSegmentsRow.add( heightSegments );
 
 	container.add( heightSegmentsRow );
 
 	// openEnded
 
-	var openEndedRow = new UI.Panel();
-	var openEnded = new UI.Checkbox( geometry.openEnded ).onChange( update );
+	var openEndedRow = new UI.Row();
+	var openEnded = new UI.Checkbox( parameters.openEnded ).onChange( update );
 
-	openEndedRow.add( new UI.Text( 'Open ended' ).setWidth( '90px' ).setColor( '#666' ) );
+	openEndedRow.add( new UI.Text( 'Open ended' ).setWidth( '90px' ) );
 	openEndedRow.add( openEnded );
 
 	container.add( openEndedRow );
@@ -70,22 +74,14 @@ Sidebar.Geometry.CylinderGeometry = function ( signals, object ) {
 
 	function update() {
 
-		delete object.__webglInit; // TODO: Remove hack (WebGLRenderer refactoring)
-
-		object.geometry.dispose();
-
-		object.geometry = new THREE.CylinderGeometry(
+		editor.execute( new SetGeometryCommand( object, new THREE.CylinderGeometry(
 			radiusTop.getValue(),
 			radiusBottom.getValue(),
 			height.getValue(),
-			radiusSegments.getValue(),
+			radialSegments.getValue(),
 			heightSegments.getValue(),
 			openEnded.getValue()
-		);
-
-		object.geometry.computeBoundingSphere();
-
-		signals.objectChanged.dispatch( object );
+		) ) );
 
 	}
 
