@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style>
+    #accordion{
+      width:25%;
+    }
+    input[type=range] {
+      width: 100%; /* Specific width is required for Firefox. */
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Collapse</h2>
+  <p><strong>Note:</strong> The <strong>data-parent</strong> attribute makes sure that all collapsible elements under the specified parent will be closed when one of the collapsible item is shown.</p>
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Maten</a><i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i>
+        </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+          lengte<input class="slider_100" type="range" min="10" max="1000" step="10">
+          breedte<input type="range" min="10" max="1000" step="10">
+          hoogte<input type="range" min="10" max="1000" step="10">
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Modules</a><i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i>
+        </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse">
+        <div class="panel-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-4">t1a</div>
+              <div class="col-sm-4">t1b</div>
+              <div class="col-sm-4">t1c</div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4">t2a</div>
+              <div class="col-sm-4">t2b</div>
+              <div class="col-sm-4">t2c</div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4">t3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <button type="button" class="btn btn-default btn-block">Bestellen</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleChevron(e) {
+    $(e.target)
+        .prev('.panel-heading')
+        .find("i.indicator")
+        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+}
+$('#accordion').on('hidden.bs.collapse', toggleChevron);
+$('#accordion').on('shown.bs.collapse', toggleChevron);
+</script>
+
+</body>
+</html>
