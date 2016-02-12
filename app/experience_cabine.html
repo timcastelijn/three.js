@@ -28,6 +28,7 @@
 			var camera, controls, scene, renderer;
 			var objects = [], plane;
 
+			var document_edited = false;
 			var length, width, height, grid;
 
 			var raycaster = new THREE.Raycaster();
@@ -124,10 +125,20 @@
 				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
 				renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 
+				window.addEventListener("beforeunload", function (e) {
+		        if (document_edited) {
+							var confirmationMessage = 'It looks like you have been editing something. '
+																			+ 'If you leave before saving, your changes will be lost.';
+
+							(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+							return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+		        }
+
+		    });
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
-
+				document.addEventListener( 'keydown', onDocumentKeyDown, false );
 			}
 
 			function onWindowResize() {
@@ -167,6 +178,9 @@
 				if ( intersects.length > 0 ) {
 
 					if ( INTERSECTED != intersects[ 0 ].object ) {
+
+						// set doc_edited to true at first edit
+						document_edited = true;
 
 						if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
 
@@ -235,6 +249,15 @@
 				}
 
 				container.style.cursor = 'auto';
+
+			}
+
+			function onDocumentKeyDown( event ) {
+				switch( event.keyCode ) {
+
+					case 8: event.preventDefault(); console.log("Delete"); break;
+
+				}
 
 			}
 
