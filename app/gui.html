@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <style>
+    body{
+      margin:1em;
+      font-size: 1.3em;
+    }
     #accordion{
-      width:25%;
+      width:20%;
     }
     input[type=range] {
       width: 100%; /* Specific width is required for Firefox. */
@@ -17,10 +23,11 @@
 </head>
 <body>
 
-<div class="container">
-  <h2>Collapse</h2>
-  <p><strong>Note:</strong> The <strong>data-parent</strong> attribute makes sure that all collapsible elements under the specified parent will be closed when one of the collapsible item is shown.</p>
+<!-- <div class="container" > -->
   <div class="panel-group" id="accordion">
+    <h2>Ervaringscabine</h2>
+    <p>Stel je eigen <strong>Ervaringscabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>sleep</strong> de modules naar de gewenste plek.</p>
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
@@ -29,8 +36,8 @@
       </div>
       <div id="collapse1" class="panel-collapse collapse in">
         <div class="panel-body">
-          lengte<input class="slider_100" type="range" min="10" max="1000" step="10">
-          breedte<input type="range" min="10" max="1000" step="10">
+          lengte<input data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" class="slider_100" type="range" min="10" max="1000" step="10">
+          breedte<input id="ex6" type="range" data-slider-min="-5" data-slider-max="20" data-slider-step="1" data-slider-value="3"/>
           hoogte<input type="range" min="10" max="1000" step="10">
         </div>
       </div>
@@ -38,7 +45,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+          <a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
         </h4>
       </div>
       <div id="collapse2" class="panel-collapse collapse">
@@ -61,16 +68,32 @@
         </div>
       </div>
     </div>
-
-       <h1 align="right">€5431</h1>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+          content
+        </div>
+      </div>
+    </div>
+       <h1 align="right">&euro;5431</h1>
 
 
       <button type="button" class="btn btn-default btn-block">Bestellen</button>
 
   </div>
-</div>
+<!-- </div> -->
 
 <script>
+$(document).ready(function(){
+    // $('[data-toggle="tooltip"]').tooltip();
+});
+
+
 function toggleChevron(e) {
     $(e.target)
         .prev('.panel-heading')
