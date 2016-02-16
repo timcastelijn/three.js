@@ -182,9 +182,10 @@
 
 				var intersects = raycaster.intersectObjects( objects );
 
-				if ( intersects.length > 0 ) {
+				if ( intersects.length > 0 && intersects[ 0 ].object.selectable ) {
 
-					if ( INTERSECTED != intersects[ 0 ].object ) {
+					if ( INTERSECTED != intersects[ 0 ].object) {
+						// If INTERSECTED changes to a new object
 
 						// set doc_edited to true at first edit
 						document_edited = true;
@@ -192,13 +193,15 @@
 						if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
 
 						INTERSECTED = intersects[ 0 ].object;
+
 						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
 
 						plane.position.copy( INTERSECTED.position );
 						plane.lookAt( camera.position );
 
-					}
 
+
+					}
 					container.style.cursor = 'pointer';
 
 				} else {
@@ -221,11 +224,13 @@
 
 				var intersects = raycaster.intersectObjects( objects );
 
-				if ( intersects.length > 0 ) {
+				if ( INTERSECTED ) {
 
 					controls.enabled = false;
 
-					SELECTED = intersects[ 0 ].object;
+					SELECTED = INTERSECTED;
+					SELECTED.select();
+					console.log(SELECTED.parent);
 
 					var intersects = raycaster.intersectObject( plane );
 

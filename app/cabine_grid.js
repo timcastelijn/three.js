@@ -76,6 +76,7 @@ function Wall( length, height, flip, door){
         //define normal cells
         var cell = new Cell(MODULE_WIDTH, MODULE_HEIGHT, MODULE_THICKNESS);
         this.add(cell);
+        objects.push(cell);
         cell.position.set( (i + 0.5) * MODULE_WIDTH + length_offset, (j +0.5) * MODULE_HEIGHT, 0.5*MODULE_THICKNESS );
       }
     }
@@ -107,17 +108,40 @@ function Cell(width, heigth, thickness){
   //define local variables
   // create interior
   var geometry = new THREE.BoxGeometry( width-0.005, heigth-0.005, thickness/2 );
-  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0xffffff } ) );
-  object.position.set(0,0,thickness/4);
+  this.interior = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0xffffff } ) );
+  this.interior.selectable =true;
+  this.interior.position.set(0,0,thickness/4);
 
   // create exterior
   var geometry = new THREE.BoxGeometry( width, heigth, thickness/2 );
-  var object2 = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  object2.position.set(0,0,-thickness/4);
+  this.exterior_mesh = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
+  this.exterior_mesh.position.set(0,0,-thickness/4);
 
-  this.add( object );
-  this.add( object2 );
+  objects.push(this.interior);
+  objects.push(this.exterior_mesh);
+
+  this.add( this.interior );
+  this.add( this.exterior_mesh );
 
 }
 Cell.prototype = new THREE.Object3D();
 Cell.prototype.constructor = Cell;
+
+
+
+//CELL Class
+function SelectableMesh(geometry, material){
+  THREE.Mesh.call( this,geometry, material );
+  this.selectable = false;
+}
+SelectableMesh.prototype = new THREE.Mesh();
+SelectableMesh.prototype.constructor = SelectableMesh;
+
+SelectableMesh.prototype.select=function(bool_select){
+  if (bool_select){
+    this.interior_color_prev = this.material.color.getHex();
+    this.material.color.setHex("0xff0000");
+  }else{
+    this.material.color.setHex(this.interior_color_prev);
+  }
+}
