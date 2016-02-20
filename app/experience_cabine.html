@@ -96,6 +96,7 @@
 		<script src="../build/three.min.js"></script>
 		<script src="cabine_grid.js"></script>
 		<script src="module_class.js"></script>
+		<script src="dragger.js"></script>
 
 		<script src="../examples/js/controls/TrackballControls.js"></script>
 		<script src="../examples/js/controls/OrbitControls.js"></script>
@@ -167,6 +168,9 @@
 				//create grid
 				grid = new CabineGrid();
 				scene.add(grid);
+
+				// create dragger instance
+				dragger = new Dragger();
 
 				//create objects
 				var geometry = new THREE.BoxGeometry( 40, 40, 40 );
@@ -252,65 +256,7 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-				raycaster.setFromCamera( mouse, camera );
-
-				if ( SELECTED ) {
-
-						// try objects intersection
-						var intersects = raycaster.intersectObjects( objects );
-						if (intersects[0]){
-							var vector = new THREE.Vector3();
-							vector.setFromMatrixPosition( intersects[0].object.matrixWorld );
-							// in case of a hit, copy position
-							SELECTED.position.copy(vector);
-						}else{
-							// else move over plane
-							var intersects = raycaster.intersectObject( plane );
-							if ( intersects.length > 0 ) {
-
-								SELECTED.position.copy( intersects[ 0 ].point);
-								// SELECTED.position = intersects[ 0 ].point;
-							}
-						}
-
-
-					return;
-
-				}
-
-				var intersects = raycaster.intersectObjects( objects );
-
-				if ( intersects.length > 0 && intersects[ 0 ].object.selectable ) {
-
-					if ( INTERSECTED != intersects[ 0 ].object) {
-						// If INTERSECTED changes to a new object
-
-						// set doc_edited to true at first edit
-						document_edited = true;
-
-						if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-
-						INTERSECTED = intersects[ 0 ].object;
-
-						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-
-						// plane.position.copy( INTERSECTED.position );
-						// plane.lookAt( camera.position );
-
-
-
-					}
-					container.style.cursor = 'pointer';
-
-				} else {
-
-					if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-
-					INTERSECTED = null;
-
-					container.style.cursor = 'auto';
-
-				}
+				dragger.mouseMove()
 
 			}
 
@@ -327,6 +273,7 @@
 					controls.enabled = false;
 
 					SELECTED = INTERSECTED;
+					dragger.dragged = INTERSECTED;
 					SELECTED.select();
 					console.log(SELECTED.parent);
 
@@ -348,17 +295,7 @@
 
 				event.preventDefault();
 
-				controls.enabled = true;
-
-				if ( INTERSECTED ) {
-
-					// plane.position.copy( INTERSECTED.position );
-
-					SELECTED = null;
-
-				}
-
-				container.style.cursor = 'auto';
+				dragger.mouseUp()
 
 			}
 
@@ -440,6 +377,8 @@
 
 				INTERSECTED = object
 				SELECTED = object
+				dragger.dragged = object;
+
 			}
 			$('#drag1').mousedown( addBox);
 
