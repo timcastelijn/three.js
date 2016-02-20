@@ -34,7 +34,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Maten<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Maten<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
 					</h4>
 				</div>
 				<div id="collapse1" class="panel-collapse collapse in">
@@ -48,7 +48,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+						<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
 					</h4>
 				</div>
 				<div id="collapse2" class="panel-collapse collapse">
@@ -76,7 +76,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
 					</h4>
 				</div>
 				<div id="collapse3" class="panel-collapse collapse">
@@ -129,7 +129,7 @@
 				container.setAttribute( 'z-index', "-1" );
 				document.body.appendChild( container );
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
 				camera.position.z = 10;
 
 				// controls = new THREE.TrackballControls( camera );
@@ -377,7 +377,7 @@
 				renderer.render( scene, camera );
 
 			}
-			
+
 			function allowDrop(ev) {
 			    ev.preventDefault();
 			}
@@ -392,6 +392,14 @@
 			    console.log("dropped ${data}");
 			    console.log(ev.clientX, ev.clientY)
 			}
+			function toggleChevron(e) {
+			    $(e.target)
+			        .prev('.panel-heading')
+			        .find("i.indicator")
+			        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+			}
+			$('#accordion').on('hidden.bs.collapse', toggleChevron);
+			$('#accordion').on('shown.bs.collapse', toggleChevron);
 
 		</script>
 
