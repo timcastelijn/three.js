@@ -56,7 +56,8 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-sm-4">
-									<img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="true" ondragstart="drag(event)" width="40" height="40">
+									<!-- <img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="true" ondragstart="drag(event)" width="40" height="40"> -->
+									<img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="false" width="40" height="40">
 								</div>
 								<div class="col-sm-4">t1b</div>
 								<div class="col-sm-4">t1c</div>
@@ -178,7 +179,8 @@
 					new THREE.PlaneBufferGeometry( 2000, 2000, 8, 8 ),
 					new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
 				);
-				// plane.rotation.x = Math.PI * -0.5;
+				// rotate plane to xz orientation
+				plane.rotation.x = Math.PI * -0.5;
 				scene.add( plane );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -282,8 +284,8 @@
 
 						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
 
-						plane.position.copy( INTERSECTED.position );
-						plane.lookAt( camera.position );
+						// plane.position.copy( INTERSECTED.position );
+						// plane.lookAt( camera.position );
 
 
 
@@ -340,7 +342,7 @@
 
 				if ( INTERSECTED ) {
 
-					plane.position.copy( INTERSECTED.position );
+					// plane.position.copy( INTERSECTED.position );
 
 					SELECTED = null;
 
@@ -378,20 +380,20 @@
 
 			}
 
-			function allowDrop(ev) {
-			    ev.preventDefault();
-			}
-
-			function drag(ev) {
-			    ev.dataTransfer.setData("text", ev.target.id);
-			}
-
-			function drop(ev) {
-			    ev.preventDefault();
-			    var data = ev.dataTransfer.getData("text");
-			    console.log("dropped ${data}");
-			    console.log(ev.clientX, ev.clientY)
-			}
+			// function allowDrop(ev) {
+			//     ev.preventDefault();
+			// }
+			//
+			// function drag(ev) {
+			//     ev.dataTransfer.setData("text", ev.target.id);
+			// }
+			//
+			// function drop(ev) {
+			//     ev.preventDefault();
+			//     var data = ev.dataTransfer.getData("text");
+			//     console.log("dropped ${data}");
+			//     console.log(ev.clientX, ev.clientY)
+			// }
 			function toggleChevron(e) {
 			    $(e.target)
 			        .prev('.panel-heading')
@@ -400,6 +402,36 @@
 			}
 			$('#accordion').on('hidden.bs.collapse', toggleChevron);
 			$('#accordion').on('shown.bs.collapse', toggleChevron);
+
+			function addBox(event){
+
+				//create objects
+				var geometry = new THREE.BoxGeometry( 0.40, 0.40, 0.40 );
+				var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+
+				plane.lookAt( camera.position );
+
+				event.preventDefault();
+
+				raycaster.setFromCamera( mouse, camera );
+
+				var intersects = raycaster.intersectObject( plane );
+
+			  if ( intersects.length > 0 ) {
+					object.position = intersects[0].point
+					console.log( intersects[0].point);
+
+
+				}
+
+
+				scene.add( object );
+				objects.push( object );
+
+				INTERSECTED = object
+				SELECTED = object
+			}
+			$('#drag1').mousedown( addBox);
 
 		</script>
 
