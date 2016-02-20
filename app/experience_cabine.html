@@ -256,13 +256,23 @@
 
 				if ( SELECTED ) {
 
-					var intersects = raycaster.intersectObject( plane );
+						// try objects intersection
+						var intersects = raycaster.intersectObjects( objects );
+						if (intersects[0]){
+							var vector = new THREE.Vector3();
+							vector.setFromMatrixPosition( intersects[0].object.matrixWorld );
+							// in case of a hit, copy position
+							SELECTED.position.copy(vector);
+						}else{
+							// else move over plane
+							var intersects = raycaster.intersectObject( plane );
+							if ( intersects.length > 0 ) {
 
-					if ( intersects.length > 0 ) {
-						SELECTED.position.copy( intersects[ 0 ].point.sub( offset ) );
-						// SELECTED.position = intersects[ 0 ].point;
+								SELECTED.position.copy( intersects[ 0 ].point);
+								// SELECTED.position = intersects[ 0 ].point;
+							}
+						}
 
-					}
 
 					return;
 
@@ -426,7 +436,7 @@
 
 
 				scene.add( object );
-				objects.push( object );
+				// objects.push( object );
 
 				INTERSECTED = object
 				SELECTED = object
