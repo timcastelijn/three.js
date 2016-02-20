@@ -4,16 +4,93 @@
 		<title>three.js webgl - draggable cubes</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<style>
 			body {
-				font-family: Monospace;
 				background-color: #f0f0f0;
 				margin: 0px;
-				overflow: hidden;
+				/*overflow: hidden;*/
+			}
+			#accordion{
+				position: absolute;
+				margin: 10px;
+				width:20%;
+				z-index: 100;
+			}
+			input[type=range] {
+				width: 100%; /* Specific width is required for Firefox. */
 			}
 		</style>
 	</head>
 	<body>
+		<!-- <div class="container" > -->
+		<div class="panel-group" id="accordion">
+			<h2>Ervaringscabine</h2>
+			<p>Stel je eigen <strong>Ervaringscabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>sleep</strong> de modules naar de gewenste plek.</p>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Maten<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
+					</h4>
+				</div>
+				<div id="collapse1" class="panel-collapse collapse in">
+					<div class="panel-body">
+						lengte<input data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" class="slider_100" type="range" min="10" max="1000" step="10" />
+						breedte<input id="ex6" type="range" data-slider-min="-5" data-slider-max="20" data-slider-step="1" data-slider-value="3" />
+						hoogte<input type="range" min="10" max="1000" step="10" />
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+					</h4>
+				</div>
+				<div id="collapse2" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-4">
+									<img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="true" ondragstart="drag(event)" width="40" height="40">
+								</div>
+								<div class="col-sm-4">t1b</div>
+								<div class="col-sm-4">t1c</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">t2a</div>
+								<div class="col-sm-4">t2b</div>
+								<div class="col-sm-4">t2c</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">t3</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+					</h4>
+				</div>
+				<div id="collapse3" class="panel-collapse collapse">
+					<div class="panel-body">
+						content
+					</div>
+				</div>
+			</div>
+				 <h1 align="right">&euro;5431</h1>
+
+
+				<button type="button" class="btn btn-default btn-block">Bestellen</button>
+
+		</div>
 
 		<script src="../build/three.min.js"></script>
 		<script src="cabine_grid.js"></script>
@@ -42,8 +119,14 @@
 			animate();
 
 			function init() {
-
 				container = document.createElement( 'div' );
+				container.setAttribute( 'id', "renderer" );
+				container.setAttribute( 'ondrop', "drop(event)" );
+				container.setAttribute( 'ondragover', "allowDrop(event)" );
+				// container.setAttribute( 'position', "absolute" );
+				// container.setAttribute( 'top', "0px" );
+				// container.setAttribute( 'left', "0px" );
+				container.setAttribute( 'z-index', "-1" );
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -58,13 +141,7 @@
 				// controls.staticMoving = true;
 				// controls.dynamicDampingFactor = 0.3;
 
-				controls = new THREE.OrbitControls( camera );
-				//controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-				controls.enableDamping = true;
-				controls.dampingFactor = 0.25;
-				controls.enableZoom = true;
-				controls.rotateSpeed = 0.25;
-				//camera.up.set( 0, 0, 1 );
+
 
 				scene = new THREE.Scene();
 
@@ -115,6 +192,14 @@
 
 				container.appendChild( renderer.domElement );
 
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				//controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+				controls.enableDamping = true;
+				controls.dampingFactor = 0.25;
+				controls.enableZoom = true;
+				controls.rotateSpeed = 0.25;
+				//camera.up.set( 0, 0, 1 );
+
 				var info = document.createElement( 'div' );
 				info.style.position = 'absolute';
 				info.style.top = '10px';
@@ -126,6 +211,7 @@
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
+				stats.domElement.style.right = '0px';
 				container.appendChild( stats.domElement );
 
 				renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -290,6 +376,21 @@
 
 				renderer.render( scene, camera );
 
+			}
+			
+			function allowDrop(ev) {
+			    ev.preventDefault();
+			}
+
+			function drag(ev) {
+			    ev.dataTransfer.setData("text", ev.target.id);
+			}
+
+			function drop(ev) {
+			    ev.preventDefault();
+			    var data = ev.dataTransfer.getData("text");
+			    console.log("dropped ${data}");
+			    console.log(ev.clientX, ev.clientY)
 			}
 
 		</script>
