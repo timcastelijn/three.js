@@ -1,19 +1,19 @@
 
 
 // define constants
-WALLS = 4;
-MODULE_WIDTH = 0.256; //m
-MODULE_HEIGHT = 0.600; //m
-MODULE_THICKNESS = 0.1; //m
+var WALLS = 4;
+var MODULE_WIDTH = 0.256; //m
+var MODULE_HEIGHT = 0.600; //m
+var MODULE_THICKNESS = 0.1; //m
 
 // var items;
 // parent class ModuleSmall
-function CabineGrid(){
+function CabineGrid(l, w, h){
 
   THREE.Object3D.call( this );
 
-	this.length = 5*0.256-0.130;
-	this.width = 4*0.256-0.13;
+	this.length = l - 2 * MODULE_THICKNESS;
+	this.width = w - 2 * MODULE_THICKNESS;
   this.height = 1.800;
 
   this.walls = [];
@@ -36,6 +36,18 @@ function CabineGrid(){
     //add wall to Cabinegrid
     this.add(wall);
   }
+
+  // create floor box
+  var geometry = new THREE.BoxGeometry( l, MODULE_THICKNESS, w );
+  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
+  this.corner_mesh.position.set(0.5 * l - MODULE_THICKNESS, -0.5 * MODULE_THICKNESS , 0.5 * w );
+  this.add( this.corner_mesh );
+
+  // create CEILING box
+  this.ceiling = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
+  this.ceiling.position.set(0.5 * l - MODULE_THICKNESS, h + 0.5 * MODULE_THICKNESS , 0.5 * w );
+  this.add( this.ceiling );
+
 }
 CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
@@ -88,12 +100,19 @@ function Wall( length, height, flip, door){
     //define normal cells
     var cell = new Cell(rest_width, MODULE_HEIGHT, MODULE_THICKNESS);
     this.add(cell);
-    var length_pos = (i + 0.5) * MODULE_WIDTH -0.5* rest_width
+    var length_pos = i * MODULE_WIDTH + 0.5 * rest_width
     if(flip){
-      length_pos = 0 + 0.5* rest_width;
+      length_pos = 0.5 * rest_width;
     }
     cell.position.set( length_pos, (j +0.5) * MODULE_HEIGHT, 0.5*MODULE_THICKNESS );
   }
+
+  // create corner box
+  var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, height, MODULE_THICKNESS );
+  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
+  this.corner_mesh.position.set(-0.5 * MODULE_THICKNESS , 0.5*height , 0.5 * MODULE_THICKNESS);
+  this.add( this.corner_mesh );
+
 
 }
 Wall.prototype = new THREE.Object3D();
