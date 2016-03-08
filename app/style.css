@@ -1,0 +1,20 @@
+body {
+  background-color: #f0f0f0;
+  margin: 0px;
+  /*overflow: hidden;*/
+}
+
+#accordion{
+  position: absolute;
+  margin: 10px;
+  width:250px;
+  z-index: 100;
+}
+/*@media screen and (min-width: 900px) {
+  #accordion{
+    width:20%;
+  }
+}*/
+input[type=range] {
+  width: 100%; /* Specific width is required for Firefox. */
+}
