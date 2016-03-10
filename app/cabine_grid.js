@@ -5,23 +5,23 @@ var WALLS = 4;
 var MODULE_WIDTH = 0.256; //m
 var MODULE_HEIGHT = 0.600; //m
 var MODULE_THICKNESS = 0.1; //m
+var FLOOR_THICKNESS = 0.1;
+var CEILING_THICKNESS = 0.1;
 
 // var items;
 // parent class ModuleSmall
-function CabineGrid(l, w, h){
+function CabineGrid(width, height, depth){
 
   THREE.Object3D.call( this );
 
-	this.length = l - 2 * MODULE_THICKNESS;
-	this.width = w - 2 * MODULE_THICKNESS;
-  this.height = 1.800;
+	this.width = width - 2 * MODULE_THICKNESS;
+	this.depth = depth - 2 * MODULE_THICKNESS;
+  this.height = height - FLOOR_THICKNESS - CEILING_THICKNESS;
 
   this.walls = [];
 
-  this.position.set(-this.length/2, 0, -this.width/2);
-
   //initialize walls
-  var items = this.getWallPositions(this.length, this.width);
+  var items = this.getWallPositions(this.width, this.depth);
 
   for(var i=0; i<items.length ;i++) {
     item = items[i];
@@ -30,137 +30,139 @@ function CabineGrid(l, w, h){
     var wall = new Wall( item.length, this.height, item.flip, item.door);
 
     //set wall properties
-    wall.position.set(item.position[0], item.position[1], item.position[2]);
+    wall.position.set(item.position[0], 0, item.position[2]);
+    // wall.position.set(0, 0, 0);
     wall.rotation.set(0,item.orientation,0);
 
-    //add wall to Cabinegrid
+    wall.visible = item.visible
+    //add wall geometry to Cabinegrid
     this.add(wall);
+
+    //add wall object to Cabinegrid
+    this.walls[i] = wall;
   }
 
-  // create floor box
-  var geometry = new THREE.BoxGeometry( l, MODULE_THICKNESS, w );
-  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  this.corner_mesh.position.set(0.5 * l - MODULE_THICKNESS, -0.5 * MODULE_THICKNESS , 0.5 * w );
-  this.add( this.corner_mesh );
+  // add ceiling
+  this.ceiling  = new CeilingPlaceHolder(width, depth, CEILING_THICKNESS);
+  this.ceiling.position.set(0,this.height,0);
+  this.add(this.ceiling);
 
-  // create CEILING box
-  this.ceiling = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  this.ceiling.position.set(0.5 * l - MODULE_THICKNESS, h + 0.5 * MODULE_THICKNESS , 0.5 * w );
-  this.add( this.ceiling );
+
+
+  //add floor
+  this.floor    = new CeilingPlaceHolder(width, depth, FLOOR_THICKNESS);
+  this.floor.position.set(0,-FLOOR_THICKNESS,0);
+  this.add(this.floor);
 
 }
 CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
 
-CabineGrid.prototype.getWallPositions=function(length, width){
+CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
-  items[0] = {position:[0,0,0], orientation:0, length:length, flip:false,door:3};
-  items[1] = {position:[-MODULE_THICKNESS,0,width+MODULE_THICKNESS], orientation:0.5 * Math.PI, length:width, flip:false};
-  items[2] = {position:[length,0,width+2*MODULE_THICKNESS], orientation:1 * Math.PI, length:length, flip:false,door:3};
-  items[3] = {position:[length+MODULE_THICKNESS,0,MODULE_THICKNESS], orientation:1.5 * Math.PI, length:width, flip:true};
+  items[0] = {position:[-length/2,0,-depth/2], orientation:0, length:length, visible:true};
+  items[1] = {position:[-length/2,0,depth/2], orientation:0.5 * Math.PI, length:depth, visible:true};
+  items[2] = {position:[length/2,0,depth/2], orientation:1 * Math.PI, length:length,visible:true};
+  items[3] = {position:[length/2,0,-depth/2], orientation:1.5 * Math.PI, length:depth, visible:true};
 
   return items;
 }
-//
 
-//wall class
-function Wall( length, height, flip, door){
+// returns dimensions of the cabine
+CabineGrid.prototype.getDim=function(){
+  return [this.width, this.height, this.length];
+}
+
+// updates the dimensions and walls accordingly
+CabineGrid.prototype.setDim=function(dim_index, value){
+
+  switch(dim_index){
+    case 0:
+      this.width = value - 2 * MODULE_THICKNESS;
+      this.setWidth(value);
+      break;
+    case 1:
+      this.height = value  - CEILING_THICKNESS - FLOOR_THICKNESS;
+      this.setHeight(value);
+      break;
+    case 2:
+      this.length = value - 2 * MODULE_THICKNESS;
+      this.setLength(value);
+      break;
+    default:
+      console.log("default");
+  }
+}
+
+// set width of the complete cabine
+CabineGrid.prototype.setWidth=function(value){
+  console.log('width:' + value);
+
+  this.ceiling.setWidth(value);
+  this.floor.setWidth(value);
+
+  this.walls[0].position.x = -this.width/2;
+  this.walls[1].position.x = -this.width/2;
+  this.walls[2].position.x = this.width/2;
+  this.walls[3].position.x = this.width/2;
+
+  this.walls[0].setLength(this.width);
+  this.walls[2].setLength(this.width);
+}
+
+// set width of the complete cabine
+CabineGrid.prototype.setLength=function(value){
+  console.log('depth:' + value);
+
+  this.ceiling.setLength(value);
+  this.floor.setLength(value);
+
+  this.walls[0].position.z = -this.length/2;
+  this.walls[1].position.z = this.length/2;
+  this.walls[2].position.z = this.length/2;
+  this.walls[3].position.z = -this.length/2;
+
+  this.walls[1].setLength(this.length);
+  this.walls[3].setLength(this.length);
+}
+
+// set width of the complete cabine
+CabineGrid.prototype.setHeight=function(value){
+  console.log('height:' + value);
+}
+
+// var items;
+// parent class ModuleSmall
+function CeilingPlaceHolder(w, d, thickness){
+
   THREE.Object3D.call( this );
-  //var geometry = new THREE.BoxGeometry(1,1,1);
-  //var wall = new THREE.Mesh(geometry);
-  // var wall = new THREE.Object3D();
-  this.length=length;
-  this.height=height;
 
-  var rest_width = this.length%MODULE_WIDTH;
+  // create floor box
+  var geometry = new THREE.BoxGeometry( w, thickness, d );
 
-  var length_offset = 0;
-  if(flip){
-      length_offset = rest_width;
-  }
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, thickness/2, 0) );
+  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
 
-  var i;
-  for(i=0;i<this.length/MODULE_WIDTH-1; i++){
-    if(door && i < door){
-    }else{
-      for(var j=0; j<this.height/MODULE_HEIGHT; j++){
-        //define normal cells
-        var cell = new Cell(MODULE_WIDTH, MODULE_HEIGHT, MODULE_THICKNESS);
-        this.add(cell);
-        objects.push(cell);
-        cell.position.set( (i + 0.5) * MODULE_WIDTH + length_offset, (j +0.5) * MODULE_HEIGHT, 0.5*MODULE_THICKNESS );
-      }
-    }
-
-    //define rest cells
-  }
-
-  for(var j=0; j<this.height/MODULE_HEIGHT; j++){
-    //define normal cells
-    var cell = new Cell(rest_width, MODULE_HEIGHT, MODULE_THICKNESS);
-    this.add(cell);
-    var length_pos = i * MODULE_WIDTH + 0.5 * rest_width
-    if(flip){
-      length_pos = 0.5 * rest_width;
-    }
-    cell.position.set( length_pos, (j +0.5) * MODULE_HEIGHT, 0.5*MODULE_THICKNESS );
-  }
-
-  // create corner box
-  var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, height, MODULE_THICKNESS );
-  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  this.corner_mesh.position.set(-0.5 * MODULE_THICKNESS , 0.5*height , 0.5 * MODULE_THICKNESS);
-  this.add( this.corner_mesh );
-
-
+  // this.corner_mesh.position.set( 0, thickness/2, 0);
+  this.add( this.mesh_object );
 }
-Wall.prototype = new THREE.Object3D();
-Wall.prototype.constructor = Wall;
+CeilingPlaceHolder.prototype = new THREE.Object3D();
+CeilingPlaceHolder.prototype.constructor = CeilingPlaceHolder;
 
-
-//CELL Class
-function Cell(width, heigth, thickness){
-  THREE.Object3D.call( this );
-
-  //create objects
-  //define local variables
-  // create interior
-  var geometry = new THREE.BoxGeometry( width-0.005, heigth-0.005, thickness/2 );
-  this.interior = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0xffffff } ) );
-  this.interior.selectable =true;
-  this.interior.position.set(0,0,thickness/4);
-
-  // create exterior
-  var geometry = new THREE.BoxGeometry( width, heigth, thickness/2 );
-  this.exterior_mesh = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  this.exterior_mesh.position.set(0,0,-thickness/4);
-
-  objects.push(this.interior);
-  objects.push(this.exterior_mesh);
-
-  this.add( this.interior );
-  this.add( this.exterior_mesh );
-
+// set width of the complete cabine
+CeilingPlaceHolder.prototype.setWidth=function(value){
+  var factor =  value / this.mesh_object.geometry.parameters.width; // === 1
+  this.mesh_object.scale.x = factor;
 }
-Cell.prototype = new THREE.Object3D();
-Cell.prototype.constructor = Cell;
 
-
-
-//CELL Class
-function SelectableMesh(geometry, material){
-  THREE.Mesh.call( this,geometry, material );
-  this.selectable = false;
+// set width of the complete cabine
+CeilingPlaceHolder.prototype.setLength=function(value){
+  var factor =  value / this.mesh_object.geometry.parameters.depth; // === 1
+  this.mesh_object.scale.z = factor;
 }
-SelectableMesh.prototype = new THREE.Mesh();
-SelectableMesh.prototype.constructor = SelectableMesh;
 
-SelectableMesh.prototype.select=function(bool_select){
-  if (bool_select){
-    this.interior_color_prev = this.material.color.getHex();
-    this.material.color.setHex("0xff0000");
-  }else{
-    this.material.color.setHex(this.interior_color_prev);
-  }
+// set width of the complete cabine
+CeilingPlaceHolder.prototype.setHeight=function(value){
+  console.log('height:' + value);
 }
