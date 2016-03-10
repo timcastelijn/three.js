@@ -13,76 +13,16 @@
 	</head>
 	<body>
 		<!-- <div class="container" > -->
-		<div class="panel-group" id="accordion">
-			<h2>Ervaringscabine</h2>
-			<p>Stel je eigen <strong>Ervaringscabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>sleep</strong> de modules naar de gewenste plek.</p>
-
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Maten<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
-					</h4>
-				</div>
-				<div id="collapse1" class="panel-collapse collapse in">
-					<div class="panel-body">
-						lengte<input data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" class="slider_100" type="range" min="10" max="1000" step="10" />
-						breedte<input id="ex6" type="range" data-slider-min="-5" data-slider-max="20" data-slider-step="1" data-slider-value="3" />
-						hoogte<input type="range" min="10" max="1000" step="10" />
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Modules<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
-					</h4>
-				</div>
-				<div id="collapse2" class="panel-collapse collapse">
-					<div class="panel-body">
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-sm-4">
-									<!-- <img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="true" ondragstart="drag(event)" width="40" height="40"> -->
-									<img id="drag1" src="http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png" draggable="false" width="40" height="40">
-								</div>
-								<div class="col-sm-4">t1b</div>
-								<div class="col-sm-4">t1c</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">t2a</div>
-								<div class="col-sm-4">t2b</div>
-								<div class="col-sm-4">t2c</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">t3</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
-					</h4>
-				</div>
-				<div id="collapse3" class="panel-collapse collapse">
-					<div class="panel-body">
-						content
-					</div>
-				</div>
-			</div>
-				 <h1 align="right">&euro;5431</h1>
-
-
-				<button type="button" class="btn btn-default btn-block">Bestellen</button>
-
+		<div id="accordion">
+				breedte<input class="slider_100" type="range" value="120" min="10" max="300" oninput="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				hoogte<input class="slider_100" type="range" value="180" min="10" max="300" oninput="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 		</div>
 
 		<script src="../build/three.min.js"></script>
 		<script src="cabine_grid.js"></script>
+		<script src="wall.js"></script>
 		<script src="module_class.js"></script>
-		<script src="dragger.js"></script>
 		<script src="browser_detector.js"></script>
 
 		<script src="../examples/js/controls/TrackballControls.js"></script>
@@ -90,6 +30,7 @@
 
 		<script src="../examples/js/libs/stats.min.js"></script>
 		<script src="../examples/js/Detector.js"></script>
+		<script src="../src/extras/helpers/AxisHelper.js"></script>
 
 		<script>
 
@@ -108,7 +49,7 @@
 			var config = {
 				// wall 1 contains door
 				// x = width, y= height, z= depth
-				dimensions:[1.3, 1.4, 1.8],
+				dimensions:[1.2, 1.4, 1.8],
 				options:{
 					vaporizer:true,
 					aromatherapy:false,
@@ -150,30 +91,27 @@
 
 				scene = new THREE.Scene();
 
-				scene.add( new THREE.AmbientLight( 0x505050 ) );
+				scene.add( new THREE.AmbientLight( 0x707070 ) );
 
 				var light = new THREE.SpotLight( 0xffffff, 1.5 );
 				light.position.set( 0, 500, 2000 );
 				light.castShadow = true;
 
-				light.shadowCameraNear = 200;
-				light.shadowCameraFar = camera.far;
-				light.shadowCameraFov = 50;
+				light.shadow.camera.near = 200;
+				light.shadow.camera.far = camera.far;
+				light.shadow.camera.fov = 50;
 
-				light.shadowBias = -0.00022;
+				light.shadow.bias = -0.00022;
 
-				light.shadowMapWidth = 2048;
-				light.shadowMapHeight = 2048;
+				light.shadow.mapSize.width = 2048;
+				light.shadow.mapSize.height = 2048;
 
 				scene.add( light );
 
-
 				//create grid
-				grid = new CabineGrid(1.3, 1.4, 1.8);
+				grid = new CabineGrid(1.2, 1.8, 1.4);
 				scene.add(grid);
 
-				// create dragger instance
-				dragger = new Dragger();
 
 				//create objects
 				var geometry = new THREE.BoxGeometry( 40, 40, 40 );
@@ -257,7 +195,6 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-				dragger.mouseMove()
 
 			}
 
@@ -265,38 +202,12 @@
 
 				event.preventDefault();
 
-				raycaster.setFromCamera( mouse, camera );
-
-				var intersects = raycaster.intersectObjects( objects );
-
-				if ( INTERSECTED ) {
-
-					controls.enabled = false;
-
-					SELECTED = INTERSECTED;
-					dragger.dragged = INTERSECTED;
-					SELECTED.select();
-					console.log(SELECTED.parent);
-
-					var intersects = raycaster.intersectObject( plane );
-
-					if ( intersects.length > 0 ) {
-
-						offset.copy( intersects[ 0 ].point ).sub( plane.position );
-
-					}
-
-					container.style.cursor = 'move';
-
-				}
 
 			}
 
 			function onDocumentMouseUp( event ) {
 
-				event.preventDefault();
 
-				dragger.mouseUp()
 
 			}
 
@@ -328,6 +239,15 @@
 
 			}
 
+			//apply dimension change to grid
+			function applyDim(dim_index, value){
+				if(grid){
+					value = value/100;
+					// 0:width 1:height 2:length
+					grid.setDim(dim_index, value)
+				}
+			}
+
 			function toggleChevron(e) {
 			    $(e.target)
 			        .prev('.panel-heading')
@@ -336,38 +256,6 @@
 			}
 			$('#accordion').on('hidden.bs.collapse', toggleChevron);
 			$('#accordion').on('shown.bs.collapse', toggleChevron);
-
-			function addBox(event){
-
-				//create objects
-				var geometry = new THREE.BoxGeometry( 0.40, 0.40, 0.40 );
-				var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-
-				plane.lookAt( camera.position );
-
-				event.preventDefault();
-
-				raycaster.setFromCamera( mouse, camera );
-
-				var intersects = raycaster.intersectObject( plane );
-
-			  if ( intersects.length > 0 ) {
-					object.position = intersects[0].point
-					console.log( intersects[0].point);
-
-
-				}
-
-
-				scene.add( object );
-				// objects.push( object );
-
-				INTERSECTED = object
-				SELECTED = object
-				dragger.dragged = object;
-
-			}
-			$('#drag1').mousedown( addBox);
 
 		</script>
 
