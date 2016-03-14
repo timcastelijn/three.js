@@ -1,5 +1,4 @@
 
-
 //wall class
 function Wall( length, height, flip, door){
   // inherit from Object3D class
@@ -66,34 +65,17 @@ Wall.prototype.setLength = function(value){
 
 Wall.prototype.addCol = function(n, width){
 
-
-  // // create placeholder box
-  // var geometry = new THREE.BoxGeometry( width, this.height, MODULE_THICKNESS );
-  // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, this.height/2, MODULE_THICKNESS/2) );
-  //
-  // this.cells[n] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  //
-  //
-  // var length_offset = n * MODULE_WIDTH
-  // this.cells[n].position.set(length_offset, 0, 0);
-  // this.add( this.cells[n] );
-  //
-  // return this.cells[n];
-
   var cell_count = 3;
   var cell_height = this.height/3;
 
   this.cells[n] = [];
 
-  var geometry = new THREE.BoxGeometry( width, cell_height, MODULE_THICKNESS );
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
-
   for(var i =0; i<3; i++){
-    // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
-    this.cells[n][i] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
 
-    var length_offset = n * MODULE_WIDTH
-    this.cells[n][i].position.set(length_offset, cell_height * i, 0);
+    var size      = [width, cell_height, MODULE_THICKNESS];
+    this.cells[n][i] = new Cell(size);
+    this.cells[n][i].position.set(n*MODULE_WIDTH, cell_height * i, 0)
+
     this.add( this.cells[n][i] );
   }
   // create placeholder box
@@ -103,19 +85,14 @@ Wall.prototype.addCol = function(n, width){
 
 Wall.prototype.setRestColPos = function(n){
 
-  // this.rest_col.position.set(n* MODULE_WIDTH, 0, 0);
-
   for(var i=0; i< this.rest_col.length; i++){
     this.rest_col[i].position.set(n* MODULE_WIDTH, this.height / 3 * i, 0);
   }
 }
 
-
 Wall.prototype.setRestColSize = function(rest_length){
-
-  var factor =  rest_length / this.rest_col[0].geometry.parameters.width; // === 1
   for(var i=0; i< this.rest_col.length; i++){
-    this.rest_col[i].scale.x = factor;
+    this.rest_col[i].setWidth(rest_length);
   }
 }
 
@@ -136,52 +113,4 @@ Wall.prototype.addCorner = function(){
   this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
   this.corner_mesh.position.set(this.length + MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2);
   this.add( this.corner_mesh );
-}
-
-
-
-//CELL Class
-function Cell(width, heigth, thickness){
-  THREE.Object3D.call( this );
-
-  //create objects
-  //define local variables
-  // create interior
-  var geometry = new THREE.BoxGeometry( width-0.005, heigth-0.005, thickness/2 );
-  this.interior = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0xffffff } ) );
-  this.interior.selectable =true;
-  this.interior.position.set(0,0,thickness/4);
-
-  // create exterior
-  var geometry = new THREE.BoxGeometry( width, heigth, thickness/2 );
-  this.exterior_mesh = new SelectableMesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
-  this.exterior_mesh.position.set(0,0,-thickness/4);
-
-  objects.push(this.interior);
-  objects.push(this.exterior_mesh);
-
-  this.add( this.interior );
-  this.add( this.exterior_mesh );
-
-}
-Cell.prototype = new THREE.Object3D();
-Cell.prototype.constructor = Cell;
-
-
-
-//CELL Class
-function SelectableMesh(geometry, material){
-  THREE.Mesh.call( this,geometry, material );
-  this.selectable = false;
-}
-SelectableMesh.prototype = new THREE.Mesh();
-SelectableMesh.prototype.constructor = SelectableMesh;
-
-SelectableMesh.prototype.select=function(bool_select){
-  if (bool_select){
-    this.interior_color_prev = this.material.color.getHex();
-    this.material.color.setHex("0xff0000");
-  }else{
-    this.material.color.setHex(this.interior_color_prev);
-  }
 }
