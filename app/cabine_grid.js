@@ -1,13 +1,12 @@
 
 
 // define constants
-var WALLS = 4;
 var MODULE_WIDTH = 0.256; //m
 var MODULE_HEIGHT = 0.600; //m
 var MODULE_THICKNESS = 0.1; //m
 var FLOOR_THICKNESS = 0.1;
 var CEILING_THICKNESS = 0.1;
-var DEBUG = false;
+var DEBUG = true;
 
 var getColor = function(category){
   if(DEBUG){
@@ -19,6 +18,9 @@ var getColor = function(category){
         break;
       case "interior":
         return 0xffffff;
+        break;
+      case "heater":
+        return 0xff0000;
         break;
       default:
         return 0xffffff;
@@ -47,7 +49,7 @@ function CabineGrid(width, height, depth){
     item = items[i];
 
     //create new wall item
-    var wall = new Wall( item.length, this.height, item.flip, item.door);
+    var wall = new Wall( item.length, this.height, item.flip, item.door, i);
 
     //set wall properties
     wall.position.set(item.position[0], 0, item.position[2]);
@@ -67,12 +69,15 @@ function CabineGrid(width, height, depth){
   this.ceiling.position.set(0,this.height,0);
   this.add(this.ceiling);
 
-
-
   //add floor
   this.floor    = new CeilingPlaceHolder(width, depth, FLOOR_THICKNESS);
   this.floor.position.set(0,-FLOOR_THICKNESS,0);
   this.add(this.floor);
+
+  //add becnch
+  this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, this.height/3);
+  this.bench.position.set(0, 0, -(this.depth)/2 + MODULE_WIDTH );
+  this.add(this.bench);
 
 }
 CabineGrid.prototype = new THREE.Object3D();
@@ -106,7 +111,7 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       this.setHeight(value);
       break;
     case 2:
-      this.setLength(value);
+      this.setDepth(value);
       break;
     default:
       console.log("default");
@@ -125,7 +130,7 @@ CabineGrid.prototype.setWidth=function(value){
 
   this.ceiling.setWidth(value);
   this.floor.setWidth(value);
-
+  this.bench.setWidth(this.width);
 
   this.walls[0].position.x = -this.width/2;
   this.walls[1].position.x = this.width/2;
@@ -134,31 +139,33 @@ CabineGrid.prototype.setWidth=function(value){
 
   this.walls[0].setLength(this.width);
   this.walls[2].setLength(this.width);
+
 }
 
 // set width of the complete cabine
-CabineGrid.prototype.setLength=function(value){
+CabineGrid.prototype.setDepth = function(value){
 
   value = (value < this.minimum_size)? this.minimum_size: value;
 
-  this.length = value - 2* MODULE_THICKNESS;
-  console.log('depth:' + value);
+  this.depth = value - 2* MODULE_THICKNESS;
 
   this.ceiling.setLength(value);
   this.floor.setLength(value);
+  this.bench.position.set(0,0,- this.depth/2 + MODULE_WIDTH);
 
-  this.walls[0].position.z = this.length/2;
-  this.walls[1].position.z = this.length/2;
-  this.walls[2].position.z = -this.length/2;
-  this.walls[3].position.z = -this.length/2;
 
-  this.walls[1].setLength(this.length);
-  this.walls[3].setLength(this.length);
+  this.walls[0].position.z = this.depth/2;
+  this.walls[1].position.z = this.depth/2;
+  this.walls[2].position.z = -this.depth/2;
+  this.walls[3].position.z = -this.depth/2;
+
+  this.walls[1].setLength(this.depth);
+  this.walls[3].setLength(this.depth);
 }
 
 // set width of the complete cabine
 CabineGrid.prototype.setHeight=function(value){
-  console.log('height:' + value);
+
 }
 
 // var items;
