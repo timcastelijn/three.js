@@ -6,7 +6,7 @@ var MODULE_HEIGHT = 0.600; //m
 var MODULE_THICKNESS = 0.1; //m
 var FLOOR_THICKNESS = 0.1;
 var CEILING_THICKNESS = 0.1;
-var DEBUG = true;
+var DEBUG = false;
 
 var getColor = function(category){
   if(DEBUG){

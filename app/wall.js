@@ -1,12 +1,65 @@
 
+HEATER_CONFIG = [
+  [
+    // FRONT
+    [],
+    [],
+    [],
+    [0,0,0,],
+    [0,0,0,0,],
+    [0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+  ],
+  [
+    // LEFT
+    [],
+    [],
+    [],
+    [0,0,1],
+    [0,0,0,1],
+    [0,0,0,0,1],
+    [0,0,0,0,0,1],
+    [0,0,0,0,0,0,1],
+  ],
+  [
+    // BACK
+    [],
+    [],
+    [],
+    [1,1,1],
+    [1,1,1,1],
+    [1,0,1,0,1],
+    [1,0,1,1,0,1],
+    [1,0,1,0,1,0,1],
+    [1,0,1,0,1,0,1,0],
+    [1,0,1,0,1,0,1,0,1],
+  ],
+  [
+    // RIGHT
+    [],
+    [],
+    [],
+    [1,0,0],
+    [1,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0,0],
+    [1,0,0,0,0,0,0],
+  ],
+]
+
+
 //wall class
-function Wall( length, height, flip, door){
+function Wall( length, height, flip, door, index){
   // inherit from Object3D class
   THREE.Object3D.call( this );
 
   this.length=length;
   this.height=height;
   this.name = "wall_instance"
+  this.index = index
 
   var axisHelper = new THREE.AxisHelper( 0.5 );
   this.add( axisHelper );
@@ -26,7 +79,11 @@ function Wall( length, height, flip, door){
     this.addCol(i, MODULE_WIDTH);
   }
 
-  this.rest_col = this.addCol(this.n, this.rest);
+
+
+  this.rest_col = this.addCol(this.n, this.rest, false);
+
+  this.updateConfig();
 
 
   this.addCorner();
@@ -34,12 +91,12 @@ function Wall( length, height, flip, door){
 Wall.prototype = new THREE.Object3D();
 Wall.prototype.constructor = Wall;
 
-
+// update wall length
 Wall.prototype.setLength = function(value){
 
   this.length = value;
 
-  //update wall config
+  //compare previous config with new config
   var temp_n = this.n
   this.rest = this.length % MODULE_WIDTH;
   this.n = (this.length - this.rest) / MODULE_WIDTH;
@@ -48,6 +105,9 @@ Wall.prototype.setLength = function(value){
     // increase number of modules
     this.addCol(this.n -1, MODULE_WIDTH);
     this.setRestColPos(this.n)
+
+    this.updateConfig();
+
     console.log("addCol");
   }else if (this.n < temp_n) {
     // decrease numnber of modules
@@ -63,6 +123,20 @@ Wall.prototype.setLength = function(value){
   this.corner_mesh.position.x = value+MODULE_THICKNESS/2
 }
 
+
+
+Wall.prototype.updateConfig = function(){
+
+  for(var i = 0; i< this.n; i++){
+    var local_module_type = HEATER_CONFIG[this.index][this.n][i]
+    console.log(this.index, this.n, i, local_module_type);
+    if (this.cells[i]){
+      this.cells[i][1].setType(local_module_type);
+    }
+  }
+
+}
+
 Wall.prototype.addCol = function(n, width){
 
   var cell_count = 3;
@@ -70,9 +144,12 @@ Wall.prototype.addCol = function(n, width){
 
   this.cells[n] = [];
 
+
   for(var i =0; i<3; i++){
 
     var size      = [width, cell_height, MODULE_THICKNESS];
+
+
     this.cells[n][i] = new Cell(size);
     this.cells[n][i].position.set(n*MODULE_WIDTH, cell_height * i, 0)
 
