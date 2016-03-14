@@ -63,10 +63,10 @@ CabineGrid.prototype.constructor = CabineGrid;
 CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
-  items[0] = {position:[-length/2,0,-depth/2], orientation:0, length:length, visible:true};
-  items[1] = {position:[-length/2,0,depth/2], orientation:0.5 * Math.PI, length:depth, visible:true};
-  items[2] = {position:[length/2,0,depth/2], orientation:1 * Math.PI, length:length,visible:true};
-  items[3] = {position:[length/2,0,-depth/2], orientation:1.5 * Math.PI, length:depth, visible:true};
+  items[0] = {position:[-length/2,0,depth/2], orientation:0, length:length, visible:true, door:true};
+  items[1] = {position:[length/2,0,depth/2], orientation:0.5 * Math.PI, length:depth, visible:true};
+  items[2] = {position:[length/2,0,-depth/2], orientation:1 * Math.PI, length:length,visible:true};
+  items[3] = {position:[-length/2,0,-depth/2], orientation:1.5 * Math.PI, length:depth, visible:true};
 
   return items;
 }
@@ -110,9 +110,9 @@ CabineGrid.prototype.setWidth=function(value){
 
 
   this.walls[0].position.x = -this.width/2;
-  this.walls[1].position.x = -this.width/2;
+  this.walls[1].position.x = this.width/2;
   this.walls[2].position.x = this.width/2;
-  this.walls[3].position.x = this.width/2;
+  this.walls[3].position.x = -this.width/2;
 
   this.walls[0].setLength(this.width);
   this.walls[2].setLength(this.width);
@@ -129,9 +129,9 @@ CabineGrid.prototype.setLength=function(value){
   this.ceiling.setLength(value);
   this.floor.setLength(value);
 
-  this.walls[0].position.z = -this.length/2;
+  this.walls[0].position.z = this.length/2;
   this.walls[1].position.z = this.length/2;
-  this.walls[2].position.z = this.length/2;
+  this.walls[2].position.z = -this.length/2;
   this.walls[3].position.z = -this.length/2;
 
   this.walls[1].setLength(this.length);

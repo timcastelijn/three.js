@@ -18,7 +18,11 @@ function Wall( length, height, flip, door){
 
   this.cells = []
 
-  for(var i = 0; i< this.n; i++){
+  this.first_col = door? 3: 0;
+
+  if(this.first_col > this.n ) alert("door is too wide for initial startup condition");
+
+  for(var i = this.first_col; i< this.n; i++){
     // create placeholder box
     this.addCol(i, MODULE_WIDTH);
   }
@@ -64,13 +68,13 @@ Wall.prototype.addCol = function(n, width){
 
   // create placeholder box
   var geometry = new THREE.BoxGeometry( width, this.height, MODULE_THICKNESS );
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, 0, 0) );
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, this.height/2, MODULE_THICKNESS/2) );
 
   this.cells[n] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
 
 
   var length_offset = n * MODULE_WIDTH
-  this.cells[n].position.set(length_offset, this.height/2, -MODULE_THICKNESS/2);
+  this.cells[n].position.set(length_offset, 0, 0);
   this.add( this.cells[n] );
 
   return this.cells[n];
@@ -78,7 +82,7 @@ Wall.prototype.addCol = function(n, width){
 
 Wall.prototype.setRestColPos = function(n){
 
-  this.rest_col.position.set(n* MODULE_WIDTH, this.height/2, -MODULE_THICKNESS/2);
+  this.rest_col.position.set(n* MODULE_WIDTH, 0, 0);
 }
 
 Wall.prototype.setRestColSize = function(rest_length){
@@ -99,7 +103,7 @@ Wall.prototype.addCorner = function(){
   // create corner box
   var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, this.height, MODULE_THICKNESS );
   this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  this.corner_mesh.position.set(this.length + MODULE_THICKNESS/2, this.height/2, -MODULE_THICKNESS/2);
+  this.corner_mesh.position.set(this.length + MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2);
   this.add( this.corner_mesh );
 }
 
