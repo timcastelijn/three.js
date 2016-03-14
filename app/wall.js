@@ -66,35 +66,66 @@ Wall.prototype.setLength = function(value){
 
 Wall.prototype.addCol = function(n, width){
 
+
+  // // create placeholder box
+  // var geometry = new THREE.BoxGeometry( width, this.height, MODULE_THICKNESS );
+  // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, this.height/2, MODULE_THICKNESS/2) );
+  //
+  // this.cells[n] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  //
+  //
+  // var length_offset = n * MODULE_WIDTH
+  // this.cells[n].position.set(length_offset, 0, 0);
+  // this.add( this.cells[n] );
+  //
+  // return this.cells[n];
+
+  var cell_count = 3;
+  var cell_height = this.height/3;
+
+  this.cells[n] = [];
+
+  var geometry = new THREE.BoxGeometry( width, cell_height, MODULE_THICKNESS );
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
+
+  for(var i =0; i<3; i++){
+    // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
+    this.cells[n][i] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
+
+    var length_offset = n * MODULE_WIDTH
+    this.cells[n][i].position.set(length_offset, cell_height * i, 0);
+    this.add( this.cells[n][i] );
+  }
   // create placeholder box
-  var geometry = new THREE.BoxGeometry( width, this.height, MODULE_THICKNESS );
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, this.height/2, MODULE_THICKNESS/2) );
-
-  this.cells[n] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-
-
-  var length_offset = n * MODULE_WIDTH
-  this.cells[n].position.set(length_offset, 0, 0);
-  this.add( this.cells[n] );
 
   return this.cells[n];
 }
 
 Wall.prototype.setRestColPos = function(n){
 
-  this.rest_col.position.set(n* MODULE_WIDTH, 0, 0);
+  // this.rest_col.position.set(n* MODULE_WIDTH, 0, 0);
+
+  for(var i=0; i< this.rest_col.length; i++){
+    this.rest_col[i].position.set(n* MODULE_WIDTH, this.height / 3 * i, 0);
+  }
 }
+
 
 Wall.prototype.setRestColSize = function(rest_length){
 
-  var factor =  rest_length / this.rest_col.geometry.parameters.width; // === 1
-  this.rest_col.scale.x = factor;
+  var factor =  rest_length / this.rest_col[0].geometry.parameters.width; // === 1
+  for(var i=0; i< this.rest_col.length; i++){
+    this.rest_col[i].scale.x = factor;
+  }
 }
 
 Wall.prototype.removeCol = function(n){
 
-  // create placeholder box
-  this.remove( this.cells[n] );
+  // remove geometry
+  for(var i=0; i< this.rest_col.length; i++){
+    this.remove( this.cells[n][i] );
+  }
+  // remove data
   this.cells[n] = null;
 }
 
@@ -102,7 +133,7 @@ Wall.prototype.addCorner = function(){
 
   // create corner box
   var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, this.height, MODULE_THICKNESS );
-  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
   this.corner_mesh.position.set(this.length + MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2);
   this.add( this.corner_mesh );
 }

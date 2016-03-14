@@ -7,6 +7,24 @@ var MODULE_HEIGHT = 0.600; //m
 var MODULE_THICKNESS = 0.1; //m
 var FLOOR_THICKNESS = 0.1;
 var CEILING_THICKNESS = 0.1;
+var DEBUG = true;
+
+var getColor = function(category){
+  if(DEBUG){
+    return Math.random() * 0xffffff
+  }else {
+    switch (category) {
+      case "exterior":
+        return 0x333333;
+        break;
+      case "interior":
+        return 0xffffff;
+        break;
+      default:
+        return 0xffffff;
+    }
+  }
+}
 
 // var items;
 // parent class ModuleSmall
