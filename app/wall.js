@@ -20,8 +20,11 @@ function Wall( length, height, flip, door){
 
   for(var i = 0; i< this.n; i++){
     // create placeholder box
-    this.addCol(i);
+    this.addCol(i, MODULE_WIDTH);
   }
+
+  this.rest_col = this.addCol(this.n, this.rest);
+
 
   this.addCorner();
 }
@@ -30,6 +33,7 @@ Wall.prototype.constructor = Wall;
 
 
 Wall.prototype.setLength = function(value){
+
   this.length = value;
 
   //update wall config
@@ -39,28 +43,48 @@ Wall.prototype.setLength = function(value){
 
   if (this.n > temp_n){
     // increase number of modules
-    this.addCol(this.n -1);
+    this.addCol(this.n -1, MODULE_WIDTH);
+    this.setRestColPos(this.n)
     console.log("addCol");
   }else if (this.n < temp_n) {
     // decrease numnber of modules
     this.removeCol(this.n)
+    this.setRestColPos(this.n)
   }else {
       // do nothing
   }
+  if (this.rest!=0) this.setRestColSize(this.rest);
   //update rest module size
 
 
   this.corner_mesh.position.x = value+MODULE_THICKNESS/2
 }
 
-Wall.prototype.addCol = function(n){
+Wall.prototype.addCol = function(n, width){
 
   // create placeholder box
-  var geometry = new THREE.BoxGeometry( MODULE_WIDTH, this.height, MODULE_THICKNESS );
+  var geometry = new THREE.BoxGeometry( width, this.height, MODULE_THICKNESS );
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, 0, 0) );
+
   this.cells[n] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  var length_offset = MODULE_WIDTH * (n + 0.5)
+
+
+  var length_offset = n * MODULE_WIDTH
   this.cells[n].position.set(length_offset, this.height/2, -MODULE_THICKNESS/2);
   this.add( this.cells[n] );
+
+  return this.cells[n];
+}
+
+Wall.prototype.setRestColPos = function(n){
+
+  this.rest_col.position.set(n* MODULE_WIDTH, this.height/2, -MODULE_THICKNESS/2);
+}
+
+Wall.prototype.setRestColSize = function(rest_length){
+
+  var factor =  rest_length / this.rest_col.geometry.parameters.width; // === 1
+  this.rest_col.scale.x = factor;
 }
 
 Wall.prototype.removeCol = function(n){

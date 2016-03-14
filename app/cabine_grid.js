@@ -18,6 +18,8 @@ function CabineGrid(width, height, depth){
 	this.depth = depth - 2 * MODULE_THICKNESS;
   this.height = height - FLOOR_THICKNESS - CEILING_THICKNESS;
 
+  this.minimum_size = 3*MODULE_WIDTH + 2* MODULE_THICKNESS;
+
   this.walls = [];
 
   //initialize walls
@@ -79,7 +81,6 @@ CabineGrid.prototype.setDim=function(dim_index, value){
 
   switch(dim_index){
     case 0:
-      this.width = value - 2 * MODULE_THICKNESS;
       this.setWidth(value);
       break;
     case 1:
@@ -87,7 +88,6 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       this.setHeight(value);
       break;
     case 2:
-      this.length = value - 2 * MODULE_THICKNESS;
       this.setLength(value);
       break;
     default:
@@ -97,10 +97,17 @@ CabineGrid.prototype.setDim=function(dim_index, value){
 
 // set width of the complete cabine
 CabineGrid.prototype.setWidth=function(value){
+
+  // test value so it doesn't exceed minimum
+  value = (value < this.minimum_size)? this.minimum_size: value;
+
   console.log('width:' + value);
+  this.width = value - 2 * MODULE_THICKNESS;
+
 
   this.ceiling.setWidth(value);
   this.floor.setWidth(value);
+
 
   this.walls[0].position.x = -this.width/2;
   this.walls[1].position.x = -this.width/2;
@@ -113,6 +120,10 @@ CabineGrid.prototype.setWidth=function(value){
 
 // set width of the complete cabine
 CabineGrid.prototype.setLength=function(value){
+
+  value = (value < this.minimum_size)? this.minimum_size: value;
+
+  this.length = value - 2* MODULE_THICKNESS;
   console.log('depth:' + value);
 
   this.ceiling.setLength(value);
@@ -142,7 +153,7 @@ function CeilingPlaceHolder(w, d, thickness){
   var geometry = new THREE.BoxGeometry( w, thickness, d );
 
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, thickness/2, 0) );
-  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x111111 } ) );
+  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x333333 } ) );
 
   // this.corner_mesh.position.set( 0, thickness/2, 0);
   this.add( this.mesh_object );

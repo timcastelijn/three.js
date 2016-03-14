@@ -6,9 +6,10 @@ body {
 
 #accordion{
   position: absolute;
+  top: 0px;
+  left: 0px;
   margin: 10px;
   width:250px;
-  z-index: 100;
 }
 /*@media screen and (min-width: 900px) {
   #accordion{
