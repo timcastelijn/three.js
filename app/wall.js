@@ -61,9 +61,6 @@ function Wall( length, height, flip, door, index){
   this.name = "wall_instance"
   this.index = index
 
-  var axisHelper = new THREE.AxisHelper( 0.5 );
-  this.add( axisHelper );
-
   // create wall
   this.rest = length % MODULE_WIDTH;
   this.n = (length - this.rest) / MODULE_WIDTH;
@@ -113,6 +110,10 @@ Wall.prototype.setLength = function(value){
     // decrease numnber of modules
     this.removeCol(this.n)
     this.setRestColPos(this.n)
+
+    this.updateConfig();
+
+
   }else {
       // do nothing
   }
@@ -129,7 +130,6 @@ Wall.prototype.updateConfig = function(){
 
   for(var i = 0; i< this.n; i++){
     var local_module_type = HEATER_CONFIG[this.index][this.n][i]
-    console.log(this.index, this.n, i, local_module_type);
     if (this.cells[i]){
       this.cells[i][1].setType(local_module_type);
     }

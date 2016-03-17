@@ -16,14 +16,15 @@ function Cell(size){
   this.add(this.mesh_exterior);
 
 
-  var geometry = new THREE.BoxGeometry( size[0], size[1], face_thickness );
+  var geometry = new THREE.BoxGeometry( size[0]-0.005, size[1]-0.005, face_thickness );
 
   // offset pivot to corner
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( size[0] / 2, size[1] / 2 , face_thickness/2  ) );
 
 
   // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
-  this.mesh_interior = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor('interior') } ) );
+  this.mesh_interior_clad = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor('interior') } ) );
+  this.mesh_interior = this.mesh_interior_clad
 
   this.add(this.mesh_interior);
 
@@ -40,7 +41,15 @@ Cell.prototype.setWidth = function(value){
 Cell.prototype.setType = function(type){
 
   var col = type == 0 ? "interior": "heater"
-
-  this.mesh_interior.material.color.setHex(getColor(col));
-
+  if(heater_object){
+    if(type==1){
+      this.remove(this.mesh_interior);
+      this.mesh_interior = heater_object.clone();
+      this.add(this.mesh_interior);
+    }else {
+      this.remove(this.mesh_interior);
+      this.mesh_interior = this.mesh_interior_clad;
+      this.add(this.mesh_interior)
+    }
+  }
 }

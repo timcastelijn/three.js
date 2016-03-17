@@ -64,6 +64,10 @@ function CabineGrid(width, height, depth){
     this.walls[i] = wall;
   }
 
+  var json_loader = new THREE.JSONLoader( );
+  json_loader.load( "models/ir-module.js", modelLoadedCallback);
+
+
   // add ceiling
   this.ceiling  = new CeilingPlaceHolder(width, depth, CEILING_THICKNESS);
   this.ceiling.position.set(0,this.height,0);
@@ -165,6 +169,14 @@ CabineGrid.prototype.setDepth = function(value){
 
 // set width of the complete cabine
 CabineGrid.prototype.setHeight=function(value){
+
+}
+
+// set width of the complete cabine
+CabineGrid.prototype.placeHeaters=function(){
+  for(var i=1; i<this.walls.length; i++){
+    this.walls[i].updateConfig();
+  }
 
 }
 

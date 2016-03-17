@@ -25,6 +25,7 @@
 		<script src="cell.js"></script>
 		<script src="module_class.js"></script>
 		<script src="browser_detector.js"></script>
+		<script src="json_loader.js"></script>
 
 		<script src="../examples/js/controls/TrackballControls.js"></script>
 		<script src="../examples/js/controls/OrbitControls.js"></script>
@@ -41,7 +42,7 @@
 
 			var container, stats;
 			var camera, controls, scene, renderer;
-			var objects = [], plane;
+			var objects = [], plane, heater_object;
 
 			var document_edited = false;
 			var length, width, height, grid;
@@ -110,9 +111,8 @@
 				scene.add( light );
 
 				//create grid
-				grid = new CabineGrid(1.2, 1.8, 1.4);
+				grid = new CabineGrid(1.2, 2.0, 1.4);
 				scene.add(grid);
-
 
 				//create objects
 				var geometry = new THREE.BoxGeometry( 40, 40, 40 );
