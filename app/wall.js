@@ -60,6 +60,7 @@ function Wall( length, height, flip, door, index){
   this.height=height;
   this.name = "wall_instance"
   this.index = index
+  this.flip = flip
 
   // create wall
   this.rest = length % MODULE_WIDTH;
@@ -78,7 +79,13 @@ function Wall( length, height, flip, door, index){
 
 
 
-  this.rest_col = this.addCol(this.n, this.rest, false);
+  this.rest_col = this.addCol(this.n, this.rest);
+
+  if(this.index ==2){
+    console.log(this.rest);
+
+    console.log(this.cells[this.n][1].width);
+  }
 
   this.updateConfig();
 
@@ -97,6 +104,8 @@ Wall.prototype.setLength = function(value){
   var temp_n = this.n
   this.rest = this.length % MODULE_WIDTH;
   this.n = (this.length - this.rest) / MODULE_WIDTH;
+
+  if (this.rest!=0) this.setRestColSize(this.rest);
 
   if (this.n > temp_n){
     // increase number of modules
@@ -117,7 +126,6 @@ Wall.prototype.setLength = function(value){
   }else {
       // do nothing
   }
-  if (this.rest!=0) this.setRestColSize(this.rest);
   //update rest module size
 
 

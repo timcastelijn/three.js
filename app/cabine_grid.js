@@ -2,7 +2,7 @@
 
 // define constants
 var MODULE_WIDTH = 0.256; //m
-var MODULE_HEIGHT = 0.600; //m
+var MODULE_HEIGHT = [0.450, 0.890]; //m
 var MODULE_THICKNESS = 0.1; //m
 var FLOOR_THICKNESS = 0.1;
 var CEILING_THICKNESS = 0.1;
@@ -37,6 +37,10 @@ function CabineGrid(width, height, depth){
 	this.width = width - 2 * MODULE_THICKNESS;
 	this.depth = depth - 2 * MODULE_THICKNESS;
   this.height = height - FLOOR_THICKNESS - CEILING_THICKNESS;
+
+  this.module_height = MODULE_HEIGHT;
+  this.module_height[2] = this.height - this.module_height[1] - this.module_height[0];
+
 
   this.minimum_size = 3*MODULE_WIDTH + 2* MODULE_THICKNESS;
 
@@ -80,6 +84,7 @@ function CabineGrid(width, height, depth){
 
   //add becnch
   this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, this.height/3);
+  this.bench.mesh_object.material.color.setHex( getColor("interior") );
   this.bench.position.set(0, 0, -(this.depth)/2 + MODULE_WIDTH );
   this.add(this.bench);
 

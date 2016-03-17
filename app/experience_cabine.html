@@ -14,7 +14,7 @@
 	<body>
 		<!-- <div class="container" > -->
 		<div id="accordion">
-				breedte<input class="slider_100" type="range" value="120" min="10" max="300" oninput="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				breedte<input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 				hoogte<input class="slider_100" type="range" value="180" min="10" max="300" oninput="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 		</div>
@@ -46,24 +46,6 @@
 
 			var document_edited = false;
 			var length, width, height, grid;
-
-			// set config
-			var config = {
-				// wall 1 contains door
-				// x = width, y= height, z= depth
-				dimensions:[1.2, 1.4, 1.8],
-				options:{
-					vaporizer:true,
-					aromatherapy:false,
-					backrest:false
-				},
-				walls:[
-					{'14':'door'},
-					{'24':'heater','34':"vaporizer"},
-					{'21':'heater', '22':'heater','23':'heater','24':'heater'},
-					{'21':'heater'}
-				],
-			}
 
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2(),
@@ -111,13 +93,18 @@
 				scene.add( light );
 
 				//create grid
-				grid = new CabineGrid(1.2, 2.0, 1.4);
+				grid = new CabineGrid(1.24, 2.0, 1.4);
 				scene.add(grid);
 
 				//create objects
-				var geometry = new THREE.BoxGeometry( 40, 40, 40 );
+				var geometry = new THREE.BoxGeometry( 10, 10, 10 );
 				var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-				//scene.add( object );
+				scene.add( object );
+
+				var geometry = new THREE.BoxGeometry( 10, 10, 10 );
+				var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+
+				scene.add( object );
 				//objects.push( object );
 
 				//create intersection plane
