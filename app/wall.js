@@ -18,11 +18,11 @@ HEATER_CONFIG = [
     [],
     [],
     [],
-    [0,0,1],
-    [0,0,0,1],
-    [0,0,0,0,1],
-    [0,0,0,0,0,1],
-    [0,0,0,0,0,0,1],
+    [1,0,0],
+    [1,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0,0],
+    [1,0,0,0,0,0,0],
   ],
   [
     // BACK
@@ -52,40 +52,39 @@ HEATER_CONFIG = [
 
 
 //wall class
-function Wall( length, height, flip, door, index){
+function Wall( length, height, index, properties){
   // inherit from Object3D class
   THREE.Object3D.call( this );
 
-  this.length=length;
-  this.height=height;
-  this.name = "wall_instance"
-  this.index = index
-  this.flip = flip
+  this.length   = length;
+  this.height   = height;
+  this.name     = "wall_instance"
+  this.visible  = properties.visible
+  this.index    = index
+  this.flip     = properties.flip
+  this.door     = properties.door
 
   // create wall
   this.rest = length % MODULE_WIDTH;
   this.n = (length - this.rest) / MODULE_WIDTH;
 
+  this.base = new THREE.Object3D()
+  this.add(this.base);
+  this.base.position.set(-this.length/2,0,0);
+
+
   this.cells = []
 
-  this.first_col = door? 3: 0;
+  this.first_col = this.door? 3: 0;
 
   if(this.first_col > this.n ) alert("door is too wide for initial startup condition");
+
 
   for(var i = this.first_col; i< this.n; i++){
     // create placeholder box
     this.addCol(i, MODULE_WIDTH);
   }
-
-
-
   this.rest_col = this.addCol(this.n, this.rest);
-
-  if(this.index ==2){
-    console.log(this.rest);
-
-    console.log(this.cells[this.n][1].width);
-  }
 
   this.updateConfig();
 
@@ -99,6 +98,9 @@ Wall.prototype.constructor = Wall;
 Wall.prototype.setLength = function(value){
 
   this.length = value;
+
+  //update the base position
+  this.base.position.set(-this.length/2,0,0);
 
   //compare previous config with new config
   var temp_n = this.n
@@ -119,17 +121,12 @@ Wall.prototype.setLength = function(value){
     // decrease numnber of modules
     this.removeCol(this.n)
     this.setRestColPos(this.n)
-
     this.updateConfig();
-
-
   }else {
       // do nothing
   }
-  //update rest module size
 
-
-  this.corner_mesh.position.x = value+MODULE_THICKNESS/2
+  this.corner_mesh.position.x = value;
 }
 
 
@@ -145,6 +142,7 @@ Wall.prototype.updateConfig = function(){
 
 }
 
+
 Wall.prototype.addCol = function(n, width){
 
   var cell_count = 3;
@@ -158,10 +156,10 @@ Wall.prototype.addCol = function(n, width){
     var size      = [width, cell_height, MODULE_THICKNESS];
 
 
-    this.cells[n][i] = new Cell(size);
+    this.cells[n][i] = new Cell(size, this.flip);
     this.cells[n][i].position.set(n*MODULE_WIDTH, cell_height * i, 0)
 
-    this.add( this.cells[n][i] );
+    this.base.add( this.cells[n][i] );
   }
   // create placeholder box
 
@@ -185,7 +183,7 @@ Wall.prototype.removeCol = function(n){
 
   // remove geometry
   for(var i=0; i< this.rest_col.length; i++){
-    this.remove( this.cells[n][i] );
+    this.base.remove( this.cells[n][i] );
   }
   // remove data
   this.cells[n] = null;
@@ -196,6 +194,10 @@ Wall.prototype.addCorner = function(){
   // create corner box
   var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, this.height, MODULE_THICKNESS );
   this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
-  this.corner_mesh.position.set(this.length + MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2);
-  this.add( this.corner_mesh );
+
+  var flip_factor = this.flip? -1: 1;
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/2, this.height/2, flip_factor * MODULE_THICKNESS/2 ));
+
+  this.corner_mesh.position.set(this.length , 0, 0);
+  this.base.add( this.corner_mesh );
 }

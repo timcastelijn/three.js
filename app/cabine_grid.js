@@ -53,14 +53,14 @@ function CabineGrid(width, height, depth){
     item = items[i];
 
     //create new wall item
-    var wall = new Wall( item.length, this.height, item.flip, item.door, i);
+    var wall = new Wall( item.length, this.height, i, item);
 
     //set wall properties
-    wall.position.set(item.position[0], 0, item.position[2]);
-    // wall.position.set(0, 0, 0);
-    wall.rotation.set(0,item.orientation,0);
+    item.offset = item.flip? Math.PI: 0;
+    wall.rotation.set(0,item.orientation + item.offset ,0);
 
-    wall.visible = item.visible
+    wall.position.set(item.position[0], 0, item.position[2]);
+
     //add wall geometry to Cabinegrid
     this.add(wall);
 
@@ -95,10 +95,10 @@ CabineGrid.prototype.constructor = CabineGrid;
 CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
-  items[0] = {position:[-length/2,0,depth/2], orientation:0, length:length, visible:true, door:true};
-  items[1] = {position:[length/2,0,depth/2], orientation:0.5 * Math.PI, length:depth, visible:true};
-  items[2] = {position:[length/2,0,-depth/2], orientation:1 * Math.PI, length:length,visible:true};
-  items[3] = {position:[-length/2,0,-depth/2], orientation:1.5 * Math.PI, length:depth, visible:true};
+  items[0] = {position:[0,0,depth/2], orientation:0,              length:length,  visible:true, door:true};
+  items[1] = {position:[length/2,0,0], orientation:0.5 * Math.PI, length:depth,   visible:true, flip:true};
+  items[2] = {position:[0,0,-depth/2], orientation:1 * Math.PI,   length:length,  visible:true, flip:true};
+  items[3] = {position:[-length/2,0,0], orientation:1.5 * Math.PI,length:depth,   visible:true};
 
   return items;
 }
@@ -141,9 +141,7 @@ CabineGrid.prototype.setWidth=function(value){
   this.floor.setWidth(value);
   this.bench.setWidth(this.width);
 
-  this.walls[0].position.x = -this.width/2;
   this.walls[1].position.x = this.width/2;
-  this.walls[2].position.x = this.width/2;
   this.walls[3].position.x = -this.width/2;
 
   this.walls[0].setLength(this.width);
@@ -164,9 +162,7 @@ CabineGrid.prototype.setDepth = function(value){
 
 
   this.walls[0].position.z = this.depth/2;
-  this.walls[1].position.z = this.depth/2;
   this.walls[2].position.z = -this.depth/2;
-  this.walls[3].position.z = -this.depth/2;
 
   this.walls[1].setLength(this.depth);
   this.walls[3].setLength(this.depth);
