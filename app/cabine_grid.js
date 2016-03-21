@@ -58,6 +58,7 @@ function CabineGrid(width, height, depth){
     //set wall properties
     item.offset = item.flip? Math.PI: 0;
     wall.rotation.set(0,item.orientation + item.offset ,0);
+    wall.rotation.set(0,item.orientation ,0);
 
     wall.position.set(item.position[0], 0, item.position[2]);
 
@@ -133,7 +134,6 @@ CabineGrid.prototype.setWidth=function(value){
   // test value so it doesn't exceed minimum
   value = (value < this.minimum_size)? this.minimum_size: value;
 
-  console.log('width:' + value);
   this.width = value - 2 * MODULE_THICKNESS;
 
 

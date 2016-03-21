@@ -41,9 +41,10 @@ Cell.prototype.constructor = Cell;
 
 Cell.prototype.setWidth = function(value){
 
+  value = value >0.005? value: 0.005
 
-  var factor = value / this.width;
-  var factor2 = (value- 0.005)  / this.interior_width;
+  var factor = value / this.width || 0.0000001;
+  var factor2 = (value- 0.005)  / this.interior_width || 0.0000001;
 
   this.mesh_interior.scale.x = factor2;
   this.mesh_exterior.scale.x = factor;
