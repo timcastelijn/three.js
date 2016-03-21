@@ -72,7 +72,7 @@ var browser_detector = {
       }
     }
 
-    // return true if browser is OK
+    // return false if browser is not OK, add message
     browser_detector.getCompatible();
     return false;
   }
