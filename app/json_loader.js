@@ -38,6 +38,6 @@ var modelLoadedCallback = function ( geometry, materials ) {
 
   heater_object = new THREE.Mesh( geometry, material );
 
-  grid.placeHeaters();
+  cabine.placeHeaters();
 
 }
