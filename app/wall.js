@@ -61,7 +61,7 @@ function Wall( length, height, index, properties){
   this.name     = "wall_instance"
   this.visible  = properties.visible
   this.index    = index
-  this.flip     = properties.flip
+  this.flip     = properties.flip || 1
   this.door     = properties.door
   this.cells    = []
 
@@ -77,13 +77,12 @@ function Wall( length, height, index, properties){
   // var axisHelper = new THREE.AxisHelper( 5 );
   // this.add( axisHelper );
 
-  var flip_factor = this.flip? 1: -1;
 
   // create wall base-pivot
   this.base = new THREE.Object3D()
   this.add(this.base);
-  this.base.position.set(flip_factor * this.length/2,0,0);
-  if (this.flip) this.base.rotation.set(0,Math.PI,0);
+  this.base.position.set(-this.flip * this.length/2,0,0);
+  if (this.flip == -1) this.base.rotation.set(0,Math.PI,0);
 
   // set first col to make door-void
   this.first_col = this.door? 3: 0;
@@ -109,8 +108,7 @@ Wall.prototype.setLength = function(value){
   this.length = value;
 
   //update the base position
-  var flip_factor = this.flip? 1: -1;
-  this.base.position.set(flip_factor * this.length/2,0,0);
+  this.base.position.set(- this.flip * this.length/2,0,0);
 
   //compare previous config with new config
   var temp_n = this.n

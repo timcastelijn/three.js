@@ -8,6 +8,7 @@ var MODULE_FIXED_HEIGHT = [0.450, 0.890]; //m
 var MODULE_THICKNESS    = 0.1; //m
 var FLOOR_THICKNESS     = 0.1;
 var CEILING_THICKNESS   = 0.1;
+var CELL_CREASE         = 0.005; //m
 var DEBUG               = false;
 
 var getColor = function(category){
@@ -52,8 +53,7 @@ function CabineGrid(width, height, depth){
   var items = this.getWallPositions(this.width, this.depth);
 
   for(var i=0; i<items.length ;i++) {
-    item = items[i];
-
+    var item = items[i]
     //create new wall item
     var wall = new Wall( item.length, this.height, i, item);
 
@@ -98,8 +98,8 @@ CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
   items[0] = {position:[0,0,depth/2], orientation:0,              length:length,  visible:true, door:true};
-  items[1] = {position:[length/2,0,0], orientation:0.5 * Math.PI, length:depth,   visible:true, flip:true};
-  items[2] = {position:[0,0,-depth/2], orientation:1 * Math.PI,   length:length,  visible:true, flip:true};
+  items[1] = {position:[length/2,0,0], orientation:0.5 * Math.PI, length:depth,   visible:true, flip:-1};
+  items[2] = {position:[0,0,-depth/2], orientation:1 * Math.PI,   length:length,  visible:true, flip:-1};
   items[3] = {position:[-length/2,0,0], orientation:1.5 * Math.PI,length:depth,   visible:true};
 
   return items;
