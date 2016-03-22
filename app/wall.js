@@ -64,10 +64,16 @@ function Wall( length, height, index, properties){
   this.flip     = properties.flip
   this.door     = properties.door
   this.cells = []
+  this.top_cells = []
 
-  // create wall
+
+  // calculate width division
   this.rest = length % MODULE_WIDTH;
   this.n = (length - this.rest) / MODULE_WIDTH;
+
+  // calculate height division
+  this.rest_height = this.height % MODULE_HEIGHT;
+  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
 
   // var axisHelper = new THREE.AxisHelper( 5 );
   // this.add( axisHelper );
@@ -113,27 +119,25 @@ Wall.prototype.setLength = function(value){
   var temp_n = this.n
   this.rest = this.length % MODULE_WIDTH;
   this.n = (this.length - this.rest) / MODULE_WIDTH;
+  var diff = this.n-temp_n
+
 
   this.setRestColSize(this.rest);
 
   if (this.n > temp_n){
-    var diff = this.n-temp_n
+    // increase number of modules
 
     for(var i =0; i< diff; i++){
       this.addCol(temp_n + i, MODULE_WIDTH);
     }
 
-    // increase number of modules
     this.setRestColPos(this.n)
-
     this.updateConfig();
 
   }else if (this.n < temp_n) {
-
-    var diff = temp_n - this.n;
-
     // decrease numnber of modules
-    for(var i =0; i< diff; i++){
+
+    for(var i =0; i< (-diff); i++){
       this.removeCol(temp_n -1 -  i, MODULE_WIDTH);
     }
 
@@ -165,31 +169,56 @@ Wall.prototype.updateConfig = function(){
 
 Wall.prototype.addCol = function(n, width){
 
-  var cell_count = 3;
-  var cell_height = this.height/3;
 
   this.cells[n] = [];
 
+  //ADDCELLS
+  for(var i =0; i<this.n_height+1; i++){
 
-  for(var i =0; i<3; i++){
+    var cell_height = (i<this.n_height)? MODULE_HEIGHT: this.rest_height;
 
-    var size      = [width, cell_height, MODULE_THICKNESS];
-
-
+    var size    = [width, cell_height, MODULE_THICKNESS];
     this.cells[n][i] = new Cell(size, this.flip);
-    this.cells[n][i].position.set(n*MODULE_WIDTH, cell_height * i, 0)
+    this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0)
 
     this.base.add( this.cells[n][i] );
   }
-  // create placeholder box
+
+  //add top cells to array
+  this.top_cells.push(this.cells[n][i-1]);
+
 
   return this.cells[n];
+}
+
+Wall.prototype.setHeight = function(value){
+  this.height = value;
+
+
+  // calculate height division
+  var temp_n_height = this.n_height;
+  this.rest_height = this.height % MODULE_HEIGHT;
+  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
+
+  this.setRestRowSize(this.rest_height);
+
+  if (this.n_height > temp_n_height){
+    this.addRow(temp_n_height)
+    this.setRestRowPos(this.n_height)
+  }else if (this.n_height < temp_n_height) {
+    this.removeRow(this.n_height)
+    this.setRestRowPos(this.n_height)
+  }
+
+  var factor = this.height / this.corner_mesh.geometry.parameters.height;
+  this.corner_mesh.scale.y = factor
+
 }
 
 Wall.prototype.setRestColPos = function(n){
 
   for(var i=0; i< this.rest_col.length; i++){
-    this.rest_col[i].position.set(n* MODULE_WIDTH, this.height / 3 * i, 0);
+    this.rest_col[i].position.x = n* MODULE_WIDTH;
   }
 }
 
@@ -199,16 +228,75 @@ Wall.prototype.setRestColSize = function(rest_length){
     this.rest_col[i].setWidth(rest_length);
   }
 }
-
 Wall.prototype.removeCol = function(n){
 
-  // remove geometry from scene
   for(var i=0; i< this.rest_col.length; i++){
+    //iterate over cells in this column, including 'rest_height' cell
+
+    // remove geometry from scene
     this.base.remove( this.cells[n][i] );
   }
   // remove data
   this.cells[n] = null;
 }
+
+Wall.prototype.setRestRowPos = function(n){
+  for(var i=0; i< this.top_cells.length; i++){
+    if(this.top_cells[i]){
+      this.top_cells[i].position.y = n * MODULE_HEIGHT;
+    }
+  }
+}
+
+Wall.prototype.setRestRowSize = function(rest_height){
+  for(var i=0; i< this.top_cells.length; i++){
+    if(this.top_cells[i]){
+      this.top_cells[i].setHeight(rest_height);
+    }
+  }
+}
+
+Wall.prototype.addRow = function(i){
+
+  var count=0
+  for(var n=0; n<this.n+1; n++){
+  //iterate over number of full cells + 1
+
+    if(this.cells[n]){
+      //column does exist
+      count++;
+
+      // get width corresponding to column
+      var width = (n<this.n)? MODULE_WIDTH: this.rest;
+
+      //create a new cell
+      var size    = [width, MODULE_HEIGHT, MODULE_THICKNESS];
+      this.cells[n][i] = new Cell(size, this.flip);
+      this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0)
+
+      // add cell to 'base' in scene
+      this.base.add( this.cells[n][i] );
+    }
+  }
+  console.log(count);
+}
+
+Wall.prototype.removeRow = function(i){
+
+  for(var n=0; n<this.n+1; n++){
+    //iterate over number of full cells + 1
+
+    if(this.cells[n]){
+      // column does exist
+
+      //remove the cell
+      this.base.remove(this.cells[n][i])
+      this.cells[n][i] = null;
+    }
+  }
+}
+
+
 
 Wall.prototype.addCorner = function(){
 

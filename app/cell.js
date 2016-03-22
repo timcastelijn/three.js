@@ -3,9 +3,10 @@ function Cell(size, flip){
   THREE.Object3D.call( this );
 
 
-  this.width = size[0];
+  this.width  = size[0];
+  this.height = size[1];
+  this.flip   = flip;
   this.interior_width = size[0]-0.005
-  this.flip = flip;
 
   var face_thickness = 0.5 * size[2];
   var flip_factor = 1
@@ -49,6 +50,14 @@ Cell.prototype.setWidth = function(value){
   this.mesh_interior.scale.x = factor2;
   this.mesh_exterior.scale.x = factor;
 
+}
+
+Cell.prototype.setHeight = function(value){
+
+  var factor = value / this.height || 0.0000001;
+
+  this.mesh_interior.scale.y = factor;
+  this.mesh_exterior.scale.y = factor;
 }
 
 Cell.prototype.setType = function(type){

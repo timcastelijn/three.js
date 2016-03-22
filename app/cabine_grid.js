@@ -1,12 +1,14 @@
 
 
 // define constants
-var MODULE_WIDTH = 0.256; //m
-var MODULE_HEIGHT = [0.450, 0.890]; //m
-var MODULE_THICKNESS = 0.1; //m
-var FLOOR_THICKNESS = 0.1;
-var CEILING_THICKNESS = 0.1;
-var DEBUG = false;
+var MODULE_WIDTH        = 0.256; //m
+var MODULE_HEIGHT       = 0.67; //m
+var MODULE_FIXED_HEIGHT = [0.450, 0.890]; //m
+// var MODULE_FIXED_HEIGHT = [0.670, 0.670]; //m
+var MODULE_THICKNESS    = 0.1; //m
+var FLOOR_THICKNESS     = 0.1;
+var CEILING_THICKNESS   = 0.1;
+var DEBUG               = false;
 
 var getColor = function(category){
   if(DEBUG){
@@ -42,8 +44,8 @@ function CabineGrid(width, height, depth){
   this.module_height[2] = this.height - this.module_height[1] - this.module_height[0];
 
 
-  this.minimum_size = 3*MODULE_WIDTH + 2* MODULE_THICKNESS;
-
+  this.minimum_size   = 3*MODULE_WIDTH + 2* MODULE_THICKNESS;
+  this.minimum_height = MODULE_FIXED_HEIGHT[1] + MODULE_FIXED_HEIGHT[0] + FLOOR_THICKNESS + CEILING_THICKNESS
   this.walls = [];
 
   //initialize walls
@@ -70,8 +72,7 @@ function CabineGrid(width, height, depth){
   }
 
   var json_loader = new THREE.JSONLoader( );
-  json_loader.load( "models/ir-module.js", modelLoadedCallback);
-
+  json_loader.load( "models/ir-module.json", modelLoadedCallback);
 
   // add ceiling
   this.ceiling  = new CeilingPlaceHolder(width, depth, CEILING_THICKNESS);
@@ -84,7 +85,7 @@ function CabineGrid(width, height, depth){
   this.add(this.floor);
 
   //add becnch
-  this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, this.height/3);
+  this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, MODULE_FIXED_HEIGHT[0]);
   this.bench.mesh_object.material.color.setHex( getColor("interior") );
   this.bench.position.set(0, 0, -(this.depth)/2 + MODULE_WIDTH );
   this.add(this.bench);
@@ -117,7 +118,6 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       this.setWidth(value);
       break;
     case 1:
-      this.height = value  - CEILING_THICKNESS - FLOOR_THICKNESS;
       this.setHeight(value);
       break;
     case 2:
@@ -171,6 +171,16 @@ CabineGrid.prototype.setDepth = function(value){
 // set width of the complete cabine
 CabineGrid.prototype.setHeight=function(value){
 
+  value = (value < this.minimum_height)? this.minimum_height: value;
+
+  this.height = value - FLOOR_THICKNESS - CEILING_THICKNESS;
+
+  for(var i =0; i<this.walls.length; i++){
+    this.walls[i].setHeight(this.height)
+  }
+
+  this.ceiling.position.y = this.height
+
 }
 
 // set width of the complete cabine
@@ -178,7 +188,6 @@ CabineGrid.prototype.placeHeaters=function(){
   for(var i=1; i<this.walls.length; i++){
     this.walls[i].updateConfig();
   }
-
 }
 
 // var items;
