@@ -14,9 +14,9 @@
 	<body>
 		<!-- <div class="container" > -->
 		<div id="accordion">
-				breedte<input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
-				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
-				hoogte<input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				breedte<input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value)" onchange="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" onchange="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				hoogte<input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value)" onchange="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 		</div>
 
 		<script src="../build/three.min.js"></script>
@@ -41,10 +41,10 @@
 
 			var container, stats;
 			var camera, controls, scene, renderer;
-			var objects = [], plane, heater_object;
+			var objects = [], plane, heater_object, cabine;
 
 			var document_edited = false;
-			var length, width, height, grid;
+			var length, width, height;
 
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2(),
@@ -57,22 +57,19 @@
 			}
 
 			function init() {
-
+				// create renderer container
 				container = document.createElement( 'div' );
 				container.setAttribute( 'id', "renderer" );
-				container.setAttribute( 'ondrop', "drop(event)" );
-				container.setAttribute( 'ondragover', "allowDrop(event)" );
 				container.setAttribute( 'position', "absolute" );
 				container.setAttribute( 'top', "0px" );
 				container.setAttribute( 'left', "0px" );
 				container.setAttribute( 'z-index', "-1" );
 				document.body.appendChild( container );
 
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
-				camera.position.z = 5;
-				camera.position.y = 3;
-
 				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
+    		camera.position.set( 0, 1.5, 2.5 );
 
 				scene.add( new THREE.AmbientLight( 0x707070 ) );
 
@@ -91,15 +88,9 @@
 
 				scene.add( light );
 
-				//create grid
-				grid = new CabineGrid(1.24, 2.0, 1.4);
-				scene.add(grid);
-
-				//create objects
-				var geometry = new THREE.BoxGeometry( 10, 10, 10 );
-				var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-				// scene.add( object );
-				//objects.push( object );
+				//create cabine
+				cabine = new CabineGrid(1.24, 2.0, 1.4);
+				scene.add(cabine);
 
 				//create intersection plane
 				plane = new THREE.Mesh(
@@ -111,26 +102,25 @@
 				plane.visible = false;
 				scene.add( plane );
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setClearColor( 0xf0f0f0 );
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
+				renderer.setClearColor( 0x000000, 0);
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.sortObjects = false;
-
 				renderer.shadowMap.enabled = true;
 				renderer.shadowMap.type = THREE.PCFShadowMap;
 
+				// add renderer to container
 				container.appendChild( renderer.domElement );
 
+				// create controls
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
 				//controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
 				controls.enableDamping = true;
 				controls.dampingFactor = 0.25;
 				controls.enableZoom = true;
 				controls.rotateSpeed = 0.25;
-				//camera.up.set( 0, 0, 1 );
-
-
+				controls.target = new THREE.Vector3(0,0.8,0)
 
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
@@ -177,7 +167,6 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-
 			}
 
 			function onDocumentMouseDown( event ) {
@@ -223,10 +212,10 @@
 
 			//apply dimension change to grid
 			function applyDim(dim_index, value){
-				if(grid){
+				if(cabine){
 					value = value/100;
 					// 0:width 1:height 2:length
-					grid.setDim(dim_index, value)
+					cabine.setDim(dim_index, value)
 				}
 			}
 
