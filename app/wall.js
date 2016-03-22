@@ -91,15 +91,13 @@ function Wall( length, height, index, properties){
 
   if(this.first_col > this.n ) alert("door is too wide for initial startup condition");
 
-
-  for(var i = this.first_col; i< this.n; i++){
-    // create placeholder box
-    this.addCol(i, MODULE_WIDTH);
+  // add columns
+  for(var i = this.first_col; i< this.n + 1; i++){
+    // iterate over full columns +1
+    this.addCol(i);
   }
-  this.rest_col = this.addCol(this.n, this.rest);
 
   this.updateConfig();
-
 
   this.addCorner();
 }
@@ -127,7 +125,7 @@ Wall.prototype.setLength = function(value){
     // increase number of modules
 
     for(var i =0; i< diff; i++){
-      this.addCol(temp_n + i, MODULE_WIDTH);
+      this.addCol(temp_n + i);
     }
 
     this.setRestColPos(this.n)
@@ -137,7 +135,7 @@ Wall.prototype.setLength = function(value){
     // decrease numnber of modules
 
     for(var i =0; i< (-diff); i++){
-      this.removeCol(temp_n -1 -  i, MODULE_WIDTH);
+      this.removeCol(temp_n -1 -  i);
     }
 
     this.setRestColPos(this.n)
@@ -167,7 +165,7 @@ Wall.prototype.updateConfig = function(){
 }
 
 
-Wall.prototype.addCol = function(n, width){
+Wall.prototype.addCol = function(n){
 
   this.cells[this.n] = this.cells[n]
 
@@ -237,7 +235,7 @@ Wall.prototype.removeCol = function(n){
 
 
 
-  for(var i=0; i< this.rest_col.length; i++){
+  for(var i=0; i< this.n_height + 1; i++){
     //iterate over cells in this column, including 'rest_height' cell
 
     // remove geometry from scene
