@@ -63,8 +63,7 @@ function Wall( length, height, index, properties){
   this.index    = index
   this.flip     = properties.flip
   this.door     = properties.door
-  this.cells = []
-  this.top_cells = []
+  this.cells    = []
 
 
   // calculate width division
@@ -119,8 +118,6 @@ Wall.prototype.setLength = function(value){
   this.n = (this.length - this.rest) / MODULE_WIDTH;
   var diff = this.n-temp_n
 
-
-
   if (this.n > temp_n){
     // increase number of modules
 
@@ -128,7 +125,7 @@ Wall.prototype.setLength = function(value){
       this.addCol(temp_n + i);
     }
 
-    this.setRestColPos(this.n)
+    this.setRestColPos()
     this.updateConfig();
 
   }else if (this.n < temp_n) {
@@ -138,7 +135,7 @@ Wall.prototype.setLength = function(value){
       this.removeCol(temp_n -1 -  i);
     }
 
-    this.setRestColPos(this.n)
+    this.setRestColPos()
     this.updateConfig();
   }
 
@@ -167,8 +164,10 @@ Wall.prototype.updateConfig = function(){
 
 Wall.prototype.addCol = function(n){
 
-  this.cells[this.n] = this.cells[n]
+  // copy previous rest coll to new coll
+  this.cells[n+1] = this.cells[n]
 
+  // create new coll
   this.cells[n] = [];
 
 
@@ -185,12 +184,6 @@ Wall.prototype.addCol = function(n){
 
     this.base.add( this.cells[n][i] );
   }
-
-  //add top cells to array
-  this.top_cells.push(this.cells[n][i-1]);
-
-
-  return this.cells[n];
 }
 
 Wall.prototype.setHeight = function(value){
@@ -201,14 +194,19 @@ Wall.prototype.setHeight = function(value){
   var temp_n_height = this.n_height;
   this.rest_height = this.height % MODULE_HEIGHT;
   this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
-
+  var diff = this.n_height-temp_n_height
 
   if (this.n_height > temp_n_height){
-    this.addRow(temp_n_height)
-    this.setRestRowPos(this.n_height)
+    for(var i=0; i < diff; i++){
+      this.addRow(temp_n_height+i)
+    }
+    this.setRestRowPos()
   }else if (this.n_height < temp_n_height) {
-    this.removeRow(this.n_height)
-    this.setRestRowPos(this.n_height)
+    for(var i=0; i < (-diff); i++){
+      // this.removeRow(this.n_height)
+      this.removeRow(temp_n_height-1-i)
+    }
+    this.setRestRowPos()
   }
 
   this.setRestRowSize(this.rest_height);
@@ -247,10 +245,12 @@ Wall.prototype.removeCol = function(n){
 
 }
 
-Wall.prototype.setRestRowPos = function(n){
-  for(var i=0; i< this.top_cells.length; i++){
-    if(this.top_cells[i]){
-      this.top_cells[i].position.y = n * MODULE_HEIGHT;
+Wall.prototype.setRestRowPos = function(){
+  var i = this.n_height
+
+  for(var n=0; n< (this.n +1); n++){
+    if(this.cells[n]){
+      this.cells[n][i].position.y = this.n_height * MODULE_HEIGHT;
     }
   }
 }
