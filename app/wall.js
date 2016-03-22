@@ -122,7 +122,6 @@ Wall.prototype.setLength = function(value){
   var diff = this.n-temp_n
 
 
-  this.setRestColSize(this.rest);
 
   if (this.n > temp_n){
     // increase number of modules
@@ -143,9 +142,10 @@ Wall.prototype.setLength = function(value){
 
     this.setRestColPos(this.n)
     this.updateConfig();
-  }else {
-      // do nothing
   }
+
+  this.setRestColSize(this.rest);
+
 
   this.corner_mesh.position.x = value/2;
 }
@@ -169,17 +169,21 @@ Wall.prototype.updateConfig = function(){
 
 Wall.prototype.addCol = function(n, width){
 
+  this.cells[this.n] = this.cells[n]
 
   this.cells[n] = [];
+
 
   //ADDCELLS
   for(var i =0; i<this.n_height+1; i++){
 
     var cell_height = (i<this.n_height)? MODULE_HEIGHT: this.rest_height;
+    var width       = (n<this.n)? MODULE_WIDTH: this.rest
 
     var size    = [width, cell_height, MODULE_THICKNESS];
     this.cells[n][i] = new Cell(size, this.flip);
     this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0)
+
 
     this.base.add( this.cells[n][i] );
   }
@@ -200,7 +204,6 @@ Wall.prototype.setHeight = function(value){
   this.rest_height = this.height % MODULE_HEIGHT;
   this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
 
-  this.setRestRowSize(this.rest_height);
 
   if (this.n_height > temp_n_height){
     this.addRow(temp_n_height)
@@ -210,25 +213,29 @@ Wall.prototype.setHeight = function(value){
     this.setRestRowPos(this.n_height)
   }
 
+  this.setRestRowSize(this.rest_height);
+
+
   var factor = this.height / this.corner_mesh.geometry.parameters.height;
   this.corner_mesh.scale.y = factor
 
 }
 
-Wall.prototype.setRestColPos = function(n){
-
-  for(var i=0; i< this.rest_col.length; i++){
-    this.rest_col[i].position.x = n* MODULE_WIDTH;
+Wall.prototype.setRestColPos = function(){
+  for(var i=0; i< this.n_height + 1; i++){
+    this.cells[this.n][i].position.x = this.n* MODULE_WIDTH;
   }
 }
 
 Wall.prototype.setRestColSize = function(rest_length){
 
-  for(var i=0; i< this.rest_col.length; i++){
-    this.rest_col[i].setWidth(rest_length);
+  for(var i=0; i< this.n_height + 1; i++){
+    this.cells[this.n][i].setWidth(rest_length);
   }
 }
 Wall.prototype.removeCol = function(n){
+
+
 
   for(var i=0; i< this.rest_col.length; i++){
     //iterate over cells in this column, including 'rest_height' cell
@@ -237,7 +244,9 @@ Wall.prototype.removeCol = function(n){
     this.base.remove( this.cells[n][i] );
   }
   // remove data
-  this.cells[n] = null;
+  this.cells[n] = this.cells[n+1];
+  this.cells[n+1] = null
+
 }
 
 Wall.prototype.setRestRowPos = function(n){
@@ -249,22 +258,26 @@ Wall.prototype.setRestRowPos = function(n){
 }
 
 Wall.prototype.setRestRowSize = function(rest_height){
-  for(var i=0; i< this.top_cells.length; i++){
-    if(this.top_cells[i]){
-      this.top_cells[i].setHeight(rest_height);
+
+  var i = this.n_height
+
+  for(var n=0; n< (this.n +1); n++){
+    if(this.cells[n]){
+      this.cells[n][i].setHeight(rest_height);
     }
   }
 }
 
 Wall.prototype.addRow = function(i){
 
-  var count=0
   for(var n=0; n<this.n+1; n++){
   //iterate over number of full cells + 1
 
     if(this.cells[n]){
-      //column does exist
-      count++;
+      //column exists
+
+      // copy rest cell to next index
+      this.cells[n][i+1] = this.cells[n][i]
 
       // get width corresponding to column
       var width = (n<this.n)? MODULE_WIDTH: this.rest;
@@ -276,9 +289,9 @@ Wall.prototype.addRow = function(i){
 
       // add cell to 'base' in scene
       this.base.add( this.cells[n][i] );
+
     }
   }
-  console.log(count);
 }
 
 Wall.prototype.removeRow = function(i){
@@ -291,7 +304,8 @@ Wall.prototype.removeRow = function(i){
 
       //remove the cell
       this.base.remove(this.cells[n][i])
-      this.cells[n][i] = null;
+      this.cells[n][i] = this.cells[n][i+1];
+      this.cells[n][i+1] = null
     }
   }
 }
