@@ -44,12 +44,12 @@
 			var objects = [], plane, heater_object, cabine;
 
 			var document_edited = false;
-			var length, width, height;
 
 			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vector2(),
-			offset = new THREE.Vector3(),
-			INTERSECTED, SELECTED;
+			var mouse = new THREE.Vector2();
+			var offset = new THREE.Vector3();
+
+			var SHADOWS_ENABLED = false;
 
 			if (browser_ok){
 				init();
@@ -73,18 +73,27 @@
 
 				scene.add( new THREE.AmbientLight( 0x707070 ) );
 
-				var light = new THREE.SpotLight( 0xffffff, 1.5 );
-				light.position.set( 0, 500, 2000 );
-				light.castShadow = true;
 
-				light.shadow.camera.near = 200;
-				light.shadow.camera.far = camera.far;
-				light.shadow.camera.fov = 50;
 
-				light.shadow.bias = -0.00022;
+				var light = new THREE.SpotLight( 0xffffff, 0.5 );
+				light.position.set( 2, 3, 5 );
 
-				light.shadow.mapSize.width = 2048;
-				light.shadow.mapSize.height = 2048;
+				if (SHADOWS_ENABLED){
+					light.castShadow = true;
+
+					light.shadow.camera.near = 1;
+					light.shadow.camera.far = camera.far;
+					light.shadow.camera.fov = 50;
+
+					light.shadow.bias = -0.00022;
+
+					light.shadow.mapSize.width = 2048;
+					light.shadow.mapSize.height = 2048;
+
+					var light2 = new THREE.SpotLight( 0xffffff, 0.5 );
+					light2.position.set( 2, 3, 5 );
+					scene.add( light2 );
+				}
 
 				scene.add( light );
 
@@ -103,12 +112,16 @@
 				scene.add( plane );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
+				// renderer = new THREE.WebGLRenderer( { antialias: true} );
 				renderer.setClearColor( 0x000000, 0);
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.sortObjects = false;
-				renderer.shadowMap.enabled = true;
-				renderer.shadowMap.type = THREE.PCFShadowMap;
+
+				if(SHADOWS_ENABLED){
+					renderer.shadowMap.enabled = true;
+					renderer.shadowMap.type = THREE.PCFShadowMap;
+				}
 
 				// add renderer to container
 				container.appendChild( renderer.domElement );
@@ -132,17 +145,17 @@
 				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
 				renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 
-				// window.addEventListener("beforeunload", function (e) {
-		    //     if (document_edited) {
-				// 			var confirmationMessage = 'It looks like you have been editing something. '
-				// 															+ 'If you leave before saving, your changes will be lost.';
-				//
-				// 			(e || window.event).returnValue = confirmationMessage; //Gecko + IE
-				// 			return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-		    //     }
-				//
-		    // });
-				//
+				// before-unload warning message
+				window.addEventListener("beforeunload", function (e) {
+		        if (document_edited) {
+							var confirmationMessage = 'If you leave now, your changes will be lost.';
+
+							(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+							return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+		        }
+
+		    });
+
 
 				window.addEventListener( 'resize', onWindowResize, false );
 				document.addEventListener( 'keydown', onDocumentKeyDown, false );
@@ -216,6 +229,8 @@
 					value = value/100;
 					// 0:width 1:height 2:length
 					cabine.setDim(dim_index, value)
+
+					document_edited = true;
 				}
 			}
 

@@ -20,6 +20,9 @@ function Cell(size, flip){
   // geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0.5 * width, cell_height/2, MODULE_THICKNESS/2) );
   this.mesh_exterior = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
 
+
+
+
   this.add(this.mesh_exterior);
 
 
@@ -33,7 +36,15 @@ function Cell(size, flip){
   this.mesh_interior_clad.position.set(CELL_CREASE/2, CELL_CREASE/2 , 0);
   this.mesh_interior = this.mesh_interior_clad
 
+
   this.add(this.mesh_interior);
+
+  if(SHADOWS_ENABLED){
+    this.mesh_exterior.castShadow = true
+    this.mesh_exterior.receiveShadow = true
+    this.mesh_interior.castShadow = true
+    this.mesh_interior.receiveShadow = true
+  }
 
 }
 Cell.prototype = new THREE.Object3D();

@@ -317,5 +317,11 @@ Wall.prototype.addCorner = function(){
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2 ));
 
   this.corner_mesh.position.set(this.length /2 , 0, 0);
+
+  if(SHADOWS_ENABLED){
+    this.corner_mesh.castShadow = true
+    this.corner_mesh.receiveShadow = true
+  }
+
   this.add( this.corner_mesh );
 }

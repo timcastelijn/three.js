@@ -202,6 +202,9 @@ function CeilingPlaceHolder(w, d, thickness){
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, thickness/2, 0) );
   this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x333333 } ) );
 
+  this.mesh_object.castShadow = true;
+  this.mesh_object.receiveShadow = true;
+
   // this.corner_mesh.position.set( 0, thickness/2, 0);
   this.add( this.mesh_object );
 }
