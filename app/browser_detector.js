@@ -1,6 +1,7 @@
 
 var browser_detector = {
   sayswho : function() {
+    var os = true;
     var uagent = navigator.userAgent.toLowerCase(),
         match = '';
     _browser ={}
@@ -23,6 +24,11 @@ var browser_detector = {
           match = uagent.match(new RegExp("rv:([0-9]+)"));
           _browser.version = match ? match[1] : "";
         }
+        // find os
+        var match2 = uagent.match(new RegExp('windows nt 6.3'));
+        if (match2){
+          os = 'windows8.1';
+        }
         break;
       }
     }
@@ -30,7 +36,8 @@ var browser_detector = {
     delete _browser.opr;
     return {
       name: (x === "opr" ? "Opera" : x),
-      version: (_browser.version ? _browser.version : "N/A")
+      version: (_browser.version ? _browser.version : "N/A"),
+      os: os
     };
   },
 
@@ -52,9 +59,8 @@ var browser_detector = {
 
 
     element.innerHTML = [
-      'you are using:',
-      current_browser.name + " " + current_browser.version,
-      'Please use a modern browser like Chrome 48, Safari 9 or <a href="https://www.mozilla.org/nl/firefox/desktop/" style="color:#00f">Firefox 44</a>.'
+      'Your browser: ' + current_browser.name + " " + current_browser.version + " does not support THREE.js.",
+      'Please use a preferred browser like the latest version of <a href="https://www.google.nl/chrome/browser/desktop/" style="color:#00f">Google Chrome</a>.'
     ].join( '\n' );
 
 
@@ -85,9 +91,11 @@ var browser_detector = {
       var version = browser_detector.browsers[i].version;
 
       //test name and version
-      if (current_browser.name.match(name)){
-        if (current_browser.version >= version ){
-          return true;
+      if(current_browser.os != 'windows8.1'){
+        if (current_browser.name.match(name)){
+          if (current_browser.version >= version ){
+            return true;
+          }
         }
       }
     }

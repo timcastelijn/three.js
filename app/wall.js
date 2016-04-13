@@ -58,12 +58,12 @@ function Wall( length, height, index, properties){
 
   this.length   = length;
   this.height   = height;
-  this.name     = "wall_instance"
-  this.visible  = properties.visible
-  this.index    = index
-  this.flip     = properties.flip || 1
-  this.door     = properties.door
-  this.cells    = []
+  this.name     = "wall_instance";
+  this.visible  = properties.visible;
+  this.index    = index;
+  this.flip     = properties.flip || 1;
+  this.door     = properties.door;
+  this.cells    = [];
 
 
   // calculate width division
@@ -72,14 +72,14 @@ function Wall( length, height, index, properties){
 
   // calculate height division
   this.rest_height = this.height % MODULE_HEIGHT;
-  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
+  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT;
 
   // var axisHelper = new THREE.AxisHelper( 5 );
   // this.add( axisHelper );
 
 
   // create wall base-pivot
-  this.base = new THREE.Object3D()
+  this.base = new THREE.Object3D();
   this.add(this.base);
   this.base.position.set(-this.flip * this.length/2,0,0);
   if (this.flip == -1) this.base.rotation.set(0,Math.PI,0);
@@ -111,10 +111,10 @@ Wall.prototype.setLength = function(value){
   this.base.position.set(- this.flip * this.length/2,0,0);
 
   //compare previous config with new config
-  var temp_n = this.n
+  var temp_n = this.n;
   this.rest = this.length % MODULE_WIDTH;
   this.n = (this.length - this.rest) / MODULE_WIDTH;
-  var diff = this.n-temp_n
+  var diff = this.n-temp_n;
 
   if (this.n > temp_n){
     // increase number of modules
@@ -123,7 +123,7 @@ Wall.prototype.setLength = function(value){
       this.addCol(temp_n + i);
     }
 
-    this.setRestColPos()
+    this.setRestColPos();
     this.updateConfig();
 
   }else if (this.n < temp_n) {
@@ -133,7 +133,7 @@ Wall.prototype.setLength = function(value){
       this.removeCol(temp_n -1 -  i);
     }
 
-    this.setRestColPos()
+    this.setRestColPos();
     this.updateConfig();
   }
 
@@ -147,7 +147,7 @@ Wall.prototype.setLength = function(value){
 
 Wall.prototype.updateConfig = function(){
 
-  var wall_config = HEATER_CONFIG[this.index][this.n] || []
+  var wall_config = HEATER_CONFIG[this.index][this.n] || [];
 
   //for each module, get the module type
   for(var i = 0; i< this.n; i++){
@@ -163,7 +163,7 @@ Wall.prototype.updateConfig = function(){
 Wall.prototype.addCol = function(n){
 
   // copy previous rest coll to new coll
-  this.cells[n+1] = this.cells[n]
+  this.cells[n+1] = this.cells[n];
 
   // create new coll
   this.cells[n] = [];
@@ -173,11 +173,11 @@ Wall.prototype.addCol = function(n){
   for(var i =0; i<this.n_height+1; i++){
 
     var cell_height = (i<this.n_height)? MODULE_HEIGHT: this.rest_height;
-    var width       = (n<this.n)? MODULE_WIDTH: this.rest
+    var width       = (n<this.n)? MODULE_WIDTH: this.rest;
 
     var size    = [width, cell_height, MODULE_THICKNESS];
     this.cells[n][i] = new Cell(size, this.flip);
-    this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0)
+    this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0);
 
 
     this.base.add( this.cells[n][i] );
@@ -191,27 +191,27 @@ Wall.prototype.setHeight = function(value){
   // calculate height division
   var temp_n_height = this.n_height;
   this.rest_height = this.height % MODULE_HEIGHT;
-  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT
-  var diff = this.n_height-temp_n_height
+  this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT;
+  var diff = this.n_height-temp_n_height;
 
   if (this.n_height > temp_n_height){
     for(var i=0; i < diff; i++){
-      this.addRow(temp_n_height+i)
+      this.addRow(temp_n_height+i);
     }
     this.setRestRowPos()
   }else if (this.n_height < temp_n_height) {
     for(var i=0; i < (-diff); i++){
       // this.removeRow(this.n_height)
-      this.removeRow(temp_n_height-1-i)
+      this.removeRow(temp_n_height-1-i);
     }
-    this.setRestRowPos()
+    this.setRestRowPos();
   }
 
   this.setRestRowSize(this.rest_height);
 
 
   var factor = this.height / this.corner_mesh.geometry.parameters.height;
-  this.corner_mesh.scale.y = factor
+  this.corner_mesh.scale.y = factor;
 
 }
 
@@ -239,12 +239,12 @@ Wall.prototype.removeCol = function(n){
   }
   // remove data
   this.cells[n] = this.cells[n+1];
-  this.cells[n+1] = null
+  this.cells[n+1] = null;
 
 }
 
 Wall.prototype.setRestRowPos = function(){
-  var i = this.n_height
+  var i = this.n_height;
 
   for(var n=0; n< (this.n +1); n++){
     if(this.cells[n]){
@@ -255,7 +255,7 @@ Wall.prototype.setRestRowPos = function(){
 
 Wall.prototype.setRestRowSize = function(rest_height){
 
-  var i = this.n_height
+  var i = this.n_height;
 
   for(var n=0; n< (this.n +1); n++){
     if(this.cells[n]){
@@ -273,7 +273,7 @@ Wall.prototype.addRow = function(i){
       //column exists
 
       // copy rest cell to next index
-      this.cells[n][i+1] = this.cells[n][i]
+      this.cells[n][i+1] = this.cells[n][i];
 
       // get width corresponding to column
       var width = (n<this.n)? MODULE_WIDTH: this.rest;
@@ -281,7 +281,7 @@ Wall.prototype.addRow = function(i){
       //create a new cell
       var size    = [width, MODULE_HEIGHT, MODULE_THICKNESS];
       this.cells[n][i] = new Cell(size, this.flip);
-      this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0)
+      this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0);
 
       // add cell to 'base' in scene
       this.base.add( this.cells[n][i] );
@@ -299,9 +299,9 @@ Wall.prototype.removeRow = function(i){
       // column does exist
 
       //remove the cell
-      this.base.remove(this.cells[n][i])
+      this.base.remove(this.cells[n][i]);
       this.cells[n][i] = this.cells[n][i+1];
-      this.cells[n][i+1] = null
+      this.cells[n][i+1] = null;
     }
   }
 }
@@ -319,8 +319,8 @@ Wall.prototype.addCorner = function(){
   this.corner_mesh.position.set(this.length /2 , 0, 0);
 
   if(SHADOWS_ENABLED){
-    this.corner_mesh.castShadow = true
-    this.corner_mesh.receiveShadow = true
+    this.corner_mesh.castShadow = true;
+    this.corner_mesh.receiveShadow = true;
   }
 
   this.add( this.corner_mesh );
