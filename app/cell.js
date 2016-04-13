@@ -74,18 +74,33 @@ Cell.prototype.setHeight = function(value){
 Cell.prototype.setType = function(type){
 
   var col = type == 0 ? "interior": "heater"
-  if(heater_object){
-    if(type==1){
-      this.remove(this.mesh_interior);
-      this.mesh_interior = heater_object.clone();
-      if(this.flip == -1){
-        this.mesh_interior.applyMatrix( new THREE.Matrix4().makeTranslation( - (this.interior_width), 0 , 0  ) );
+
+  // check whether objects are defined
+
+  if(heater_object && zout_object){
+    switch(type){
+      case 1:
+        this.remove(this.mesh_interior);
+        this.mesh_interior = heater_object.clone();
+        if(this.flip == -1){
+          this.mesh_interior.applyMatrix( new THREE.Matrix4().makeTranslation( - (this.interior_width), 0 , 0  ) );
+        }
+        this.add(this.mesh_interior);
+        break
+      case 2:
+        this.remove(this.mesh_interior);
+        this.mesh_interior = heater_object.clone();
+        if(this.flip == -1){
+          this.mesh_interior.applyMatrix( new THREE.Matrix4().makeTranslation( - (this.interior_width), 0 , 0  ) );
+        }
+        this.add(this.mesh_interior);
+        break
+      default:
+        this.remove(this.mesh_interior);
+        this.mesh_interior = this.mesh_interior_clad;
+        this.add(this.mesh_interior)
+        break
       }
-      this.add(this.mesh_interior);
-    }else {
-      this.remove(this.mesh_interior);
-      this.mesh_interior = this.mesh_interior_clad;
-      this.add(this.mesh_interior)
-    }
+
   }
 }

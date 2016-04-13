@@ -9,6 +9,7 @@ var modelLoadedCallback = function ( geometry, materials ) {
 
 
   heater_object = new THREE.Mesh( geometry, material );
+  zout_object = new THREE.Mesh( geometry, material );
   if(SHADOWS_ENABLED){
     heater_object.castShadow = true
     heater_object.receiveShadow = true

@@ -17,6 +17,18 @@
 				breedte<input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value)" onchange="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" onchange="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
 				hoogte<input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value)" onchange="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
+				<table>
+					<tr>
+						<td>zout
+						<td><input type="checkbox" id="cbox1"  value='2' onchange='addOption(this.value, this.checked)' />
+					</tr><tr>
+						<td>rugsteun
+						<td><input type="checkbox" id="cbox1"  value='3' onchange='addOption(this.value, this.checked)' />
+					</tr><tr>
+						<td>aromatherapie
+						<td><input type="checkbox" id="cbox1"  value='4' onchange='addOption(this.value, this.checked)' />
+					</tr>
+				</table>
 		</div>
 
 		<script src="../build/three.min.js"></script>
@@ -41,7 +53,7 @@
 
 			var container, stats;
 			var camera, controls, scene, renderer;
-			var objects = [], plane, heater_object, cabine;
+			var objects = [], plane, heater_object, zout_object, cabine;
 
 			var document_edited = false;
 
@@ -240,6 +252,14 @@
 
 					document_edited = true;
 				}
+			}
+
+			// 0:zoutvernevelaar
+			// 1:rugsteun
+			// 2:aromatherapie
+			function addOption(index, boolean_add){
+				// console.log(index, boolean_add);
+				cabine.setOption(parseInt(index), boolean_add);
 			}
 
 			function toggleChevron(e) {

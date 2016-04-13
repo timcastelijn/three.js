@@ -127,6 +127,22 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       console.log("default");
   }
 }
+// updates the dimensions and walls accordingly
+CabineGrid.prototype.setOption = function(index, boolean){
+  switch(index){
+    case 2: //zout
+      this.walls[2].addZout( boolean);
+      break;
+    case 3: //rugsteun
+      alert('not implemented yet');
+      break;
+    case 4: //aromatherapie
+      alert('not implemented yet');
+      break;
+    default:
+      console.log("default");
+  }
+}
 
 // set width of the complete cabine
 CabineGrid.prototype.setWidth=function(value){
@@ -182,6 +198,8 @@ CabineGrid.prototype.setHeight=function(value){
   this.ceiling.position.y = this.height
 
 }
+
+
 
 // set width of the complete cabine
 CabineGrid.prototype.placeHeaters=function(){

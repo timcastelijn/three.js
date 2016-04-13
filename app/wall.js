@@ -184,6 +184,19 @@ Wall.prototype.addCol = function(n){
   }
 }
 
+Wall.prototype.addZout = function( boolean){
+  var type_index = boolean? 2: 0
+  this.cells[this.n-1][this.n_height].setType(type_index);
+}
+
+Wall.prototype.addSteun = function( boolean){
+
+}
+
+Wall.prototype.addAroma = function( boolean){
+
+}
+
 Wall.prototype.setHeight = function(value){
   this.height = value;
 
