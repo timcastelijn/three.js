@@ -20,13 +20,13 @@
 				<table>
 					<tr>
 						<td>zout
-						<td><input type="checkbox" id="cbox1"  value='2' onchange='addOption(this.value, this.checked)' />
+						<td><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' />
 					</tr><tr>
 						<td>rugsteun
-						<td><input type="checkbox" id="cbox1"  value='3' onchange='addOption(this.value, this.checked)' />
+						<td><input type="checkbox" id="cboxBackrest"  value='3' onchange='addOption(this.value, this.checked)' />
 					</tr><tr>
 						<td>aromatherapie
-						<td><input type="checkbox" id="cbox1"  value='4' onchange='addOption(this.value, this.checked)' />
+						<td><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' />
 					</tr>
 				</table>
 		</div>
@@ -53,7 +53,7 @@
 
 			var container, stats;
 			var camera, controls, scene, renderer;
-			var objects = [], plane, heater_object, zout_object, cabine;
+			var objects = [], plane, heater_object, vaporizer_object, cabine;
 
 			var document_edited = false;
 

@@ -11,6 +11,9 @@ var CEILING_THICKNESS   = 0.1;
 var CELL_CREASE         = 0.005; //m
 var DEBUG               = false;
 
+var BACKREST_TOTAL_WIDTH= 5; //m
+var BACKREST_THICKNESS  = 0.1; //m
+
 var getColor = function(category){
   if(DEBUG){
     return Math.random() * 0xffffff
@@ -24,6 +27,9 @@ var getColor = function(category){
         break;
       case "heater":
         return 0xff0000;
+        break;
+      case "bamboo":
+        return 0xC28B6B;
         break;
       default:
         return 0xffffff;
@@ -73,6 +79,12 @@ function CabineGrid(width, height, depth){
 
   var json_loader = new THREE.JSONLoader( );
   json_loader.load( "models/ir-module.json", modelLoadedCallback);
+
+
+  json_loader.load( "models/salt-vaporizer.json", loadVaporizer);
+
+  json_loader.load( "models/backrest.json", loadBackrest);
+
 
   // add ceiling
   this.ceiling  = new CeilingPlaceHolder(width, depth, CEILING_THICKNESS);
@@ -134,7 +146,7 @@ CabineGrid.prototype.setOption = function(index, boolean){
       this.walls[2].addZout( boolean);
       break;
     case 3: //rugsteun
-      alert('not implemented yet');
+      this.addBackrest(boolean)
       break;
     case 4: //aromatherapie
       alert('not implemented yet');
@@ -143,6 +155,24 @@ CabineGrid.prototype.setOption = function(index, boolean){
       console.log("default");
   }
 }
+
+// add backrest to the scene
+CabineGrid.prototype.addBackrest=function(boolean){
+
+  if(boolean){
+    this.add(backrest_object);
+  }else {
+    this.remove(backrest_object)
+  }
+  this.setBackrestWidth();
+}
+
+CabineGrid.prototype.setBackrestWidth=function(){
+  backrest_object.morphTargetInfluences[1] = this.width/BACKREST_TOTAL_WIDTH;
+  // backrest_object.morphTargetInfluences[2] = 0.8;
+  backrest_object.position.set(-0.5*this.width, MODULE_FIXED_HEIGHT[0] + 0.05, -0.5 * this.depth + BACKREST_THICKNESS);
+}
+
 
 // set width of the complete cabine
 CabineGrid.prototype.setWidth=function(value){
@@ -156,6 +186,8 @@ CabineGrid.prototype.setWidth=function(value){
   this.ceiling.setWidth(value);
   this.floor.setWidth(value);
   this.bench.setWidth(this.width);
+
+  this.setBackrestWidth();
 
   this.walls[1].position.x = this.width/2;
   this.walls[3].position.x = -this.width/2;
