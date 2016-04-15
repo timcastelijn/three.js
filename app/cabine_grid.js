@@ -208,6 +208,8 @@ CabineGrid.prototype.setDepth = function(value){
   this.floor.setLength(value);
   this.bench.position.set(0,0,- this.depth/2 + MODULE_WIDTH);
 
+  this.setBackrestWidth();
+
 
   this.walls[0].position.z = this.depth/2;
   this.walls[2].position.z = -this.depth/2;
