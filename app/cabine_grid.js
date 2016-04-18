@@ -143,7 +143,7 @@ CabineGrid.prototype.setDim=function(dim_index, value){
 CabineGrid.prototype.setOption = function(index, boolean){
   switch(index){
     case 2: //zout
-      this.walls[2].addZout( boolean);
+      this.walls[2].addVaporizer( boolean);
       break;
     case 3: //rugsteun
       this.addBackrest(boolean)

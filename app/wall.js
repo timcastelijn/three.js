@@ -144,7 +144,6 @@ Wall.prototype.setLength = function(value){
 }
 
 
-
 Wall.prototype.updateConfig = function(){
 
   var wall_config = HEATER_CONFIG[this.index][this.n] || [];
@@ -184,9 +183,18 @@ Wall.prototype.addCol = function(n){
   }
 }
 
-Wall.prototype.addZout = function( boolean){
-  var type_index = boolean? 2: 0
-  this.cells[this.n-1][this.n_height].setType(type_index);
+Wall.prototype.addVaporizer = function( boolean){
+
+  var target_cell = this.cells[this.n-1][this.n_height];
+  this.vaporizer = boolean;
+
+  var type_index = boolean? 2: 0;
+  target_cell.setType(type_index);
+
+  if (this.n_height < 3 && target_cell.height < 0.3 && boolean) {
+    alert("zoutvernevelaar past niet, maak hoogte groter of vraag offerte op maat aan");
+  }
+
 }
 
 Wall.prototype.addSteun = function( boolean){
@@ -200,11 +208,12 @@ Wall.prototype.addAroma = function( boolean){
 Wall.prototype.setHeight = function(value){
   this.height = value;
 
-
   // calculate height division
   var temp_n_height = this.n_height;
   this.rest_height = this.height % MODULE_HEIGHT;
   this.n_height    = (this.height - this.rest_height) / MODULE_HEIGHT;
+
+  //get the difference in number of rows
   var diff = this.n_height-temp_n_height;
 
   if (this.n_height > temp_n_height){
@@ -222,7 +231,7 @@ Wall.prototype.setHeight = function(value){
 
   this.setRestRowSize(this.rest_height);
 
-
+  // scale coreners
   var factor = this.height / this.corner_mesh.geometry.parameters.height;
   this.corner_mesh.scale.y = factor;
 
