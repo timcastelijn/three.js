@@ -68,10 +68,7 @@ Cell.prototype.setVaporizerHeight = function(value){
 
   if (value < 0.3 && this.vaporizer_visible){
     //hide vaporizer, show normal cladding
-    this.remove(this.mesh_interior);
-    this.mesh_interior = this.mesh_interior_clad;
-    this.add(this.mesh_interior)
-
+    this.replaceInteriorGometry(this.mesh_interior_clad);
     this.vaporizer_visible = false;
 
   }else if(value > 0.3 && !this.vaporizer_visible){
@@ -120,9 +117,7 @@ Cell.prototype.setType = function(type){
         this.setHeight(this.height);
         break
       default:
-        this.remove(this.mesh_interior);
-        this.mesh_interior = this.mesh_interior_clad;
-        this.add(this.mesh_interior)
+        this.replaceInteriorGometry(this.mesh_interior_clad);
         this.setHeight(this.height);
         break
       }
@@ -132,7 +127,7 @@ Cell.prototype.replaceInteriorGometry = function(object_mesh){
   if(object_mesh){
     this.remove(this.mesh_interior);
     this.mesh_interior = object_mesh.clone();
-    if(this.flip == -1){
+    if(this.flip == -1 && (object_mesh != this.mesh_interior_clad) ){
       this.mesh_interior.applyMatrix( new THREE.Matrix4().makeTranslation( - (this.interior_width), 0 , 0  ) );
     }
     this.add(this.mesh_interior);
