@@ -14,7 +14,11 @@
 		$dt = new DateTime("now", new DateTimeZone($tz)); //first argument "must" be a string
 		$dt->setTimestamp($timestamp); //adjust the object to correct timestamp
 
-		$message = $_POST['message'] . " " . $dt->format('d.m.Y, H:i:s') . "<br>" ;
+		$message = 	$dt->format('d.m.Y, H:i:s') . "<br>" ;
+		$message .= "naam: " . $_POST['name'] . "<br>";
+		$message .= "telefoonnummer: " . $_POST['telephone'] . "<br>";
+		$message .= "emailadres: " . $_POST['email'] . "<br>";
+		$message .= "opmerkingen:" . $_POST['message'] . "<br>";
 
 
 		$to = 'configuratornobelsaunas@gmail.com';
@@ -30,14 +34,10 @@
 						 "<br><br></body></html>";
 		// mail($to, $subject, $message, $headers);
 
-		$body = "From: $name\n E-Mail: $email\n Message:\n $message";
-
 		if (mail ($to, $subject, $message, $headers)) {
-			echo "succes";
-			echo '<p> name is: ' . $_POST['name'];
-			echo '<p> email is: ' . $_POST['email'];
-			echo '<p> message is: ' . $_POST['message'];
-			echo '<p> human is: ' . $_POST['human'];
+			echo '<p> beste ' . $_POST['name'];
+			echo "<p> uw aanvraag is verstuurd";
+			echo '<p> er wordt spoedig contact opgenomen via: ' . $_POST['email'];
 		}
 
 
