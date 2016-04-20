@@ -99,17 +99,18 @@ function init() {
 
   var info = document.createElement( 'div' );
   info.style.position = 'absolute';
-  info.style.top = '0px';
+  info.style.bottom = '40px';
+  info.style.right = '10px';
   info.style.width = '100%';
-  info.style.textAlign = 'center';
+  info.style.textAlign = 'right';
   info.innerHTML = 'created by <a href="http://timcastelijn.nl">timcastelijn.nl</a> using <a href="http://threejs.org" target="_blank">three.js</a>';
   container.appendChild( info );
 
-  stats = new Stats();
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.top = '0px';
-  stats.domElement.style.right = '0px';
-  container.appendChild( stats.domElement );
+  // stats = new Stats();
+  // stats.domElement.style.position = 'absolute';
+  // stats.domElement.style.top = '0px';
+  // stats.domElement.style.right = '0px';
+  // container.appendChild( stats.domElement );
 
   renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
   renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
