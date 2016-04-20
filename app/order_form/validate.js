@@ -10,8 +10,9 @@ $().ready(function(){
       },
     },
     messages:{
-      name: 'vul voor en achternaam in, minimaal 3 characters',
-      telephone: 'vul een telefoonnummer in, e.g. 0612345678',
+      name: 'vul a.u.b. uw voor- en achternaam in, minimaal 3 characters',
+      email: 'vul a.u.b. een geldig emailadres in',
+      telephone: 'vul a.u.b. een telefoonnummer in, e.g. 0612345678',
     },
   });
 

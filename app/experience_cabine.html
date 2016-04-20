@@ -9,269 +9,180 @@
 		<link rel="stylesheet" href="style.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+		<script src="order_form/validate.js"></script>
 	</head>
 	<body>
-		<!-- <div class="container" > -->
-		<div id="accordion">
-				breedte<input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value)" onchange="applyDim(0,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
-				diepte<input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value)" onchange="applyDim(2,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
-				hoogte<input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value)" onchange="applyDim(1,this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" />
-				<table>
-					<tr>
-						<td>zout
-						<td><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' />
-					</tr><tr>
-						<td>rugsteun
-						<td><input type="checkbox" id="cboxBackrest"  value='3' onchange='addOption(this.value, this.checked)' />
-					</tr><tr>
-						<td>aromatherapie
-						<td><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' />
-					</tr>
-				</table>
-		</div>
+		<div id="content">
+			<div class="panel-group" id="accordion">
+	    	<h2>Ervaringscabine</h2>
+	     		<p>Stel je eigen <strong>Ervaringscabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>sleep</strong> de modules naar de gewenste plek.</p>
 
-		<script src="../build/three.min.js"></script>
-		<script src="cabine_grid.js"></script>
-		<script src="wall.js"></script>
-		<script src="cell.js"></script>
-		<script src="module_class.js"></script>
-		<script src="browser_detector.js"></script>
-		<script src="json_loader.js"></script>
+					<div class="panel panel-default">
+	       		<div class="panel-heading">
+	         		<h4 class="panel-title">
+	           		<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Afmetingen<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
+	         		</h4>
+	       		</div>
+	       		<div id="collapse1" class="panel-collapse collapse in">
+	         		<div class="panel-body">
+								<div class="container-fluid">
+		             	<div class="row" id='label-width'>Breedte:</div>
+		              <div class="row"><input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value); updateLabel(0, this.value);" onchange="applyDim(0,this.value); updateLabel(0, this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-depth'>Diepte</div>
+			            <div class="row"><input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value); updateLabel(1, this.value);" onchange="applyDim(2,this.value); updateLabel(1, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-height'>Hoogte</div>
+		              <div class="row"><input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value); updateLabel(2, this.value);" onchange="applyDim(1,this.value); updateLabel(2, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+								</div>
+	         		</div>
+	       		</div>
+	     		</div>
+				<div class="panel panel-default">
+	       	<div class="panel-heading">
+	         	<h4 class="panel-title">
+	           	<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Opties<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	         	</h4>
+	       	</div>
+	       	<div id="collapse2" class="panel-collapse collapse">
+	         	<div class="panel-body">
+	           	<div class="container-fluid">
+	             	<div class="row">
+	               	<div class="col-sm-8">Zoutvernevelaar</div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
+	             	</div>
+	             	<div class="row">
+		              <div class="col-sm-8">Rugsteun</div>
+		              <div class="col-sm-4"><input type="checkbox" id="cboxBackrest"  value='3' onchange='addOption(this.value, this.checked)' /></div>
+	             	</div>
+	             	<div class="row">
+	               	<div class="col-sm-8">Aromatherapie</div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' /></div>
+	             	</div>
+							</div>
+	         	</div>
+	       	</div>
+	     	</div>
+	     	<div class="panel panel-default">
+	      	<div class="panel-heading">
+	         	<h4 class="panel-title">
+	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	         	</h4>
+	       	</div>
+	       	<div id="collapse3" class="panel-collapse collapse">
+	         	<div class="panel-body">
+	           	content
+	         	</div>
+	       	</div>
+	     	</div>
+	     	<div class="panel panel-default">
+					<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Bestellen</button>
+				</div>
+		 	</div>
+			<!-- Modal -->
+	   	<div id="myModal" class="modal fade" role="dialog">
+	     	<div class="modal-dialog">
 
-		<script src="../examples/js/controls/TrackballControls.js"></script>
-		<script src="../examples/js/controls/OrbitControls.js"></script>
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	      	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Vraag offerte aan</h4>
+	      	</div>
+	        	<div class="modal-body">
+	          	<div id="message"></div>
+	          	<form id='myform' class="form-horizontal" role="form" method="post" action="order_form/saveState.php">
+	           	<div class="form-group">
+	      			<label for="name" class="col-sm-3 control-label">Naam</label>
+	           		<div class="col-sm-9">
+	           			<input type="text" class="form-control" id="name" name="name" placeholder="Voor- & achternaam">
+	           		</div>
+	           	</div>
+	           	<div class="form-group">
+	           		<label for="telephone" class="col-sm-3 control-label">Telefoonnummer</label>
+	           		<div class="col-sm-9">
+	           			<input type="text" class="form-control" id="telephone" name="telephone" placeholder="0612345678">
+	           		</div>
+	           	</div>
+	           	<div class="form-group">
+	           		<label for="email" class="col-sm-3 control-label">Emailadres</label>
+	           		<div class="col-sm-9">
+	           			<input type="email" required class="form-control" id="email" name="email" placeholder="voorbeeld@domein.nl">
+	           		</div>
+	           	</div>
+	           	<div class="form-group">
+	           		<label for="message" class="col-sm-3 control-label">opmerkingen</label>
+	           		<div class="col-sm-9">
+	           			<textarea class="form-control" rows="4" name="message" ></textarea>
+	           		</div>
+	           	</div>
+	           	<div class="form-group">
+	           		<div class="col-sm-10 col-sm-offset-2">
+	           			<!-- Will be used to display an alert to the user -->
+	           		</div>
+	           	</div>
+	           </form>
+	           <div id="response"></div>
+	         </div>
+	         <div class="modal-footer">
+	           <input id="submit" name="submit" type="submit" value="Verzenden" onclick="$('#myform').submit()" class="btn btn-primary" onC>
+	           <button type="button" class="btn btn-default" data-dismiss="modal">Sluit</button>
+	         </div>
+	       </div>
 
-		<script src="../examples/js/libs/stats.min.js"></script>
-		<script src="../examples/js/Detector.js"></script>
-		<script src="../src/extras/helpers/AxisHelper.js"></script>
+	     </div>
+	   </div>
+	</div>
 
-		<script>
+	<script src="../build/three.min.js"></script>
+	<script src="../examples/js/controls/TrackballControls.js"></script>
+	<script src="../examples/js/controls/OrbitControls.js"></script>
+	<script src="../examples/js/libs/stats.min.js"></script>
+	<script src="../examples/js/Detector.js"></script>
+	<script src="../src/extras/helpers/AxisHelper.js"></script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-			var browser_ok = browser_detector.detect()
+	<script src="cabine_grid.js"></script>
+	<script src="wall.js"></script>
+	<script src="cell.js"></script>
+	<script src="module_class.js"></script>
+	<script src="browser_detector.js"></script>
+	<script src="json_loader.js"></script>
+	<script src="lib/viewer.js"></script>
 
-			var container, stats;
-			var camera, controls, scene, renderer;
-			var objects = [], plane, heater_object, vaporizer_object, cabine;
+	<script>
+		function toggleChevron(e) {
+		    $(e.target)
+		        .prev('.panel-heading')
+		        .find("i.indicator")
+		        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+		}
+		$('#accordion').on('hidden.bs.collapse', toggleChevron);
+		$('#accordion').on('shown.bs.collapse', toggleChevron);
 
-			var document_edited = false;
+		updateLabel(0, 124);
+		updateLabel(1, 140);
+		updateLabel(2, 200);
 
-			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vector2();
-			var offset = new THREE.Vector3();
-
-			var SHADOWS_ENABLED = false;
-
-			if (browser_ok){
-				init();
-				animate();
-			}
-
-			function init() {
-				// create renderer container
-				container = document.createElement( 'div' );
-				container.setAttribute( 'id', "renderer" );
-				container.setAttribute( 'position', "absolute" );
-				container.setAttribute( 'top', "0px" );
-				container.setAttribute( 'left', "0px" );
-				container.setAttribute( 'z-index', "-1" );
-				document.body.appendChild( container );
-
-				scene = new THREE.Scene();
-
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
-    		camera.position.set( 0, 1.5, 2.5 );
-
-				scene.add( new THREE.AmbientLight( 0x707070 ) );
-
-
-
-				var light = new THREE.SpotLight( 0xffffff, 0.5 );
-				light.position.set( 2, 3, 5 );
-
-				if (SHADOWS_ENABLED){
-					light.castShadow = true;
-
-					light.shadow.camera.near = 1;
-					light.shadow.camera.far = camera.far;
-					light.shadow.camera.fov = 50;
-
-					light.shadow.bias = -0.00022;
-
-					light.shadow.mapSize.width = 2048;
-					light.shadow.mapSize.height = 2048;
-
-					var light2 = new THREE.SpotLight( 0xffffff, 0.5 );
-					light2.position.set( 2, 3, 5 );
-					scene.add( light2 );
+		function updateLabel(index, value){
+			switch(index){
+				case 0:
+					var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
+					value =  Math.round( (value > minimum_size)? value: minimum_size );
+					$( '#label-width' ).text( 'Breedte: ' + value + ' cm');
+					break;
+				case 1:
+					var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
+					value =  Math.round( (value > minimum_size)? value: minimum_size );
+					$( '#label-depth' ).text( 'Diepte: ' + value + ' cm');
+					break;
+				case 2:
+					var minimum_size =	(MODULE_FIXED_HEIGHT[1] + MODULE_FIXED_HEIGHT[0] + FLOOR_THICKNESS + CEILING_THICKNESS)*100;
+					value =  Math.round( (value > minimum_size)? value: minimum_size );
+					$( '#label-height' ).text( 'Hoogte: ' + value + ' cm');
+					break;
 				}
+		}
 
-				scene.add( light );
-
-				//create cabine
-				cabine = new CabineGrid(1.24, 2.0, 1.4);
-				scene.add(cabine);
-
-				//create intersection plane
-				plane = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 2000, 2000, 8, 8 ),
-					new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
-				);
-				// rotate plane to xz orientation
-				plane.rotation.x = Math.PI * -0.5;
-				plane.visible = false;
-				scene.add( plane );
-
-				renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
-				// renderer = new THREE.WebGLRenderer( { antialias: true} );
-				renderer.setClearColor( 0x000000, 0);
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.sortObjects = false;
-
-				if(SHADOWS_ENABLED){
-					renderer.shadowMap.enabled = true;
-					renderer.shadowMap.type = THREE.PCFShadowMap;
-				}
-
-				// add renderer to container
-				container.appendChild( renderer.domElement );
-
-				// create controls
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				//controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-				controls.enableDamping = true;
-				controls.dampingFactor = 0.25;
-				controls.enableZoom = true;
-				controls.rotateSpeed = 0.25;
-				controls.target = new THREE.Vector3(0,0.8,0)
-
-				var info = document.createElement( 'div' );
-				info.style.position = 'absolute';
-				info.style.top = '0px';
-				info.style.width = '100%';
-				info.style.textAlign = 'center';
-				info.innerHTML = 'created by <a href="http://timcastelijn.nl">timcastelijn.nl</a> using <a href="http://threejs.org" target="_blank">three.js</a>';
-				container.appendChild( info );
-
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				stats.domElement.style.right = '0px';
-				container.appendChild( stats.domElement );
-
-				renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-				renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
-
-				// before-unload warning message
-				window.addEventListener("beforeunload", function (e) {
-		        if (document_edited) {
-							var confirmationMessage = 'If you leave now, your changes will be lost.';
-
-							(e || window.event).returnValue = confirmationMessage; //Gecko + IE
-							return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-		        }
-
-		    });
-
-
-				window.addEventListener( 'resize', onWindowResize, false );
-				document.addEventListener( 'keydown', onDocumentKeyDown, false );
-
-				return true;
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-
-			}
-
-			function onDocumentMouseMove( event ) {
-
-				event.preventDefault();
-
-				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-			}
-
-			function onDocumentMouseDown( event ) {
-
-				event.preventDefault();
-
-
-			}
-
-			function onDocumentMouseUp( event ) {
-
-
-
-			}
-
-			function onDocumentKeyDown( event ) {
-				switch( event.keyCode ) {
-
-					case 8: event.preventDefault(); console.log("Delete"); break;
-
-				}
-
-			}
-
-			//
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-
-				render();
-				stats.update();
-
-			}
-
-			function render() {
-
-				controls.update();
-
-				renderer.render( scene, camera );
-
-			}
-
-			//apply dimension change to grid
-			function applyDim(dim_index, value){
-				if(cabine){
-					value = value/100;
-					// 0:width 1:height 2:length
-					cabine.setDim(dim_index, value)
-
-					document_edited = true;
-				}
-			}
-
-			// 0:zoutvernevelaar
-			// 1:rugsteun
-			// 2:aromatherapie
-			function addOption(index, boolean_add){
-				// console.log(index, boolean_add);
-				cabine.setOption(parseInt(index), boolean_add);
-			}
-
-			function toggleChevron(e) {
-			    $(e.target)
-			        .prev('.panel-heading')
-			        .find("i.indicator")
-			        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
-			}
-			$('#accordion').on('hidden.bs.collapse', toggleChevron);
-			$('#accordion').on('shown.bs.collapse', toggleChevron);
-
-		</script>
+	</script>
 
 	</body>
 </html>

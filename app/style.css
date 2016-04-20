@@ -20,3 +20,7 @@ body {
 input[type=range] {
   width: 100%; /* Specific width is required for Firefox. */
 }
+
+.error{
+  color: red;
+}
