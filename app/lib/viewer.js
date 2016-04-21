@@ -99,7 +99,7 @@ function init() {
 
   var info = document.createElement( 'div' );
   info.style.position = 'absolute';
-  info.style.bottom = '40px';
+  info.style.bottom = '10px';
   info.style.right = '10px';
   info.style.width = '100%';
   info.style.textAlign = 'right';
