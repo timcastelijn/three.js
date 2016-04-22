@@ -3,7 +3,7 @@ var browser_ok = browser_detector.detect()
 
 var container, stats;
 var camera, controls, scene, renderer;
-var objects = [], plane, heater_object, vaporizer_object, cabine;
+var objects = [], plane, heater_object, vaporizer_object, shelf_object, cabine;
 
 var document_edited = false;
 
@@ -182,7 +182,7 @@ function animate() {
   requestAnimationFrame( animate );
 
   render();
-  stats.update();
+  // stats.update();
 
 }
 
