@@ -26,6 +26,7 @@ var loadVaporizer = function ( geometry, materials ) {
 
   materials[0] = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
+
   var material = new THREE.MultiMaterial( materials );
 
   vaporizer_object = new THREE.Mesh( geometry, material);
@@ -47,5 +48,26 @@ var loadBackrest = function ( geometry ) {
 
   backrest_object.castShadow = SHADOWS_ENABLED
   backrest_object.receiveShadow = SHADOWS_ENABLED
+
+}
+
+var loadAromatherapy = function ( geometry, materials ) {
+
+  geometry.computeFaceNormals();
+  geometry.computeVertexNormals();
+
+  console.log(materials);
+
+  materials[0] = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[1] = new THREE.MeshPhongMaterial( { transparent:true, opacity:0.5, color:0xdddddd, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[2] = new THREE.MeshPhongMaterial( { color: 0xffffff, map: new THREE.TextureLoader().load( "../../examples/textures/square-outline-textured.png" ), morphTargets: true} );
+
+  var material = new THREE.MultiMaterial( materials );
+
+  shelf_object = new THREE.Mesh( geometry, material);
+  shelf_object.morphTargetInfluences[1]=1;
+
+  shelf_object.castShadow = SHADOWS_ENABLED
+  shelf_object.receiveShadow = SHADOWS_ENABLED
 
 }
