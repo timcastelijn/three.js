@@ -64,6 +64,7 @@ function Wall( length, height, index, properties){
   this.flip     = properties.flip || 1;
   this.door     = properties.door;
   this.cells    = [];
+  this.first_col = 0;
 
 
   // calculate width division
@@ -85,7 +86,10 @@ function Wall( length, height, index, properties){
   if (this.flip == -1) this.base.rotation.set(0,Math.PI,0);
 
   // set first col to make door-void
-  this.first_col = this.door? 3: 0;
+  if(this.door){
+    this.first_col = 3;
+    this.addDoorPlate();
+  }
 
   if(this.first_col > this.n ) alert("door is too wide for initial startup condition");
 
@@ -141,6 +145,10 @@ Wall.prototype.setLength = function(value){
 
 
   this.corner_mesh.position.x = value/2;
+  if (this.door_plate_mesh) {
+    this.door_plate_mesh.position.x = -value/2 + 3*MODULE_WIDTH - 0.02;
+  }
+
 }
 
 
@@ -167,7 +175,10 @@ Wall.prototype.updateColors=function(){
       }
     }
   }
-  this.corner_mesh.material.color.set(colors.exterior)
+  this.corner_mesh.material.color.set(colors.exterior);
+  if (this.door_plate_mesh) {
+    this.door_plate_mesh.material.color.set(colors.exterior);    
+  }
 }
 
 
@@ -359,4 +370,23 @@ Wall.prototype.addCorner = function(){
   }
 
   this.add( this.corner_mesh );
+}
+
+Wall.prototype.addDoorPlate = function(){
+
+  var plate_thickness = 0.02;
+  // create corner box
+  var geometry = new THREE.BoxGeometry( plate_thickness, this.height, MODULE_THICKNESS );
+  this.door_plate_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( plate_thickness, this.height/2, MODULE_THICKNESS/2 ));
+
+  this.door_plate_mesh.position.set(-this.length / 2 + 3*MODULE_WIDTH - plate_thickness, 0, 0);
+
+  if(SHADOWS_ENABLED){
+    this.door_plate_mesh.castShadow = true;
+    this.door_plate_mesh.receiveShadow = true;
+  }
+
+  this.add( this.door_plate_mesh );
 }
