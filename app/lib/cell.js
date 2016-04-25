@@ -21,7 +21,7 @@ function Cell(size, flip){
   // offset pivot to corner
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( this.flip * this.width / 2, size[1] / 2 , face_thickness/2 + size[2] /2) );
 
-  this.mesh_exterior = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
+  this.mesh_exterior = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
 
   this.add(this.mesh_exterior);
 
@@ -32,10 +32,10 @@ function Cell(size, flip){
   geometry2.applyMatrix( new THREE.Matrix4().makeTranslation( this.flip * this.interior_width / 2, this.interior_height / 2 , face_thickness/2  ) );
 
 
-  this.mesh_interior_clad = new THREE.Mesh( geometry2, new THREE.MeshLambertMaterial( { color: getColor('interior') } ) );
+  this.mesh_interior_clad = new THREE.Mesh( geometry2, new THREE.MeshLambertMaterial( { color: colors.interior } ) );
   this.mesh_interior_clad.position.set(CELL_CREASE/2, CELL_CREASE/2 , 0);
   this.mesh_interior = this.mesh_interior_clad
-
+  this.type = 0;
 
   this.add(this.mesh_interior);
 
@@ -132,6 +132,24 @@ Cell.prototype.replaceInteriorGometry = function(object_mesh){
     }
     this.add(this.mesh_interior);
   }
+}
+Cell.prototype.updateColor = function(){
+  this.mesh_exterior.material.color.set(colors.exterior);
+
+  switch(this.type){
+    case 0:
+      this.mesh_interior.material.color.set(colors.interior);
+      break;
+    case 1:
+      this.mesh_interior.material.materials[1].color.set(colors.interior);
+      break;
+    case 2:
+      this.mesh_interior.material.materials[0].color.set(colors.interior);
+      break;
+  }
+
+  this.mesh_interior_clad.material.color.set(colors.interior)
+
 }
 
 Cell.prototype.isVaporizer = function(){

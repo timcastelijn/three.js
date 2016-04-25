@@ -158,6 +158,19 @@ Wall.prototype.updateConfig = function(){
 
 }
 
+Wall.prototype.updateColors=function(){
+  //for each module, get the module type
+  for(var n = 0; n< this.n+1; n++){
+    for(var i =0; i< this.n_height+1; i++){
+      if(this.cells[n]){
+        this.cells[n][i].updateColor();
+      }
+    }
+  }
+  this.corner_mesh.material.color.set(colors.exterior)
+}
+
+
 
 Wall.prototype.addCol = function(n){
 
@@ -334,7 +347,7 @@ Wall.prototype.addCorner = function(){
 
   // create corner box
   var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, this.height, MODULE_THICKNESS );
-  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: getColor("exterior") } ) );
+  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
 
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2 ));
 

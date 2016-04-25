@@ -4,19 +4,24 @@
 		<title>experience cabine - three.js webgl</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
 		<link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
-		<link rel="stylesheet" href="style.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 		<script src="order_form/validate.js"></script>
+
+		<script src="lib/colorselector/bootstrap-colorselector.js"></script>
+		<link rel="stylesheet" href="bootstrap-colorselector.css">
+
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div id="content">
 			<div class="panel-group" id="accordion">
-	    	<h2>Ervaringscabine</h2>
-	     		<p>Stel je eigen <strong>Ervaringscabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>sleep</strong> de modules naar de gewenste plek.</p>
+	     		<p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p>
 
 					<div class="panel panel-default">
 	       		<div class="panel-heading">
@@ -69,9 +74,35 @@
 	         	</h4>
 	       	</div>
 	       	<div id="collapse3" class="panel-collapse collapse">
-	         	<div class="panel-body">
-	           	content
-	         	</div>
+						<!-- material selection -->
+						<div class="panel-body">
+							<div class='row'>
+								<div class="col-sm-4">
+									Exterieur
+								</div>
+								<div class="col-sm-4">
+									<select id="colorselector1">
+								    <option value="1" data-color="#ffffff">White</option>
+								    <option value="2" data-color="#333333" selected="selected">Black</option>
+								    <option value="3" data-color="#969690">Grey</option>
+								    <option value="4" data-color="#F2E16F">Yellow</option>
+									</select>
+								</div>
+							</div>
+							<div class='row'>
+								<div class="col-sm-4">
+									Interieur
+								</div>
+								<div class="col-sm-4">
+									<select id="colorselector2">
+								    <option value="1" data-color="#ffffff" selected="selected">White</option>
+								    <option value="2" data-color="#333333">Black</option>
+								    <option value="3" data-color="#969690">Grey</option>
+								    <option value="4" data-color="#F2E16F">Yellow</option>
+									</select>
+								</div>
+							</div>
+						</div>
 	       	</div>
 	     	</div>
 	     	<div class="panel panel-default">
@@ -148,6 +179,18 @@
 	<script src="lib/viewer.js"></script>
 
 	<script>
+
+		$('#colorselector1').colorselector({
+          callback: function (value, color, title) {
+						setColor('exterior', color);
+          }
+    });
+		$('#colorselector2').colorselector({
+          callback: function (value, color, title) {
+						setColor('interior', color);
+          }
+    });
+
 		function toggleChevron(e) {
 		    $(e.target)
 		        .prev('.panel-heading')

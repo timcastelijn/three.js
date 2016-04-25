@@ -13,6 +13,13 @@ var offset = new THREE.Vector3();
 
 var SHADOWS_ENABLED = false;
 
+var colors = {
+  exterior:"#333333",
+  interior:"#ffffff",
+  floor:"#333333",
+  bamboo:"#C28B6B",
+}
+
 if (browser_ok){
   init();
   animate();
@@ -211,4 +218,14 @@ function applyDim(dim_index, value){
 function addOption(index, boolean_add){
   // console.log(index, boolean_add);
   cabine.setOption(parseInt(index), boolean_add);
+
+  document_edited = true;
+
+}
+
+function setColor(id, color){
+  colors[id] = color;
+  cabine.updateColors();
+
+  document_edited = true;
 }

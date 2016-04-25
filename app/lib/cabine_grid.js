@@ -14,28 +14,6 @@ var DEBUG               = false;
 var BACKREST_TOTAL_WIDTH= 5; //m
 var BACKREST_THICKNESS  = 0.1; //m
 
-var getColor = function(category){
-  if(DEBUG){
-    return Math.random() * 0xffffff
-  }else {
-    switch (category) {
-      case "exterior":
-        return 0x333333;
-        break;
-      case "interior":
-        return 0xffffff;
-        break;
-      case "heater":
-        return 0xff0000;
-        break;
-      case "bamboo":
-        return 0xC28B6B;
-        break;
-      default:
-        return 0xffffff;
-    }
-  }
-}
 
 // var items;
 // parent class ModuleSmall
@@ -100,7 +78,7 @@ function CabineGrid(width, height, depth){
 
   //add becnch
   this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, MODULE_FIXED_HEIGHT[0]);
-  this.bench.mesh_object.material.color.setHex( getColor("interior") );
+  this.bench.mesh_object.material.color.set( colors.interior );
   this.bench.position.set(0, 0, -(this.depth)/2 + MODULE_WIDTH );
   this.add(this.bench);
 
@@ -244,6 +222,21 @@ CabineGrid.prototype.placeHeaters=function(){
   }
 }
 
+// set width of the complete cabine
+CabineGrid.prototype.updateColors=function(){
+  this.floor.mesh_object.material.color.set(colors.exterior);
+  this.ceiling.mesh_object.material.color.set(colors.exterior);
+  this.bench.mesh_object.material.color.set(colors.interior);
+
+  for(var i=0; i<this.walls.length; i++){
+    this.walls[i].updateColors();
+  }
+
+  //update parent colors
+  heater_object.material.materials[1].color.set(colors.interior);
+  vaporizer_object.material.materials[0].color.set(colors.interior);
+}
+
 // var items;
 // parent class ModuleSmall
 function CeilingPlaceHolder(w, d, thickness){
@@ -254,7 +247,7 @@ function CeilingPlaceHolder(w, d, thickness){
   var geometry = new THREE.BoxGeometry( w, thickness, d );
 
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, thickness/2, 0) );
-  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x333333 } ) );
+  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
 
   this.mesh_object.castShadow = true;
   this.mesh_object.receiveShadow = true;

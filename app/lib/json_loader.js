@@ -3,7 +3,7 @@ var modelLoadedCallback = function ( geometry, materials ) {
   geometry.computeFaceNormals();
   geometry.computeVertexNormals();
 
-  materials[1] = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   var material = new THREE.MultiMaterial( materials );
   heater_object = new THREE.Mesh( geometry, material );
@@ -14,6 +14,7 @@ var modelLoadedCallback = function ( geometry, materials ) {
   cabine.placeHeaters();
 }
 
+// cell type 2
 var loadVaporizer = function ( geometry, materials ) {
 
   geometry.computeFaceNormals();
@@ -22,9 +23,7 @@ var loadVaporizer = function ( geometry, materials ) {
   // var material = new THREE.MeshLambertMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   // var material = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
-  console.log(materials);
-
-  materials[0] = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
 
   var material = new THREE.MultiMaterial( materials );
@@ -42,7 +41,7 @@ var loadBackrest = function ( geometry ) {
   geometry.computeVertexNormals();
 
   // var material = new THREE.MeshLambertMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  var material = new THREE.MeshPhongMaterial( { color: getColor("bamboo"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  var material = new THREE.MeshPhongMaterial( { color: colors.bamboo, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   backrest_object = new THREE.Mesh( geometry, material);
 
@@ -51,14 +50,13 @@ var loadBackrest = function ( geometry ) {
 
 }
 
+// type 3
 var loadAromatherapy = function ( geometry, materials ) {
 
   geometry.computeFaceNormals();
   geometry.computeVertexNormals();
 
-  console.log(materials);
-
-  materials[0] = new THREE.MeshPhongMaterial( { color: getColor("interior"), shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   materials[1] = new THREE.MeshPhongMaterial( { transparent:true, opacity:0.5, color:0xdddddd, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   materials[2] = new THREE.MeshPhongMaterial( { color: 0xffffff, map: new THREE.TextureLoader().load( "../../examples/textures/square-outline-textured.png" ), morphTargets: true} );
 

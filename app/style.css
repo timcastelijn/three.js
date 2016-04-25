@@ -12,6 +12,12 @@ body {
   margin: 10px;
   width:250px;
 }
+
+.btn-colorselector{
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+}
 /*@media screen and (min-width: 900px) {
   #accordion{
     width:20%;
