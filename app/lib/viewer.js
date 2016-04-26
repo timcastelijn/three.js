@@ -3,13 +3,10 @@ var browser_ok = browser_detector.detect()
 
 var container, stats;
 var camera, controls, scene, renderer;
-var objects = [], plane, heater_object, vaporizer_object, shelf_object, cabine;
+var heater_object, vaporizer_object, shelf_object, cabine;
 
 var document_edited = false;
 
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-var offset = new THREE.Vector3();
 
 var SHADOWS_ENABLED = false;
 
@@ -155,8 +152,6 @@ function onDocumentMouseMove( event ) {
 
   event.preventDefault();
 
-  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 }
 
