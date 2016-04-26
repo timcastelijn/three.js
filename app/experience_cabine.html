@@ -51,6 +51,13 @@
 	       	<div id="collapse2" class="panel-collapse collapse">
 	         	<div class="panel-body">
 	           	<div class="container-fluid">
+	             	<!-- <div class="row">
+	               	<div class="col-sm-8">IR-heaters</div>
+	               	<div class="col-sm-4"><input id="numberInputHeaters" style="width:50px;" type="number" name="quantity" min="0" value="6" max="16" onchange='defineHeaterPositions(this.value)'></input></div>
+	             	</div>
+								<div class="row">
+									&nbsp
+	             	</div> -->
 	             	<div class="row">
 	               	<div class="col-sm-8">Zoutvernevelaar</div>
 	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
@@ -203,6 +210,26 @@
 		updateLabel(0, 124);
 		updateLabel(1, 140);
 		updateLabel(2, 200);
+
+		function defineHeaterPositions(number){
+			var slots = cabine.walls[2].n;
+			var array = [];
+
+			if (number>slots){
+				number = slots;
+				$('#numberInputHeaters').val(slots);
+			}
+			array.push(0);
+			if (number > 0 ) {
+				//add element 0
+				for(var i=1; i< number; i++){
+						array.push(Math.round(i*slots/number));
+				}
+			}
+			console.log(array);
+
+
+		}
 
 		function updateLabel(index, value){
 			switch(index){
