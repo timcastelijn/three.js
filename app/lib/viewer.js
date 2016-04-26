@@ -201,9 +201,33 @@ function applyDim(dim_index, value){
   if(cabine){
     value = value/100;
     // 0:width 1:height 2:length
-    cabine.setDim(dim_index, value)
+    cabine.setDim(dim_index, value);
+
 
     document_edited = true;
+
+    switch (dim_index) {
+      case 0:
+          var min = $("#number-width").attr('min');
+          value = value *100 < min? min:value*100
+
+          $("#slider-width").val(Math.round(value));
+          $("#number-width").val(Math.round(value));
+        break;
+      case 2:
+          var min = $("#number-depth").attr('min');
+          value = value *100 < min? min:value*100
+          $("#slider-depth").val(Math.round(value));
+          $("#number-depth").val(Math.round(value));
+        break;
+      case 1:
+          var min = $("#number-height").attr('min');
+          value = value *100 < min? min:value*100
+          $("#slider-height").val(Math.round(value));
+          $("#number-height").val(Math.round(value));
+        break;
+      default:
+    }
   }
 }
 

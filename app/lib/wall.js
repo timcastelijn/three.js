@@ -177,7 +177,7 @@ Wall.prototype.updateColors=function(){
   }
   this.corner_mesh.material.color.set(colors.exterior);
   if (this.door_plate_mesh) {
-    this.door_plate_mesh.material.color.set(colors.exterior);    
+    this.door_plate_mesh.material.color.set(colors.exterior);
   }
 }
 
@@ -258,6 +258,10 @@ Wall.prototype.setHeight = function(value){
   // scale coreners
   var factor = this.height / this.corner_mesh.geometry.parameters.height;
   this.corner_mesh.scale.y = factor;
+
+  if( this.door_plate_mesh){
+    this.door_plate_mesh.scale.y = factor;
+  }
 
 }
 

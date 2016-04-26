@@ -32,12 +32,12 @@
 	       		<div id="collapse1" class="panel-collapse collapse in">
 	         		<div class="panel-body">
 								<div class="container-fluid">
-		             	<div class="row" id='label-width'>Breedte:</div>
-		              <div class="row"><input class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value); updateLabel(0, this.value);" onchange="applyDim(0,this.value); updateLabel(0, this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-depth'>Diepte</div>
-			            <div class="row"><input class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value); updateLabel(1, this.value);" onchange="applyDim(2,this.value); updateLabel(1, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-height'>Hoogte</div>
-		              <div class="row"><input class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value); updateLabel(2, this.value);" onchange="applyDim(1,this.value); updateLabel(2, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="quantity" min="97" max="300" value="124" onchange='handleChange(this); applyDim(0, this.value)' /></div>
+		              <div class="row"><input id='slider-width' class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value); updateLabel(0, this.value);" onchange="applyDim(0,this.value); updateLabel(0, this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="quantity" min="97" max="300" value="140" onchange='handleChange(this); applyDim(2, this.value)' /></div>
+			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value); updateLabel(1, this.value);" onchange="applyDim(2,this.value); updateLabel(1, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="97" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
+		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value); updateLabel(2, this.value);" onchange="applyDim(1,this.value); updateLabel(2, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 								</div>
 	         		</div>
 	       		</div>
@@ -198,6 +198,11 @@
           }
     });
 
+		function handleChange(input) {
+			if (input.value < input.min) input.value = input.min;
+			if (input.value > input.max) input.value = input.max;
+		}
+
 		function toggleChevron(e) {
 		    $(e.target)
 		        .prev('.panel-heading')
@@ -207,9 +212,9 @@
 		$('#accordion').on('hidden.bs.collapse', toggleChevron);
 		$('#accordion').on('shown.bs.collapse', toggleChevron);
 
-		updateLabel(0, 124);
-		updateLabel(1, 140);
-		updateLabel(2, 200);
+		// updateLabel(0, 124);
+		// updateLabel(1, 140);
+		// updateLabel(2, 200);
 
 		function defineHeaterPositions(number){
 			var slots = cabine.walls[2].n;
@@ -232,23 +237,23 @@
 		}
 
 		function updateLabel(index, value){
-			switch(index){
-				case 0:
-					var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
-					value =  Math.round( (value > minimum_size)? value: minimum_size );
-					$( '#label-width' ).text( 'Breedte: ' + value + ' cm');
-					break;
-				case 1:
-					var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
-					value =  Math.round( (value > minimum_size)? value: minimum_size );
-					$( '#label-depth' ).text( 'Diepte: ' + value + ' cm');
-					break;
-				case 2:
-					var minimum_size =	(MODULE_FIXED_HEIGHT[1] + MODULE_FIXED_HEIGHT[0] + FLOOR_THICKNESS + CEILING_THICKNESS)*100;
-					value =  Math.round( (value > minimum_size)? value: minimum_size );
-					$( '#label-height' ).text( 'Hoogte: ' + value + ' cm');
-					break;
-				}
+			// switch(index){
+			// 	case 0:
+			// 		var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
+			// 		value =  Math.round( (value > minimum_size)? value: minimum_size );
+			// 		$( '#label-width' ).text( 'Breedte: ' + value + ' cm');
+			// 		break;
+			// 	case 1:
+			// 		var minimum_size =	(3*MODULE_WIDTH + 2* MODULE_THICKNESS)*100;
+			// 		value =  Math.round( (value > minimum_size)? value: minimum_size );
+			// 		$( '#label-depth' ).text( 'Diepte: ' + value + ' cm');
+			// 		break;
+			// 	case 2:
+			// 		var minimum_size =	(MODULE_FIXED_HEIGHT[1] + MODULE_FIXED_HEIGHT[0] + FLOOR_THICKNESS + CEILING_THICKNESS)*100;
+			// 		value =  Math.round( (value > minimum_size)? value: minimum_size );
+			// 		$( '#label-height' ).text( 'Hoogte: ' + value + ' cm');
+			// 		break;
+			// 	}
 		}
 
 	</script>
