@@ -164,6 +164,10 @@ Wall.prototype.updateConfig = function(){
     }
   }
 
+  if(this.aromatherapy){
+    this.cells[this.n-1][1].setType(3);
+  }
+
 }
 
 Wall.prototype.updateColors=function(){
@@ -219,6 +223,16 @@ Wall.prototype.addVaporizer = function( boolean){
     alert("zoutvernevelaar past niet, maak hoogte groter of vraag offerte op maat aan");
   }
 
+}
+
+Wall.prototype.addAromaTherapy = function( boolean ){
+
+  var target_cell = this.cells[this.n-1][1];
+
+
+  var type_index = boolean? 3: 0;
+  target_cell.setType(type_index);
+  this.aromatherapy = boolean;
 }
 
 Wall.prototype.addSteun = function( boolean){

@@ -57,8 +57,7 @@ var loadAromatherapy = function ( geometry, materials ) {
   geometry.computeVertexNormals();
 
   materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  materials[1] = new THREE.MeshPhongMaterial( { transparent:true, opacity:0.5, color:0xdddddd, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  materials[2] = new THREE.MeshPhongMaterial( { color: 0xffffff, map: new THREE.TextureLoader().load( "../../examples/textures/square-outline-textured.png" ), morphTargets: true} );
+  materials[3] = new THREE.MeshPhongMaterial( { color: 0xcccccc, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   var material = new THREE.MultiMaterial( materials );
 

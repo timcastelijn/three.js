@@ -105,22 +105,25 @@ Cell.prototype.setType = function(type){
 
   this.type = type;
 
-  var col = type == 0 ? "interior": "heater"
   // check whether objects are defined
-    switch(type){
-      case 1:
-        this.replaceInteriorGometry(heater_object)
-        break
-      case 2:
-        this.replaceInteriorGometry(vaporizer_object);
-        this.vaporizer_visible = true;
-        this.setHeight(this.height);
-        break
-      default:
-        this.replaceInteriorGometry(this.mesh_interior_clad);
-        this.setHeight(this.height);
-        break
-      }
+  switch(type){
+    case 1:
+      this.replaceInteriorGometry(heater_object)
+      break
+    case 2:
+      this.replaceInteriorGometry(vaporizer_object);
+      this.vaporizer_visible = true;
+      this.setHeight(this.height);
+      break
+    case 3:
+      this.replaceInteriorGometry(shelf_object);
+      this.mesh_interior.morphTargetInfluences[1]=0.67;
+      break
+    default:
+      this.replaceInteriorGometry(this.mesh_interior_clad);
+      this.setHeight(this.height);
+      break
+  }
 }
 
 Cell.prototype.replaceInteriorGometry = function(object_mesh){
@@ -146,6 +149,11 @@ Cell.prototype.updateColor = function(){
     case 2:
       this.mesh_interior.material.materials[0].color.set(colors.interior);
       break;
+    case 3:
+      this.mesh_interior.material.materials[0].color.set(colors.interior);
+      break;
+    default:
+      console.log("could not update cell color");
   }
 
   this.mesh_interior_clad.material.color.set(colors.interior)

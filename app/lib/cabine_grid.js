@@ -129,7 +129,7 @@ CabineGrid.prototype.setOption = function(index, boolean){
       this.addBackrest(boolean)
       break;
     case 4: //aromatherapie
-      alert('not implemented yet');
+      this.walls[3].addAromaTherapy( boolean )
       break;
     default:
       console.log("default");
