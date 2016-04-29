@@ -13,6 +13,11 @@ body {
   width:250px;
 }
 
+.modal {
+    overflow-y:auto;
+    max-height:90%;
+}
+
 .number-dim{
   position:absolute;
   right:15px;

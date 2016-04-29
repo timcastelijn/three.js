@@ -25,8 +25,8 @@
 		$subject 	= 'Message from Contact Demo ';
 		$headers 	= 'MIME-Version: 1.0' . "\r\n";
 		$headers 	.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		$headers 	.= 'From: _www@macbook-pro-van-tim-castelijn.local' . "\r\n";
-		// $headers 	.= 'From: Nobelsaunas@timcastelijn.nl' . "\r\n";
+		// $headers 	.= 'From: _www@macbook-pro-van-tim-castelijn.local' . "\r\n";
+		$headers 	.= 'From: Nobelsaunas@timcastelijn.nl' . "\r\n";
 		$message 	= "<html><head>" .
 						 "<meta http-equiv='Content-Language' content='en-us'>" .
 						 "<meta http-equiv='Content-Type' content='text/html; charset=windows-1252'>" .

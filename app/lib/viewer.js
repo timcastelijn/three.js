@@ -209,15 +209,21 @@ function applyDim(dim_index, value){
     switch (dim_index) {
       case 0:
           $("#slider-width").val(Math.round(value*100));
-          $("#number-width").val(Math.round(value*100));
-        break;
+          var min = $("#number-width").attr("min");
+          var value_temp = value*100<min? min:value*100
+          $("#number-width").val(Math.round(value_temp));
+          break;
       case 2:
           $("#slider-depth").val(Math.round(value*100));
-          $("#number-depth").val(Math.round(value*100));
-        break;
+          var min = $("#number-depth").attr("min");
+          var value_temp = value*100<min? min:value*100
+          $("#number-depth").val(Math.round(value_temp));
+          break;
       case 1:
           $("#slider-height").val(Math.round(value*100));
-          $("#number-height").val(Math.round(value*100));
+          var min = $("#number-height").attr("min");
+          var value_temp = value*100<min? min:value*100
+          $("#number-height").val(Math.round(value_temp));
         break;
       default:
     }

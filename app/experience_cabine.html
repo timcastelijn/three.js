@@ -36,7 +36,7 @@
 		              <div class="row"><input id='slider-width' class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value); updateLabel(0, this.value);" onchange="applyDim(0,this.value); updateLabel(0, this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="quantity" min="97" max="300" value="140" onchange='handleChange(this); applyDim(2, this.value)' /></div>
 			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value); updateLabel(1, this.value);" onchange="applyDim(2,this.value); updateLabel(1, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="97" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
+		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="154" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
 		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value); updateLabel(2, this.value);" onchange="applyDim(1,this.value); updateLabel(2, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 								</div>
 	         		</div>
@@ -115,7 +115,9 @@
 	     	<div class="panel panel-default">
 					<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Bestellen</button>
 				</div>
+				<a href="" data-toggle="modal" data-target="#helpModal" style="position:relative; right:0px;"><i class="glyphicon glyphicon-info-sign"> </i></a>
 		 	</div>
+
 			<!-- Modal -->
 	   	<div id="myModal" class="modal fade" role="dialog">
 	     	<div class="modal-dialog">
@@ -169,6 +171,36 @@
 
 	     </div>
 	   </div>
+		 <!-- modal end -->
+			<!-- Modal -->
+	   	<div id="helpModal" class="modal fade" role="dialog">
+	     	<div class="modal-dialog">
+
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	      	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Help!</h4>
+	      	</div>
+	        	<div class="modal-body">
+							<h3>Afmetingen</h3>
+	          	<div >Sleep met de sliders tot de gewenste afmetingen. Een exacte maat kun je ook intypen. De afmetingen van de cabine in de configurator zijn beperkt tot minimaal 97 x 97 x 154 cm en maximaal 300 x 300 x 300 cm. Wil je een afwijkende maat, geef dit dan aan bij de opmerkingen in het bestelformulier.</div>
+							<h3>Opties</h3>
+	          	<div >Kies de opties die je in de cabine wilt hebben. Deze worden automatisch geplaatst afhankelijk van de afmetingen. Wil je de opties op een andere locatie geef dit dan aan bij de offerte-aanvraag.</div>
+							<h3>Kleuren</h3>
+	          	<div >klik op het gekleurde vakje om de gewenste kleur per onderdeel te selecteren</div>
+							<h3>Bestellen</h3>
+	          	<div >vul je contactgegevens in en klik op verzenden om een offerte aan te vragen. Nobelsaunas neemt contact met je op over de bestelling.</div>
+	         </div>
+	         <div class="modal-footer">
+	           <!-- <input id="submit" name="submit" type="submit" value="Verzenden" onclick="$('#myform').submit()" class="btn btn-primary" onC> -->
+	           <button type="button" class="btn btn-default" data-dismiss="modal">Sluit</button>
+	         </div>
+	       </div>
+
+	     </div>
+	   </div>
+		 <!-- modal end -->
 	</div>
 
 	<script src="../build/three.min.js"></script>
