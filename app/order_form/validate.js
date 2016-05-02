@@ -27,7 +27,7 @@ $().ready(function(){
       $.ajax({
           url: $(this).attr("action"),
           type: 'POST',
-          data: $(this).serialize(),
+          data: $(this).serialize() + "&config=" + JSON.stringify(config),
           beforeSend: function() {
               $("#message").html("sending...");
           },

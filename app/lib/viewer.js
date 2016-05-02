@@ -9,6 +9,28 @@ var document_edited = false;
 
 var SHADOWS_ENABLED = false;
 
+var config = {
+  dimensions:[
+    124,
+    200,
+    140,
+  ],
+  heaters:[
+    'B(1,0)',
+    'C(1,0)',
+    'C(1,1)',
+    'C(1,2)',
+    'C(1,3)',
+    'D(1,0)',
+  ],
+  options:{
+    vaporizer:false,
+    backrest:false,
+    aromatherapy:false,
+  }
+
+}
+
 var colors = {
   exterior:"#333333",
   interior:"#ffffff",
@@ -170,7 +192,7 @@ function onDocumentMouseUp( event ) {
 function onDocumentKeyDown( event ) {
   switch( event.keyCode ) {
 
-    case 8: event.preventDefault(); console.log("Delete"); break;
+    // case 8: event.preventDefault(); console.log("Delete"); break;
 
   }
 
@@ -197,6 +219,9 @@ function render() {
 
 //apply dimension change to grid
 function applyDim(dim_index, value){
+
+  config.dimensions[dim_index] = value
+
   value = value/100;
 
   document_edited = true;
@@ -232,6 +257,22 @@ function applyDim(dim_index, value){
 // 1:rugsteun
 // 2:aromatherapie
 function addOption(index, boolean_add){
+
+  switch (parseInt(index)) {
+    case 2:
+      config.options.vaporizer = boolean_add
+      break;
+    case 3:
+      config.options.backrest = boolean_add
+      break;
+    case 4:
+      config.options.aromatherapy = boolean_add
+      break;
+    default:
+
+
+  }
+
 
   if(cabine){
     cabine.setOption(parseInt(index), boolean_add);

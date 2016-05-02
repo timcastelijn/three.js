@@ -33,11 +33,11 @@
 	         		<div class="panel-body">
 								<div class="container-fluid">
 		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="quantity" min="97" max="300" value="124" onchange='handleChange(this); applyDim(0, this.value)' /></div>
-		              <div class="row"><input id='slider-width' class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value); updateLabel(0, this.value);" onchange="applyDim(0,this.value); updateLabel(0, this.value)" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		              <div class="row"><input id='slider-width' class="slider_100" type="range" value="124" min="10" max="300" oninput="applyDim(0,this.value);" onchange="applyDim(0,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="quantity" min="97" max="300" value="140" onchange='handleChange(this); applyDim(2, this.value)' /></div>
-			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value); updateLabel(1, this.value);" onchange="applyDim(2,this.value); updateLabel(1, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value);" onchange="applyDim(2,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="154" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
-		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value); updateLabel(2, this.value);" onchange="applyDim(1,this.value); updateLabel(2, this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value);" onchange="applyDim(1,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 								</div>
 	         		</div>
 	       		</div>
@@ -160,6 +160,7 @@
 	           			<!-- Will be used to display an alert to the user -->
 	           		</div>
 	           	</div>
+									<input type="hidden" class="form-control" name="config" value="javascript:JSON.stringify({apple:green, pear:blue})">
 	           </form>
 	           <div id="response"></div>
 	         </div>
@@ -243,10 +244,6 @@
 		}
 		$('#accordion').on('hidden.bs.collapse', toggleChevron);
 		$('#accordion').on('shown.bs.collapse', toggleChevron);
-
-		// updateLabel(0, 124);
-		// updateLabel(1, 140);
-		// updateLabel(2, 200);
 
 		function defineHeaterPositions(number){
 			var slots = cabine.walls[2].n;
