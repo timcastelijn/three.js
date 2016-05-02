@@ -1,4 +1,3 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var browser_ok = browser_detector.detect()
 
 var container, stats;
@@ -198,35 +197,34 @@ function render() {
 
 //apply dimension change to grid
 function applyDim(dim_index, value){
+  value = value/100;
+
+  document_edited = true;
+
+  switch (dim_index) {
+    case 0:
+        $("#slider-width").val(Math.round(value*100));
+        var min = $("#number-width").attr("min");
+        var value_temp = value*100<min? min:value*100
+        $("#number-width").val(Math.round(value_temp));
+        break;
+    case 2:
+        $("#slider-depth").val(Math.round(value*100));
+        var min = $("#number-depth").attr("min");
+        var value_temp = value*100<min? min:value*100
+        $("#number-depth").val(Math.round(value_temp));
+        break;
+    case 1:
+        $("#slider-height").val(Math.round(value*100));
+        var min = $("#number-height").attr("min");
+        var value_temp = value*100<min? min:value*100
+        $("#number-height").val(Math.round(value_temp));
+      break;
+    default:
+  }
   if(cabine){
-    value = value/100;
     // 0:width 1:height 2:length
     cabine.setDim(dim_index, value);
-
-
-    document_edited = true;
-
-    switch (dim_index) {
-      case 0:
-          $("#slider-width").val(Math.round(value*100));
-          var min = $("#number-width").attr("min");
-          var value_temp = value*100<min? min:value*100
-          $("#number-width").val(Math.round(value_temp));
-          break;
-      case 2:
-          $("#slider-depth").val(Math.round(value*100));
-          var min = $("#number-depth").attr("min");
-          var value_temp = value*100<min? min:value*100
-          $("#number-depth").val(Math.round(value_temp));
-          break;
-      case 1:
-          $("#slider-height").val(Math.round(value*100));
-          var min = $("#number-height").attr("min");
-          var value_temp = value*100<min? min:value*100
-          $("#number-height").val(Math.round(value_temp));
-        break;
-      default:
-    }
   }
 }
 
@@ -234,8 +232,10 @@ function applyDim(dim_index, value){
 // 1:rugsteun
 // 2:aromatherapie
 function addOption(index, boolean_add){
-  // console.log(index, boolean_add);
-  cabine.setOption(parseInt(index), boolean_add);
+
+  if(cabine){
+    cabine.setOption(parseInt(index), boolean_add);
+  }
 
   document_edited = true;
 
@@ -243,7 +243,9 @@ function addOption(index, boolean_add){
 
 function setColor(id, color){
   colors[id] = color;
-  cabine.updateColors();
 
+  if(cabine){
+    cabine.updateColors();
+  }
   document_edited = true;
 }

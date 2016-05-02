@@ -42,7 +42,7 @@ var browser_detector = {
   },
 
 
-  getCompatible : function (current_browser) {
+  getCompatible : function (message) {
 
     var element = document.createElement( 'div' );
     element.id = 'browser-error-message';
@@ -58,10 +58,7 @@ var browser_detector = {
 
 
 
-    element.innerHTML = [
-      'Your browser: ' + current_browser.name + " " + current_browser.version + " does not support THREE.js.",
-      'Please use a preferred browser like the latest version of <a href="https://www.google.nl/chrome/browser/desktop/" style="color:#00f">Google Chrome</a>.'
-    ].join( '\n' );
+    element.innerHTML = message;
 
 
     var parent, id;
@@ -72,6 +69,28 @@ var browser_detector = {
 		id = parameters.id !== undefined ? parameters.id : 'oldie';
 
 		parent.appendChild( element );
+
+    var svg_element = document.createElement( 'img' );
+    svg_element.id = 'browser-error-svg';
+    svg_element.src="images/sensiks_static.svg"
+
+    // svg_element.style.fontFamily = 'sans-serif';
+    // svg_element.style.fontSize = '13px';
+    // svg_element.style.fontWeight = 'normal';
+    // svg_element.style.textAlign = 'center';
+    // svg_element.style.background = '#fff';
+    // svg_element.style.color = '#000';
+    // svg_element.style.padding = '1.5em';
+    // svg_element.style.width = '400px';
+    svg_element.style.display= 'block';
+    svg_element.style.margin = '30px auto';
+
+
+
+
+		parent.appendChild( svg_element );
+
+
   },
 
   browsers:[
@@ -80,9 +99,18 @@ var browser_detector = {
     {name:'safari', version:9},
     {name:'msie', version:11},
   ],
+  // browsers:[
+  //   {name:'firefox', version:100},
+  //   {name:'chrome', version:48},
+  //   {name:'safari', version:9},
+  //   {name:'msie', version:11},
+  // ],
 
-  detect : function(){
-    var current_browser = browser_detector.sayswho()
+  compatible: function(){
+    // check browser_version
+    this.current_browser = browser_detector.sayswho()
+
+    var current_browser = this.current_browser;
     console.log(current_browser.name, current_browser.version)
 
     // for each browser in the list
@@ -92,16 +120,46 @@ var browser_detector = {
 
       //test name and version
       if(current_browser.os != 'windows8.1'){
+        // not 8.1
         if (current_browser.name.match(name)){
+          // match one of the names
           if (current_browser.version >= version ){
+            // version greater than minimum
             return true;
           }
         }
       }
     }
+    // name or version not ok:
+    return false
+  },
 
-    // return false if browser is not OK, add message
-    browser_detector.getCompatible(current_browser);
-    return false;
+  detect : function(){
+
+    // check webgl on GPU
+    if ( ! Detector.webgl ) {
+
+      var message = [
+          "WebGL is not supported by your graphics card. You cannot use the dynamic 3d viewer, but you can still use the user interface to get your customized design",
+        ].join( '\n' );
+
+      browser_detector.getCompatible(message);
+
+      return false;
+    } else if (!browser_detector.compatible() ) {
+
+      var message = [
+          "Your browser: '" + this.current_browser.name + " " + this.current_browser.version + "' is not supported by the dynamic 3d viewer.",
+          'Please use a preferred browser like the latest version of <a href="https://www.google.nl/chrome/browser/desktop/" style="color:#00f">Google Chrome</a>.',
+        ].join( '\n' );
+
+      browser_detector.getCompatible(message);
+      return false;
+
+    } else {
+      return true;
+    }
+
+
   }
 }
