@@ -2,7 +2,7 @@ var browser_ok = browser_detector.detect()
 
 var container, stats;
 var camera, controls, scene, renderer;
-var heater_object, vaporizer_object, shelf_object, cabine;
+var floor_object, heater_object, vaporizer_object, shelf_object, cabine;
 
 var document_edited = false;
 
@@ -34,7 +34,7 @@ var config = {
 var colors = {
   exterior:"#333333",
   interior:"#ffffff",
-  floor:"#333333",
+  floor:"#C28B6B",
   bamboo:"#C28B6B",
 }
 

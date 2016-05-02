@@ -56,8 +56,8 @@ function CabineGrid(width, height, depth){
   }
 
   var json_loader = new THREE.JSONLoader( );
-  json_loader.load( "models/ir-module.json", modelLoadedCallback);
 
+  json_loader.load( "models/ir-module.json", modelLoadedCallback);
 
   json_loader.load( "models/salt-vaporizer.json", loadVaporizer);
 
@@ -71,10 +71,13 @@ function CabineGrid(width, height, depth){
   this.ceiling.position.set(0,this.height,0);
   this.add(this.ceiling);
 
-  //add floor
-  this.floor    = new CeilingPlaceHolder(width, depth, FLOOR_THICKNESS);
-  this.floor.position.set(0,-FLOOR_THICKNESS,0);
-  this.add(this.floor);
+  // //add floor
+  this.floor = new Cap(width, depth);
+  this.add(this.floor)
+
+  // this.floor    = new CeilingPlaceHolder(width, depth, FLOOR_THICKNESS);
+  // this.floor.position.set(0,-FLOOR_THICKNESS,0);
+  // this.add(this.floor);
 
   //add becnch
   this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, MODULE_FIXED_HEIGHT[0]);
@@ -85,6 +88,8 @@ function CabineGrid(width, height, depth){
 }
 CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
+
+
 
 CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
@@ -185,7 +190,7 @@ CabineGrid.prototype.setDepth = function(value){
   this.depth = value - 2* MODULE_THICKNESS;
 
   this.ceiling.setLength(value);
-  this.floor.setLength(value);
+  this.floor.setDepth(value);
   this.bench.position.set(0,0,- this.depth/2 + MODULE_WIDTH);
 
   this.setBackrestWidth();
@@ -224,7 +229,8 @@ CabineGrid.prototype.placeHeaters=function(){
 
 // set width of the complete cabine
 CabineGrid.prototype.updateColors=function(){
-  this.floor.mesh_object.material.color.set(colors.exterior);
+  this.floor.updateColors();
+  
   this.ceiling.mesh_object.material.color.set(colors.exterior);
   this.bench.mesh_object.material.color.set(colors.interior);
 

@@ -109,6 +109,18 @@
 									</select>
 								</div>
 							</div>
+							<div class='row'>
+								<div class="col-sm-4">
+									Vloer
+								</div>
+								<div class="col-sm-4">
+									<select id="colorselector3">
+								    <option value="1" data-color="#ffffff">White</option>
+								    <option value="2" data-color="#333333">Black</option>
+								    <option value="3" data-color="#C28B6B" selected="selected">Bamboo</option>
+									</select>
+								</div>
+							</div>
 						</div>
 	       	</div>
 	     	</div>
@@ -214,6 +226,7 @@
 	<script src="lib/cabine_grid.js"></script>
 	<script src="lib/wall.js"></script>
 	<script src="lib/cell.js"></script>
+	<script src="lib/cap.js"></script>
 	<script src="lib/browser_detector.js"></script>
 	<script src="lib/json_loader.js"></script>
 	<script src="lib/viewer.js"></script>
@@ -228,6 +241,12 @@
 		$('#colorselector2').colorselector({
           callback: function (value, color, title) {
 						setColor('interior', color);
+          }
+    });
+
+		$('#colorselector3').colorselector({
+          callback: function (value, color, title) {
+						setColor('floor', color);
           }
     });
 
