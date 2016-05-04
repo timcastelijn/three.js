@@ -2,6 +2,7 @@ var browser_ok = browser_detector.detect()
 
 var container, stats;
 var camera, controls, scene, renderer;
+var dragger;
 var floor_object, heater_object, vaporizer_object, shelf_object, cabine;
 
 var document_edited = false;
@@ -88,16 +89,6 @@ function init() {
   cabine = new CabineGrid(1.24, 2.0, 1.4);
   scene.add(cabine);
 
-  //create intersection plane
-  plane = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry( 2000, 2000, 8, 8 ),
-    new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
-  );
-  // rotate plane to xz orientation
-  plane.rotation.x = Math.PI * -0.5;
-  plane.visible = false;
-  scene.add( plane );
-
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
   // renderer = new THREE.WebGLRenderer( { antialias: true} );
   renderer.setClearColor( 0x000000, 0);
@@ -121,6 +112,25 @@ function init() {
   controls.enableZoom = true;
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
+
+  // ---------- ADD DRAGGER TO THE SCENE ----------------
+  dragger = new Dragger(camera, controls);
+  var geometry = new THREE.BoxGeometry( 2, 2, 2 );
+  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  object.name = "big"
+
+  var geometry2 = new THREE.BoxGeometry( 0.5, 0.5, 0.5 );
+  var object2 = new THREE.Mesh( geometry2, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  object2.position.set(1,1,1);
+  object2.name = 'small'
+
+  object.add(object2);
+
+  // dragger.add(object);
+  var arrow_width = new Draggable(object, dragger);
+  scene.add(arrow_width);
+
+
 
   var info = document.createElement( 'div' );
   info.style.position = 'absolute';
@@ -172,6 +182,7 @@ function onWindowResize() {
 function onDocumentMouseMove( event ) {
 
   event.preventDefault();
+  dragger.onMouseMove(event);
 
 
 }
@@ -179,14 +190,13 @@ function onDocumentMouseMove( event ) {
 function onDocumentMouseDown( event ) {
 
   event.preventDefault();
-
+  dragger.onMouseDown(event);
 
 }
 
 function onDocumentMouseUp( event ) {
-
-
-
+  event.preventDefault();
+  dragger.onMouseUp(event);
 }
 
 function onDocumentKeyDown( event ) {
