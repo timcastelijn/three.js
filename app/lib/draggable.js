@@ -21,6 +21,27 @@ function Dragger(camera, controls){
   this.plane.rotation.x = Math.PI * -0.5;
   this.plane.material.visible = false;
   scene.add( this.plane );
+
+  renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+  renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+  renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+
+}
+function onDocumentMouseDown( event ) {
+
+  event.preventDefault();
+  dragger.onMouseDown(event);
+
+}
+
+function onDocumentMouseUp( event ) {
+  event.preventDefault();
+  dragger.onMouseUp(event);
+}
+
+function onDocumentMouseMove( event ) {
+  event.preventDefault();
+  dragger.onMouseMove(event);
 }
 
 Dragger.prototype.add=function(object){
@@ -152,7 +173,4 @@ Draggable.prototype.moveTo=function( target){
   this.position.copy( pos );
 
   cabine.setWidth(pos.x - 1 + 1.24)
-}
-Draggable.prototype.printInfo=function( ){
-  console.log(this.name);
 }

@@ -113,21 +113,21 @@ function init() {
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 
-  // ---------- ADD DRAGGER TO THE SCENE ----------------
-  dragger = new Dragger(camera, controls);
-  var geometry = new THREE.BoxGeometry( 0.1,0.1,0.1);
-  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: '#165ba8' } ) );
-  object.name = "arrow";
-
-
-  // dragger.add(object);
-  var arrow_width = new Draggable(object, dragger);
-  arrow_width.dof = new THREE.Vector3(1,0,0);
-  arrow_width.position.set(1,0,0);
-
-  arrow_width.printInfo()
-
-  scene.add(arrow_width);
+  // // ---------- ADD DRAGGER TO THE SCENE ----------------
+  // dragger = new Dragger(camera, controls);
+  //
+  // var dir = new THREE.Vector3( 1, 0, 0 );
+  // var origin = new THREE.Vector3( 0, 0, 0 );
+  // var length = 0.5;
+  // var hex = '#165ba8';
+  //
+  // var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex, 0.4*length, 0.2*length);
+  //
+  // var arrow_width = new Draggable(arrowHelper, dragger);
+  // arrow_width.dof = new THREE.Vector3(1,0,0);
+  // arrow_width.position.set(1,0,0);
+  //
+  // scene.add(arrow_width);
 
 
 
@@ -146,9 +146,6 @@ function init() {
   // stats.domElement.style.right = '0px';
   // container.appendChild( stats.domElement );
 
-  renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-  renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 
   // before-unload warning message
   window.addEventListener("beforeunload", function (e) {
@@ -178,25 +175,7 @@ function onWindowResize() {
 
 }
 
-function onDocumentMouseMove( event ) {
 
-  event.preventDefault();
-  dragger.onMouseMove(event);
-
-
-}
-
-function onDocumentMouseDown( event ) {
-
-  event.preventDefault();
-  dragger.onMouseDown(event);
-
-}
-
-function onDocumentMouseUp( event ) {
-  event.preventDefault();
-  dragger.onMouseUp(event);
-}
 
 function onDocumentKeyDown( event ) {
   switch( event.keyCode ) {
