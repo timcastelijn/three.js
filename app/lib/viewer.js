@@ -115,19 +115,18 @@ function init() {
 
   // ---------- ADD DRAGGER TO THE SCENE ----------------
   dragger = new Dragger(camera, controls);
-  var geometry = new THREE.BoxGeometry( 2, 2, 2 );
-  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  object.name = "big"
+  var geometry = new THREE.BoxGeometry( 0.1,0.1,0.1);
+  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: '#165ba8' } ) );
+  object.name = "arrow";
 
-  var geometry2 = new THREE.BoxGeometry( 0.5, 0.5, 0.5 );
-  var object2 = new THREE.Mesh( geometry2, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  object2.position.set(1,1,1);
-  object2.name = 'small'
-
-  object.add(object2);
 
   // dragger.add(object);
   var arrow_width = new Draggable(object, dragger);
+  arrow_width.dof = new THREE.Vector3(1,0,0);
+  arrow_width.position.set(1,0,0);
+
+  arrow_width.printInfo()
+
   scene.add(arrow_width);
 
 

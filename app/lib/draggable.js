@@ -19,7 +19,7 @@ function Dragger(camera, controls){
   );
   // rotate plane to xz orientation
   this.plane.rotation.x = Math.PI * -0.5;
-  // this.plane.visible = false;
+  this.plane.material.visible = false;
   scene.add( this.plane );
 }
 
@@ -36,7 +36,9 @@ Dragger.prototype.onMouseMove=function(event){
   if ( this.dragged ) {
     var intersects = this.raycaster.intersectObject( this.plane );
     if ( intersects.length > 0 ) {
-      this.dragged.position.copy( intersects[ 0 ].point );
+
+      this.dragged.moveTo(intersects[ 0 ].point);
+      // this.dragged.position.copy( intersects[ 0 ].point );
     }
     return;
   }
@@ -122,7 +124,7 @@ function getChildMeshes(object){
 //Draggable class
 /////////////////
 function Draggable(object, dragger){
-  THREE.Group.call( this );
+  THREE.Object3D.call( this );
 
   this.add(object);
 
@@ -134,11 +136,23 @@ function Draggable(object, dragger){
     dragger.parent_lookup[children[i].id] = this;
   }
 
-
-
   // add object to the dragger
   dragger.draggables.push(this);
 }
 
-Draggable.prototype = new THREE.Group();
+Draggable.prototype = new THREE.Object3D();
 Draggable.prototype.constructor = Draggable;
+
+Draggable.prototype.moveTo=function( target){
+  var pos = new THREE.Vector3(0,0,0);
+  pos.x = this.dof.x * target.x
+  pos.y = this.dof.y * target.y
+  pos.z = this.dof.z * target.z
+
+  this.position.copy( pos );
+
+  cabine.setWidth(pos.x - 1 + 1.24)
+}
+Draggable.prototype.printInfo=function( ){
+  console.log(this.name);
+}
