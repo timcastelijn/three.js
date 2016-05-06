@@ -165,6 +165,52 @@ function init() {
   return true;
 }
 
+function addLights(){
+  // ----------------- Sprites --------------------
+  function generateSprite() {
+      var canvas = document.createElement( 'canvas' );
+      canvas.width = 16;
+      canvas.height = 16;
+      var context = canvas.getContext( '2d' );
+      var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+      gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
+      gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
+      gradient.addColorStop( 0.4, 'rgba(0,0,64,0)' );
+      gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
+      context.fillStyle = gradient;
+      context.fillRect( 0, 0, canvas.width, canvas.height );
+      return canvas;
+  }
+
+  var material = new THREE.SpriteMaterial( {
+      map: new THREE.CanvasTexture( generateSprite() ),
+      blending: THREE.AdditiveBlending
+  } );
+
+
+  light1 = new THREE.PointLight( 0x2222ff, 1, 50 );
+  light1.position.set(0,1.79,0)
+  scene.add( light1 );
+
+  var radius = 10;
+
+  for ( var i = 0; i < 10; i++ ) {
+    for( var j =0; j< 10; j++){
+      particle = new THREE.Sprite( material );
+      particle.position.x = 1.04/10*i -1.0/2 ;
+      particle.position.y = 1.78;
+      particle.position.z = 1.2/10*j - 1.16 /2;
+
+      var scale = 0.2
+      particle.scale.x = scale;
+      particle.scale.y = scale;
+      particle.scale.z = scale;
+
+      scene.add( particle );
+    }
+  }
+}
+
 function onWindowResize() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -178,9 +224,10 @@ function onWindowResize() {
 
 
 function onDocumentKeyDown( event ) {
-  switch( event.keyCode ) {
-
+  switch( event.key ) {
     // case 8: event.preventDefault(); console.log("Delete"); break;
+    case 'l':
+      addLights();
 
   }
 
