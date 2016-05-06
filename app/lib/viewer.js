@@ -188,7 +188,7 @@ function addLights(){
   } );
 
 
-  light1 = new THREE.PointLight( 0x2222ff, 1, 50 );
+  light1 = new THREE.PointLight( 0x2222ff, 1, 3 );
   light1.position.set(0,1.79,0)
   scene.add( light1 );
 
