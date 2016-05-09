@@ -19,7 +19,9 @@
 		$message .= "telefoonnummer: " . $_POST['telephone'] . "<br>";
 		$message .= "emailadres: " . $_POST['email'] . "<br>";
 		$message .= "opmerkingen:" . $_POST['message'] . "<br>";
-		$message .= "config:" . $_POST['config'] . "<br>";
+		$message .= "config:"  . "<br>";
+		$message .= $_POST['config'] . "<br>";
+
 
 
 		$to = 'configuratornobelsaunas@gmail.com';

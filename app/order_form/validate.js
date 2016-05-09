@@ -23,6 +23,9 @@ $().ready(function(){
   $("#myform").on("submit", function(e) {
     if($('#myform').valid()){
       //prevent default redirrecting
+      
+      cabine.getCellLayout();
+
       e.preventDefault();
       $.ajax({
           url: $(this).attr("action"),
