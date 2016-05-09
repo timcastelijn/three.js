@@ -31,6 +31,22 @@ var loadFloor = function ( geometry, materials ) {
   cabine.floor.addCap()
 }
 
+var loadBench = function ( geometry, materials ) {
+
+  geometry.computeFaceNormals();
+  geometry.computeVertexNormals();
+
+  materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
+  var material = new THREE.MultiMaterial( materials );
+  bench_object = new THREE.Mesh( geometry, material );
+
+  bench_object.castShadow = SHADOWS_ENABLED
+  bench_object.receiveShadow = SHADOWS_ENABLED
+
+  cabine.bench.addBench()
+}
+
 // cell type 2
 var loadVaporizer = function ( geometry, materials ) {
 

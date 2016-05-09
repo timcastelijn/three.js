@@ -3,7 +3,7 @@ var browser_ok = browser_detector.detect()
 var container, stats;
 var camera, controls, scene, renderer;
 var dragger;
-var floor_object, heater_object, vaporizer_object, shelf_object, cabine;
+var floor_object, heater_object, vaporizer_object, shelf_object, bench_object, cabine;
 
 var document_edited = false;
 

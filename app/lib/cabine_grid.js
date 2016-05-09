@@ -75,15 +75,9 @@ function CabineGrid(width, height, depth){
   this.floor = new Cap(width, depth);
   this.add(this.floor)
 
-  // this.floor    = new CeilingPlaceHolder(width, depth, FLOOR_THICKNESS);
-  // this.floor.position.set(0,-FLOOR_THICKNESS,0);
-  // this.add(this.floor);
+  this.bench = new Bench(this.width, this.depth);
+  this.add(this.bench)
 
-  //add becnch
-  this.bench    = new CeilingPlaceHolder(this.width, MODULE_WIDTH * 2, MODULE_FIXED_HEIGHT[0]);
-  this.bench.mesh_object.material.color.set( colors.interior );
-  this.bench.position.set(0, 0, -(this.depth)/2 + MODULE_WIDTH );
-  this.add(this.bench);
 
 }
 CabineGrid.prototype = new THREE.Object3D();
@@ -91,6 +85,30 @@ CabineGrid.prototype.constructor = CabineGrid;
 
 
 
+CabineGrid.prototype.getCellLayout=function(){
+  config.heaters = []
+
+  if(cabine){
+    for(var i = 0; i<this.walls.length; i++){
+      var wall = this.walls[i];
+      for(var j = 0; j<wall.cells.length; j++){
+        var column = wall.cells[j];
+        console.log(column);
+        if(column){
+          for(var k = 0; k<this.walls[i].cells[j].length; k++){
+            var cell = column[k];
+            if (cell.type == 1){
+              config.heaters.push(i + '-'+ j +',' + k);
+            }
+          }
+        }
+      }
+    }
+  } else {
+    config.heaters = "de simpele editor ondersteunt deze optie nog niet"
+  }
+
+}
 CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
@@ -230,9 +248,9 @@ CabineGrid.prototype.placeHeaters=function(){
 // set width of the complete cabine
 CabineGrid.prototype.updateColors=function(){
   this.floor.updateColors();
-  
+
   this.ceiling.mesh_object.material.color.set(colors.exterior);
-  this.bench.mesh_object.material.color.set(colors.interior);
+  this.bench.updateColors();
 
   for(var i=0; i<this.walls.length; i++){
     this.walls[i].updateColors();
