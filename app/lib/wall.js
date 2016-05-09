@@ -203,7 +203,8 @@ Wall.prototype.addCol = function(n){
     var width       = (n<this.n)? MODULE_WIDTH: this.rest;
 
     var size    = [width, cell_height, MODULE_THICKNESS];
-    this.cells[n][i] = new Cell(size, this.flip);
+    var cell_id = this.index + "-" + n + "-" + i;
+    this.cells[n][i] = new Cell(size, this.flip, cell_id);
     this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0);
 
 
@@ -344,7 +345,9 @@ Wall.prototype.addRow = function(i){
 
       //create a new cell
       var size    = [width, MODULE_HEIGHT, MODULE_THICKNESS];
-      this.cells[n][i] = new Cell(size, this.flip);
+      var cell_id = this.index + "-" + n + "-" + i;
+
+      this.cells[n][i] = new Cell(size, this.flip, cell_id);
       this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0);
 
       // add cell to 'base' in scene
