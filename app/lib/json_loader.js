@@ -1,17 +1,20 @@
-var modelLoadedCallback = function ( geometry, materials ) {
+var modelLoadedCallback = function(type, config_file){
+  return function ( geometry, materials ) {
 
-  geometry.computeFaceNormals();
-  geometry.computeVertexNormals();
+    geometry.computeFaceNormals();
+    geometry.computeVertexNormals();
 
-  materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+    var material = new THREE.MultiMaterial( materials );
+    _mesh_objects[type] = new THREE.Mesh( geometry, material );
 
-  var material = new THREE.MultiMaterial( materials );
-  heater_object = new THREE.Mesh( geometry, material );
 
-  heater_object.castShadow = SHADOWS_ENABLED
-  heater_object.receiveShadow = SHADOWS_ENABLED
 
-  cabine.placeHeaters();
+    _models_loading--
+    console.log(_models_loading);
+    if(_models_loading ==0){
+      loadConfig(config_file)
+    }
+  }
 }
 
 var loadFloor = function ( geometry, materials ) {

@@ -3,12 +3,19 @@ var browser_ok = browser_detector.detect()
 var container, stats;
 var camera, controls, scene, renderer;
 var dragger;
-var floor_object, heater_object, vaporizer_object, shelf_object, bench_object, cabine;
+var _mesh_objects =[];
 
 var document_edited = false;
+var _models_loading = 0;
 
 
 var SHADOWS_ENABLED = false;
+
+var block_files = {
+  wall:'models/wall.json',
+  floor:'models/floor.json',
+}
+
 
 var config = {
   dimensions:[
@@ -29,7 +36,6 @@ var config = {
     backrest:false,
     aromatherapy:false,
   }
-
 }
 
 var colors = {
@@ -40,6 +46,7 @@ var colors = {
 }
 
 if (browser_ok){
+
   init();
   animate();
 }
@@ -85,10 +92,6 @@ function init() {
 
   scene.add( light );
 
-  //create cabine
-  cabine = new CabineGrid(1.24, 2.0, 1.4);
-  scene.add(cabine);
-
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
   // renderer = new THREE.WebGLRenderer( { antialias: true} );
   renderer.setClearColor( 0x000000, 0);
@@ -113,39 +116,17 @@ function init() {
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 
-  // // ---------- ADD DRAGGER TO THE SCENE ----------------
-  // dragger = new Dragger(camera, controls);
-  //
-  // var dir = new THREE.Vector3( 1, 0, 0 );
-  // var origin = new THREE.Vector3( 0, 0, 0 );
-  // var length = 0.5;
-  // var hex = '#165ba8';
-  //
-  // var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex, 0.4*length, 0.2*length);
-  //
-  // var arrow_width = new Draggable(arrowHelper, dragger);
-  // arrow_width.dof = new THREE.Vector3(1,0,0);
-  // arrow_width.position.set(1,0,0);
-  //
-  // scene.add(arrow_width);
 
 
+  // add information tag
+  addInfo()
 
-  var info = document.createElement( 'div' );
-  info.style.position = 'absolute';
-  info.style.bottom = '10px';
-  info.style.right = '10px';
-  info.style.width = '100%';
-  info.style.textAlign = 'right';
-  info.innerHTML = 'created by <a href="http://timcastelijn.nl">timcastelijn.nl</a> using <a href="http://threejs.org" target="_blank">three.js</a>';
-  container.appendChild( info );
 
   // stats = new Stats();
   // stats.domElement.style.position = 'absolute';
   // stats.domElement.style.top = '0px';
   // stats.domElement.style.right = '0px';
   // container.appendChild( stats.domElement );
-
 
   // before-unload warning message
   window.addEventListener("beforeunload", function (e) {
@@ -162,7 +143,64 @@ function init() {
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
+
+
+
+  // load all block and load filename when finished
+  function loadBlocks(){
+    var json_loader = new THREE.JSONLoader( );
+
+    for (var type in block_files) {
+        if (block_files.hasOwnProperty(type)) {
+
+          // increment models being loaded
+          _models_loading ++;
+
+          // if models are loaded, load the config file
+          json_loader.load( block_files[type], modelLoadedCallback(type, 'config/model1.json'));
+        }
+    }
+
+  }
+
+  loadBlocks();
+
   return true;
+}
+
+function addObject(geometry){
+
+  var block;
+  switch (geometry.type) {
+    case 'floor':
+      block = new Floor(geometry);
+      break;
+    default:
+      block = new Block(geometry);
+  }
+
+  var pos = geometry.position
+
+  block.position.set(pos[0],pos[1],pos[2]);
+  // console.log(block);
+  scene.add(block);
+}
+
+function loadConfig(filename){
+  // $.ajaxSetup({ mimeType: "text/plain" });
+  $.ajaxSetup({ mimeType: "application/json" });
+  var jqxhr = $.getJSON( filename, function(data) {
+    console.log( "config file loaded sucessfully" );
+    for (var name in data.geometry) {
+        if (data.geometry.hasOwnProperty(name)) {
+          addObject(data.geometry[name])
+        }
+    }
+
+  }).fail(function() {
+    //in case loading fails, log an error
+    console.log( "Error: config file failed to load" );
+  })
 }
 
 function addLights(){
@@ -324,4 +362,16 @@ function setColor(id, color){
     cabine.updateColors();
   }
   document_edited = true;
+}
+
+function  addInfo(){
+
+  var info = document.createElement( 'div' );
+  info.style.position = 'absolute';
+  info.style.bottom = '10px';
+  info.style.right = '10px';
+  info.style.width = '100%';
+  info.style.textAlign = 'right';
+  info.innerHTML = 'created by <a href="http://timcastelijn.nl">timcastelijn.nl</a> using <a href="http://threejs.org" target="_blank">three.js</a>';
+  container.appendChild( info );
 }
