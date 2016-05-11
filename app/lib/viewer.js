@@ -185,7 +185,6 @@ function addObject(geometry){
   block.position.set(parseInt(pos[0]),parseInt(pos[1]),parseInt(pos[2]));
 
 
-
   // console.log(block);
   scene.add(block);
 }
