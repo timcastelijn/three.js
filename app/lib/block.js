@@ -5,8 +5,10 @@ function Block(geometry){
   this.type = geometry.type;
 
   this.mesh_object = _mesh_objects[this.type].clone()
-  var edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
 
+  this.width = 1;
+
+  var edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
   this.add(edges);
   this.add(this.mesh_object)
 

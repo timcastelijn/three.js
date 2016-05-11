@@ -2,7 +2,7 @@ var browser_ok = browser_detector.detect()
 
 var container, stats;
 var camera, controls, scene, renderer;
-var dragger;
+var dragger, selector;
 var _mesh_objects =[];
 
 var document_edited = false;
@@ -143,29 +143,30 @@ function init() {
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
-
-
-
-  // load all block and load filename when finished
-  function loadBlocks(){
-    var json_loader = new THREE.JSONLoader( );
-
-    for (var type in block_files) {
-        if (block_files.hasOwnProperty(type)) {
-
-          // increment models being loaded
-          _models_loading ++;
-
-          // if models are loaded, load the config file
-          json_loader.load( block_files[type], modelLoadedCallback(type, 'config/model1.json'));
-        }
-    }
-
-  }
+  selector = new Selector(camera, controls);
 
   loadBlocks();
 
   return true;
+}
+
+
+
+// load all block and load filename when finished
+function loadBlocks(){
+  var json_loader = new THREE.JSONLoader( );
+
+  for (var type in block_files) {
+      if (block_files.hasOwnProperty(type)) {
+
+        // increment models being loaded
+        _models_loading ++;
+
+        // if models are loaded, load the config file
+        json_loader.load( block_files[type], modelLoadedCallback(type, 'config/model1.json'));
+      }
+  }
+
 }
 
 function addObject(geometry){
@@ -173,15 +174,18 @@ function addObject(geometry){
   var block;
   switch (geometry.type) {
     case 'floor':
-      block = new Floor(geometry);
+      block = new Selectable( new Floor(geometry), selector);
+      // block =  new Floor(geometry);
       break;
     default:
       block = new Block(geometry);
   }
 
   var pos = geometry.position
+  block.position.set(parseInt(pos[0]),parseInt(pos[1]),parseInt(pos[2]));
 
-  block.position.set(pos[0],pos[1],pos[2]);
+
+
   // console.log(block);
   scene.add(block);
 }

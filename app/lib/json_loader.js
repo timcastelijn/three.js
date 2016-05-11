@@ -10,8 +10,9 @@ var modelLoadedCallback = function(type, config_file){
 
 
     _models_loading--
-    console.log(_models_loading);
+    console.log('models left to load', _models_loading);
     if(_models_loading ==0){
+      console.log('ready to load config file');
       loadConfig(config_file)
     }
   }
