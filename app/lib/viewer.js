@@ -177,6 +177,9 @@ function addObject(geometry){
       block = new Selectable( new Floor(geometry), selector);
       // block =  new Floor(geometry);
       break;
+    case 'wall':
+      block = new Selectable( new Wall(geometry), selector);
+      break;
     default:
       block = new Block(geometry);
   }

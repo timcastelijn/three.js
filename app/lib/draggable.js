@@ -252,10 +252,7 @@ Selector.prototype.moveDraggedObject = function(){
   }
 }
 
-var n=0
 Selector.prototype.onMouseMove=function(event){
-
-  console.log(this.selectables);
 
   this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -264,15 +261,15 @@ Selector.prototype.onMouseMove=function(event){
 
   if ( this.dragged ) {
     this.moveDraggedObject();
+    return;
   }
 
   //else
   var intersects = this.raycaster.intersectObjects( this.selectables );
-  n++;
+
   if ( intersects.length > 0 ) {
 
     // intersected object changes
-
     if ( this.intersected != intersects[ 0 ].object ) {
 
       // restore last intersected color
@@ -296,20 +293,20 @@ Selector.prototype.onMouseMove=function(event){
 }
 
 Selector.prototype.defineSnapPoint=function(intersect, parent){
+  console.log(intersect.faceIndex);
 
   //iterate over faceIndexes
   for (index in parent.object.patches) {
     if((index) == intersect.faceIndex){
-      var vector = new THREE.Vector3(0,0,0).addVectors(parent.position, parent.object.patches[index].position)
 
-      console.log(parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) ))
+      var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
+      this.dragged.position.copy( vector  );
 
+      //rotate if possible
+      this.dragged.rotation.y =  (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
 
     }
-
-
   }
-
 }
 
 Selector.prototype.onMouseDown=function(event){

@@ -1,34 +1,34 @@
 {
-    "uvs":[],
-    "faces":[35,0,1,2,3,0,0,1,2,3,35,4,7,6,5,0,4,5,6,7,35,0,4,5,1,0,0,4,7,1,35,1,5,6,2,0,1,7,6,2,35,2,6,7,3,0,2,6,5,3,35,4,0,3,7,0,4,0,3,5],
+    "name":"Cube.002Geometry.1",
+    "vertices":[0.2,0,0,0.2,0,0.6,-0,0,0.6,0,-0,-0,0.2,2.5,0,0.2,2.5,0.6,-0,2.5,0.6,0,2.5,-0],
     "materials":[{
-        "DbgIndex":0,
-        "depthWrite":true,
-        "visible":true,
-        "transparent":false,
-        "colorDiffuse":[1,1,1],
         "colorEmissive":[0,0,0],
-        "opacity":1,
-        "shading":"lambert",
+        "blending":"NormalBlending",
+        "colorDiffuse":[1,1,1],
+        "transparent":false,
+        "visible":true,
         "DbgName":"Material",
-        "wireframe":false,
+        "shading":"lambert",
+        "DbgIndex":0,
         "depthTest":true,
+        "opacity":1,
+        "wireframe":false,
         "DbgColor":15658734,
-        "blending":"NormalBlending"
+        "depthWrite":true
     }],
-    "name":"Cube.002Geometry",
+    "faces":[35,0,1,2,3,0,0,1,2,3,35,4,7,6,5,0,4,5,6,7,35,0,4,5,1,0,0,4,7,1,35,1,5,6,2,0,1,7,6,2,35,2,6,7,3,0,2,6,5,3,35,4,0,3,7,0,4,0,3,5],
+    "morphTargets":[],
+    "uvs":[],
     "normals":[0.577349,-0.577349,-0.577349,0.577349,-0.577349,0.577349,-0.577349,-0.577349,0.577349,-0.577349,-0.577349,-0.577349,0.577349,0.577349,-0.577349,-0.577349,0.577349,-0.577349,-0.577349,0.577349,0.577349,0.577349,0.577349,0.577349],
     "metadata":{
         "faces":6,
-        "uvs":0,
+        "morphTargets":0,
         "materials":1,
-        "version":3,
+        "normals":8,
+        "vertices":8,
         "type":"Geometry",
         "generator":"io_three",
-        "normals":8,
-        "morphTargets":0,
-        "vertices":8
-    },
-    "morphTargets":[],
-    "vertices":[0.2,-0,-0.6,0.2,0,0,-0,-0,-0,0,-0,-0.6,0.2,2.7,-0.6,0.2,2.7,0,-0,2.7,-0,0,2.7,-0.6]
+        "uvs":0,
+        "version":3
+    }
 }

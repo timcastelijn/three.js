@@ -14,7 +14,10 @@ function Block(geometry){
   this.add(this.mesh_object)
 
 
-  this.addPlaceHolders();
+  this.addPatches();
+
+  var axisHelper = new THREE.AxisHelper( 2 );
+  this.add( axisHelper );
 
 }
 
@@ -22,7 +25,7 @@ Block.prototype = new THREE.Object3D();
 Block.prototype.constructor = Block;
 
 
-Block.prototype.addPlaceHolders = function(){
+Block.prototype.addPatches = function(){
     console.log('cannot add placeholders for abstract class "block"');
 }
 
