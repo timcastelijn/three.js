@@ -293,20 +293,23 @@ Selector.prototype.onMouseMove=function(event){
 }
 
 Selector.prototype.defineSnapPoint=function(intersect, parent){
-  console.log(intersect.faceIndex);
+  // console.log(intersect.faceIndex);
 
   //iterate over faceIndexes
   for (index in parent.object.patches) {
     if((index) == intersect.faceIndex){
+      if(this.dragged.object.type == parent.object.patches[index].type){
 
-      var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
-      this.dragged.position.copy( vector  );
+        var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
+        this.dragged.position.copy( vector  );
 
-      //rotate if possible
-      var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
+        console.log(parent.worldToLocal(intersect.point));
 
-      this.dragged.rotation.y =  parent.rotation.y + rot_y
+        //rotate if possible
+        var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
 
+        this.dragged.rotation.y =  parent.rotation.y + rot_y
+      }
     }
   }
 }
@@ -346,7 +349,6 @@ Selector.prototype.onMouseUp=function(event){
   this.controls.enabled = true;
 
   if ( this.dragged ) {
-
     this.dragged = null;
 
   }

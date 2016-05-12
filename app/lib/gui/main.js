@@ -42,5 +42,11 @@ $(function() {
 });
 
 function addBlock(event){
-  console.log(event.data.type);
+  var geometry={
+    floor:{"type":"floor", "position":["0","0","0"], "size":3.2, "rotation":["0","0","0"]},
+    wall:{"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]}
+  }
+
+  var block = addObject(geometry[event.data.type])
+  selector.dragged = block;
 }

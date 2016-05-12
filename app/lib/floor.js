@@ -1,7 +1,6 @@
 function Floor(geometry){
   Block.call( this, geometry );
 
-
 }
 
 Floor.prototype = Object.create(Block.prototype);
@@ -15,6 +14,18 @@ Floor.prototype.addPatches = function(){
       3:{type:"wall", position:new THREE.Vector3(this.width,0.3,0.3), rotation:Math.PI},
       14:{type:"wall", position:new THREE.Vector3(0, 0.3, 0)},
       15:{type:"wall", position:new THREE.Vector3(0, 0.3, 0)},
+      18:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      19:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      30:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      31:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      6:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      7:{type:"floor", position:new THREE.Vector3(0, 0.0, 0.3)},
+      10:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+      11:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+      34:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+      35:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+      22:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+      23:{type:"floor", position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
   }
 }
 

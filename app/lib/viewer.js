@@ -182,6 +182,7 @@ function addObject(geometry){
       break;
     default:
       block = new Block(geometry);
+
   }
 
   var pos = geometry.position
@@ -189,9 +190,10 @@ function addObject(geometry){
 
   block.rotation.set(0, parseFloat(geometry.rotation[1])/180*Math.PI, 0);
 
-  console.log(pos);
-  // console.log(block);
   scene.add(block);
+
+  return block;
+
 }
 
 function loadConfig(filename){
