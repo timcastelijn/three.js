@@ -38,6 +38,8 @@
 			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="300" oninput="applyDim(2,this.value);" onchange="applyDim(2,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="154" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
 		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="300" oninput="applyDim(1,this.value);" onchange="applyDim(1,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+  								<div class="row"><button type="button" id='btn_add_floor' class="btn btn-default">floor</button></div>
+  								<div class="row"><button type="button" id='btn_add_wall' class="btn btn-default">wall</button></div>
 								</div>
 	         		</div>
 	       		</div>
@@ -224,6 +226,7 @@
 	<script src="../src/extras/helpers/AxisHelper.js"></script>
 	<script src="../src/extras/helpers/EdgesHelper.js"></script>
 
+	<script src="lib/gui/main.js"></script>
 	<script src="lib/cabine_grid.js"></script>
 	<script src="lib/wall.js"></script>
 	<script src="lib/draggable.js"></script>
@@ -260,14 +263,7 @@
 			if (input.value > parseInt(input.max)) input.value = parseInt(input.max);
 		}
 
-		function toggleChevron(e) {
-		    $(e.target)
-		        .prev('.panel-heading')
-		        .find("i.indicator")
-		        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
-		}
-		$('#accordion').on('hidden.bs.collapse', toggleChevron);
-		$('#accordion').on('shown.bs.collapse', toggleChevron);
+
 
 		function defineHeaterPositions(number){
 			var slots = cabine.walls[2].n;

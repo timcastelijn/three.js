@@ -20,27 +20,5 @@ $().ready(function(){
       return  phone_number.length == 10 && phone_number.match(/[2-9]/);
   }, "Please specify a valid phone number");
 
-  $("#myform").on("submit", function(e) {
-    if($('#myform').valid()){
-      //prevent default redirrecting
-      
-      cabine.getCellLayout();
-
-      e.preventDefault();
-      $.ajax({
-          url: $(this).attr("action"),
-          type: 'POST',
-          data: $(this).serialize() + "&config=" + JSON.stringify(config),
-          beforeSend: function() {
-              $("#message").html("sending...");
-          },
-          success: function(data) {
-              $("#message").hide();
-              $("#myform").hide();
-              $("#submit").hide();
-              $("#response").html(data);
-          }
-      });
-    }
-  });
+  
 })

@@ -33,6 +33,11 @@ body {
   border-width: 1px;
   border-color: #ddd;
 }
+
+.btn-default{
+  margin-top: 10px;
+  width: 100%;
+}
 /*@media screen and (min-width: 900px) {
   #accordion{
     width:20%;
