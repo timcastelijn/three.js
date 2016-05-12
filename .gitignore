@@ -5,3 +5,7 @@ node_modules
 .idea/
 app_e/
 *.blend1
+
+*.blend1
+
+app/models/floor.blend1

@@ -1,6 +1,7 @@
 function Floor(geometry){
   Block.call( this, geometry );
 
+
 }
 
 Floor.prototype = Object.create(Block.prototype);
@@ -15,8 +16,9 @@ Floor.prototype.addPatches = function(){
       14:{type:"wall", position:new THREE.Vector3(0, 0.3, 0)},
       15:{type:"wall", position:new THREE.Vector3(0, 0.3, 0)},
   }
-
 }
+
+
 
 Floor.prototype.addPlaceHolders = function(){
 

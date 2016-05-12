@@ -4,7 +4,12 @@ var modelLoadedCallback = function(type, config_file){
     geometry.computeFaceNormals();
     geometry.computeVertexNormals();
 
+    if(geometry.morphTargets.length>0){
+      materials[0].morphTargets = true
+    }
     var material = new THREE.MultiMaterial( materials );
+    // materials[0] = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
     _mesh_objects[type] = new THREE.Mesh( geometry, material );
 
 

@@ -185,9 +185,11 @@ function addObject(geometry){
   }
 
   var pos = geometry.position
-  block.position.set(parseInt(pos[0]),parseInt(pos[1]),parseInt(pos[2]));
+  block.position.set(parseFloat(pos[0]),parseFloat(pos[1]),parseFloat(pos[2]));
 
+  block.rotation.set(0, parseFloat(geometry.rotation[1])/180*Math.PI, 0);
 
+  console.log(pos);
   // console.log(block);
   scene.add(block);
 }

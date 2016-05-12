@@ -303,7 +303,9 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
       this.dragged.position.copy( vector  );
 
       //rotate if possible
-      this.dragged.rotation.y =  (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
+      var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
+
+      this.dragged.rotation.y =  parent.rotation.y + rot_y
 
     }
   }
