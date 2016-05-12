@@ -183,17 +183,18 @@ function Selector(camera, controls){
   this.parent_lookup   = [];
   this.intersected  = null;
   this.dragged      = null;
+  this.snap_objects = [];
   this.camera       = camera;
   this.controls     = controls;
 
   this.raycaster    = new THREE.Raycaster();
   this.mouse        = new THREE.Vector2();
 
-  rollOverGeo = new THREE.BoxGeometry( 0.2, 2.5, 0.3 );
-  rollOverGeo.applyMatrix( new THREE.Matrix4().makeTranslation(0, 2.5/2, 0) );
-  rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
-  this.rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
-  scene.add( this.rollOverMesh );
+  // rollOverGeo = new THREE.BoxGeometry( 0.2, 2.5, 0.3 );
+  // rollOverGeo.applyMatrix( new THREE.Matrix4().makeTranslation(0, 2.5/2, 0) );
+  // rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+  // this.rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
+  // scene.add( this.rollOverMesh );
 
   //create intersection plane
   this.plane = new THREE.Mesh(
@@ -230,7 +231,31 @@ function onDocumentMouseMove( event ) {
 Selector.prototype.add=function(object){
   this.selectables.push(object)
 }
+
+Selector.prototype.moveDraggedObject = function(){
+
+  var intersects = this.raycaster.intersectObjects( this.snap_objects );
+  if ( intersects.length > 0 ) {
+    // intersected object change
+
+    this.defineSnapPoint(intersects[0], this.parent_lookup[intersects[0].object.id]);
+  } else {
+
+    // else move over plane
+    var intersects = this.raycaster.intersectObject( this.plane );
+    if ( intersects.length > 0 ) {
+
+      // this.dragged.moveTo(intersects[ 0 ].point);
+      this.dragged.position.copy( intersects[ 0 ].point );
+    }
+    return;
+  }
+}
+
+var n=0
 Selector.prototype.onMouseMove=function(event){
+
+  console.log(this.selectables);
 
   this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -238,22 +263,15 @@ Selector.prototype.onMouseMove=function(event){
   this.raycaster.setFromCamera( this.mouse, this.camera );
 
   if ( this.dragged ) {
-    var intersects = this.raycaster.intersectObject( this.plane );
-    if ( intersects.length > 0 ) {
-
-      // this.dragged.moveTo(intersects[ 0 ].point);
-      // this.dragged.position.copy( intersects[ 0 ].point );
-    }
-    return;
+    this.moveDraggedObject();
   }
 
   //else
   var intersects = this.raycaster.intersectObjects( this.selectables );
+  n++;
   if ( intersects.length > 0 ) {
+
     // intersected object changes
-
-    this.defineSnapPoint(intersects[0], this.parent_lookup[intersects[0].object.id]);
-
 
     if ( this.intersected != intersects[ 0 ].object ) {
 
@@ -279,21 +297,14 @@ Selector.prototype.onMouseMove=function(event){
 
 Selector.prototype.defineSnapPoint=function(intersect, parent){
 
-  //use world intersection;
-  // var geom = this.rollOverMesh.geometry;
-  //
-  // var vector = new THREE.Vector3(0,0,0).copy(intersect.face.normal);
-  // var vector2 = new THREE.Vector3().multiplyVectors(new THREE.Vector3( geom.width/2, geom.height/2, geom.depth/2),vector);
-  //
-  // this.rollOverMesh.position.copy( intersect.point ).add( vector2);
-  //get object face
-
-  console.log(parent.object, intersect.faceIndex);
   //iterate over faceIndexes
   for (index in parent.object.patches) {
     if((index) == intersect.faceIndex){
       var vector = new THREE.Vector3(0,0,0).addVectors(parent.position, parent.object.patches[index].position)
-      this.rollOverMesh.position.copy( vector )
+
+      console.log(parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) ))
+
+
     }
 
 
@@ -318,6 +329,14 @@ Selector.prototype.onMouseDown=function(event){
     } else {
       this.dragged = intersects[ 0 ].object;
     }
+
+    //clone array
+    this.snap_objects = this.selectables.slice(0);
+    for(var i =0; i<this.dragged.children_meshes.length; i++){
+      var dragged_index = this.snap_objects.indexOf(this.dragged.children_meshes[i]);
+      this.snap_objects.splice(dragged_index, 1)
+    }
+
     container.style.cursor = 'move';
   }
 }
@@ -327,7 +346,7 @@ Selector.prototype.onMouseUp=function(event){
 
   this.controls.enabled = true;
 
-  if ( this.intersected ) {
+  if ( this.dragged ) {
 
     this.dragged = null;
 
@@ -362,17 +381,16 @@ function Selectable(object, selector){
   this.object = object
   this.add(this.object);
 
+  this.name = object.name
 
   //traverse over children and add parent to draggables under child identifier
   var children = getChildMeshes(this);
-
+  this.children_meshes = children;
   for(var i = 0; i<children.length; i++){
     selector.selectables.push(children[i]);
     selector.parent_lookup[children[i].id] = this;
   }
 
-  // add object to the dragger
-  selector.selectables.push(this);
 }
 
 Selectable.prototype = new THREE.Object3D();

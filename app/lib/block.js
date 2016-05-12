@@ -3,6 +3,7 @@ function Block(geometry){
 
   this.placeholders = [];
   this.type = geometry.type;
+  this.name = geometry.type;
 
   this.mesh_object = _mesh_objects[this.type].clone()
 
