@@ -14,6 +14,7 @@ var SHADOWS_ENABLED = false;
 var block_files = {
   wall:'models/wall.json',
   floor:'models/floor.json',
+  roof:'models/roof.json',
 }
 
 
@@ -172,6 +173,7 @@ function loadBlocks(){
 function addObject(geometry){
 
   var block;
+
   switch (geometry.type) {
     case 'floor':
       block = new Selectable( new Floor(geometry), selector);
@@ -181,7 +183,8 @@ function addObject(geometry){
       block = new Selectable( new Wall(geometry), selector);
       break;
     default:
-      block = new Block(geometry);
+      console.log(geometry);
+      block = new Selectable( new Block(geometry), selector);
 
   }
 
@@ -197,10 +200,11 @@ function addObject(geometry){
 }
 
 function loadConfig(filename){
-  // $.ajaxSetup({ mimeType: "text/plain" });
-  $.ajaxSetup({ mimeType: "application/json" });
+  $.ajaxSetup({ mimeType: "text/plain" });
+  // $.ajaxSetup({ mimeType: "application/json" });
   var jqxhr = $.getJSON( filename, function(data) {
     console.log( "config file loaded sucessfully" );
+    console.log(data.geometry);
     for (var name in data.geometry) {
         if (data.geometry.hasOwnProperty(name)) {
           addObject(data.geometry[name])

@@ -234,6 +234,10 @@ Selector.prototype.add=function(object){
 
 Selector.prototype.moveDraggedObject = function(){
 
+  for(var i=0; i<this.snap_objects.length;i++){
+    this.snap_objects[i].material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  }
+
   var intersects = this.raycaster.intersectObjects( this.snap_objects );
   if ( intersects.length > 0 ) {
     // intersected object change
@@ -292,26 +296,65 @@ Selector.prototype.onMouseMove=function(event){
   }
 }
 
+Selector.prototype.bboxOverLap=function(){
+
+  var bb      =  new THREE.Box3().setFromObject(this.dragged.object)//.mesh_object.geometry.boundingBox;
+  var others  = this.snap_objects;
+
+  for(var i =0; i<others.length; i++){
+
+    // var bb2 = others[i].object.mesh_object.boundingBox;
+    var bb2 = new THREE.Box3().setFromObject(others[i]);
+
+    var volume = Math.max(Math.min(bb2.max.x, bb.max.x)-Math.max(bb2.min.x, bb.min.x),0)
+    * Math.max(Math.min(bb2.max.y,bb.max.y)-Math.max(bb2.min.y,bb.min.y),0)
+    * Math.max(Math.min(bb2.max.z,bb.max.z)-Math.max(bb2.min.z,bb.min.z),0)
+    if (volume>0){
+      this.snap_objects[i].material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+      return true;
+    };
+    // console.log(bb.intersectsBox(bb2));
+  }
+  return false
+}
+
 Selector.prototype.defineSnapPoint=function(intersect, parent){
   // console.log(intersect.faceIndex);
+
 
   //iterate over faceIndexes
   for (index in parent.object.patches) {
     if((index) == intersect.faceIndex){
       if(this.dragged.object.type == parent.object.patches[index].type){
 
+
+
+
         var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
         this.dragged.position.copy( vector  );
 
-        console.log(parent.worldToLocal(intersect.point));
+
+
+        if(parent.worldToLocal(intersect.point).z>0.3){
+
+        }
 
         //rotate if possible
         var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
 
         this.dragged.rotation.y =  parent.rotation.y + rot_y
+
+        this.bboxOverLap()
+
+
+        return;
       }
+    }else {
+      this.dragged.object.mesh_object.material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
     }
   }
+  this.dragged.position.copy(intersect.point)
 }
 
 Selector.prototype.onMouseDown=function(event){
@@ -383,6 +426,10 @@ function Selectable(object, selector){
   this.add(this.object);
 
   this.name = object.name
+
+  // this.bbox = new THREE.BoundingBoxHelper( object.mesh_object, 0xff0000 );
+  // this.bbox.update();
+  // this.add( this.bbox );
 
   //traverse over children and add parent to draggables under child identifier
   var children = getChildMeshes(this);

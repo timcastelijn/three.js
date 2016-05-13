@@ -3,6 +3,7 @@
     {"type":"floor", "position":["0","0","0"], "size":3.2, "rotation":["0","0","0"]},
     {"type":"floor", "position":["0","0","0.3"], "size":3.2, "rotation":["0","0","0"]},
     {"type":"floor", "position":["0","0","0.6"], "size":3.2, "rotation":["0","-30","0"]},
-    {"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]}
+    {"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]},
+    {"type":"roof", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]}
   ]
 }
