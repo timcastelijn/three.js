@@ -71,8 +71,8 @@ function init() {
 
 
 
-  var light = new THREE.SpotLight( 0xffffff, 0.5 );
-  light.position.set( 2, 3, 5 );
+  var light = new THREE.PointLight( 0xffffff, 0.5 );
+  light.position.set( 10, 10, 10 );
 
   if (SHADOWS_ENABLED){
     light.castShadow = true;

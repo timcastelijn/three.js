@@ -325,7 +325,9 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
   //iterate over faceIndexes
   for (index in parent.object.patches) {
     if((index) == intersect.faceIndex){
-      if(this.dragged.object.type == parent.object.patches[index].type){
+
+      // test wether object is allowed to snap on patch
+      if( parent.object.patches[index].types.indexOf(this.dragged.object.type)> -1 ){
 
 
 
