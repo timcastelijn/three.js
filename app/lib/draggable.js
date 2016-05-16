@@ -327,12 +327,9 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
       // test wether object is allowed to snap on patch
       if( parent.object.patches[index].types.indexOf(this.dragged.object.type)> -1 ){
 
-
-
-
+        // move object to patch reference point
         var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
         this.dragged.position.copy( vector  );
-
 
 
         if(parent.worldToLocal(intersect.point).z>0.3){
