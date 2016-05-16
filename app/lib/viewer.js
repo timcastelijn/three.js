@@ -182,6 +182,9 @@ function addObject(geometry){
     case 'wall':
       block = new Selectable( new Wall(geometry), selector);
       break;
+    case 'roof':
+      block = new Selectable( new Roof(geometry), selector);
+      break;
     default:
       console.log(geometry);
       block = new Selectable( new Block(geometry), selector);
@@ -204,17 +207,26 @@ function loadConfig(filename){
   // $.ajaxSetup({ mimeType: "application/json" });
   var jqxhr = $.getJSON( filename, function(data) {
     console.log( "config file loaded sucessfully" );
-    console.log(data.geometry);
     for (var name in data.geometry) {
         if (data.geometry.hasOwnProperty(name)) {
           addObject(data.geometry[name])
         }
     }
+    camera.position.set(-3,5,7)
+    controls.target = new THREE.Vector3(1.6,2.5,1.8);
+    // zoomAll();
 
   }).fail(function() {
     //in case loading fails, log an error
     console.log( "Error: config file failed to load" );
   })
+}
+
+function zoomAll(){
+  var bb      =   new THREE.BoundingBoxHelper( scene, 0x000000 );
+  bb.update();
+  scene.add(bb)
+
 }
 
 function addLights(){

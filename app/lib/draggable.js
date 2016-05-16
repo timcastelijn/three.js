@@ -303,17 +303,15 @@ Selector.prototype.bboxOverLap=function(){
 
   for(var i =0; i<others.length; i++){
 
-    // var bb2 = others[i].object.mesh_object.boundingBox;
-    var bb2 = new THREE.Box3().setFromObject(others[i]);
+    var bb2 = others[i].bb;
 
     var volume = Math.max(Math.min(bb2.max.x, bb.max.x)-Math.max(bb2.min.x, bb.min.x),0)
     * Math.max(Math.min(bb2.max.y,bb.max.y)-Math.max(bb2.min.y,bb.min.y),0)
     * Math.max(Math.min(bb2.max.z,bb.max.z)-Math.max(bb2.min.z,bb.min.z),0)
-    if (volume>0){
+    if (volume>0.1){
       this.snap_objects[i].material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
       return true;
     };
-    // console.log(bb.intersectsBox(bb2));
   }
   return false
 }
@@ -346,9 +344,7 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
 
         this.dragged.rotation.y =  parent.rotation.y + rot_y
 
-        this.bboxOverLap()
-
-
+        this.dragged.overlap = this.bboxOverLap()
         return;
       }
     }else {
@@ -377,11 +373,24 @@ Selector.prototype.onMouseDown=function(event){
       this.dragged = intersects[ 0 ].object;
     }
 
+    this.dragged.previous_position = new THREE.Vector3().copy( this.dragged.position);
+
     //clone array
     this.snap_objects = this.selectables.slice(0);
     for(var i =0; i<this.dragged.children_meshes.length; i++){
       var dragged_index = this.snap_objects.indexOf(this.dragged.children_meshes[i]);
       this.snap_objects.splice(dragged_index, 1)
+    }
+
+    //for each snap object, calculate bb
+    for(var i = 0; i<this.snap_objects.length; i++){
+      var obj   = this.snap_objects[i]
+
+      this.snap_objects[i].bb = new THREE.Box3().setFromObject(obj);
+
+      // var bb      =   new THREE.BoundingBoxHelper( obj, 0x000000 );
+      // bb.update();
+      // scene.add(bb)
     }
 
     container.style.cursor = 'move';
@@ -394,9 +403,17 @@ Selector.prototype.onMouseUp=function(event){
   this.controls.enabled = true;
 
   if ( this.dragged ) {
+    if (this.dragged.overlap){
+      this.dragged.position.copy(  this.dragged.previous_position );
+      this.dragged.overlap = false;
+    }
     this.dragged = null;
-
   }
+
+  for(var i =0; i<this.snap_objects.length; i++){
+    this.snap_objects[i].material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  }
+
   container.style.cursor = 'auto';
 }
 
@@ -428,6 +445,7 @@ function Selectable(object, selector){
   this.add(this.object);
 
   this.name = object.name
+
 
   // this.bbox = new THREE.BoundingBoxHelper( object.mesh_object, 0xff0000 );
   // this.bbox.update();
