@@ -11,8 +11,23 @@ $(function() {
   $('#accordion').on('shown.bs.collapse', toggleChevron);
 
   // add block buttons
+  function addBlock(event){
+
+    var geometry={
+      floor:{"type":"floor", "position":["0","0","0"], "size":3.2, "rotation":["0","0","0"]},
+      wall:{"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]},
+      roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
+    }
+
+    var block = addObject(geometry[event.data.type])
+    selector.dragged = block;
+    selector.setSnapObjects()
+    selector.calculateBBVolumes()
+  }
+
   $('#btn_add_wall').click( {type:"wall"}, addBlock);
   $('#btn_add_floor').click( {type:"floor"}, addBlock);
+  $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
   // handle form submit
   $("#myform").on("submit", function(e) {
@@ -40,13 +55,3 @@ $(function() {
   });
 
 });
-
-function addBlock(event){
-  var geometry={
-    floor:{"type":"floor", "position":["0","0","0"], "size":3.2, "rotation":["0","0","0"]},
-    wall:{"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]}
-  }
-
-  var block = addObject(geometry[event.data.type])
-  selector.dragged = block;
-}

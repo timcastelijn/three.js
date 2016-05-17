@@ -296,16 +296,19 @@ Selector.prototype.onMouseMove=function(event){
   }
 }
 
+Selector.prototype.updateDebugSpheres = function(bb){
+  this.dragged.sphere_min.position.set(bb.min.x, bb.min.y, bb.min.z);
+  this.dragged.sphere_max.position.set(bb.max.x, bb.max.y, bb.max.z);
+  this.dragged.sphere_min.visible = true;
+  this.dragged.sphere_max.visible = true;
+}
+
 Selector.prototype.bboxOverLap=function(){
 
   var bb      =  new THREE.Box3().setFromObject(this.dragged.object)//.mesh_object.geometry.boundingBox;
   var others  = this.snap_objects;
 
-  this.dragged.sphere_min.position.set(bb.min.x, bb.min.y, bb.min.z);
-  this.dragged.sphere_max.position.set(bb.max.x, bb.max.y, bb.max.z);
-  this.dragged.sphere_min.visible = true;
-  this.dragged.sphere_max.visible = true;
-
+  // this.updateDebugSpheres(bb)
 
   for(var i =0; i<others.length; i++){
 
@@ -355,6 +358,29 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
   this.dragged.position.copy(intersect.point)
 }
 
+Selector.prototype.setSnapObjects = function(){
+  //clone array
+  this.snap_objects = this.selectables.slice(0);
+  for(var i =0; i<this.dragged.children_meshes.length; i++){
+    var dragged_index = this.snap_objects.indexOf(this.dragged.children_meshes[i]);
+    this.snap_objects.splice(dragged_index, 1)
+  }
+}
+
+
+Selector.prototype.calculateBBVolumes=function(event){
+  //for each snap object, calculate bb
+  for(var i = 0; i<this.snap_objects.length; i++){
+    var obj   = this.snap_objects[i]
+
+    this.snap_objects[i].bb = new THREE.Box3().setFromObject(obj);
+
+    // var bb      =   new THREE.BoundingBoxHelper( obj, 0x000000 );
+    // bb.update();
+    // scene.add(bb)
+  }
+}
+
 Selector.prototype.onMouseDown=function(event){
 
   this.raycaster.setFromCamera( this.mouse, this.camera );
@@ -375,23 +401,8 @@ Selector.prototype.onMouseDown=function(event){
 
     this.dragged.previous_position = new THREE.Vector3().copy( this.dragged.position);
 
-    //clone array
-    this.snap_objects = this.selectables.slice(0);
-    for(var i =0; i<this.dragged.children_meshes.length; i++){
-      var dragged_index = this.snap_objects.indexOf(this.dragged.children_meshes[i]);
-      this.snap_objects.splice(dragged_index, 1)
-    }
-
-    //for each snap object, calculate bb
-    for(var i = 0; i<this.snap_objects.length; i++){
-      var obj   = this.snap_objects[i]
-
-      this.snap_objects[i].bb = new THREE.Box3().setFromObject(obj);
-
-      // var bb      =   new THREE.BoundingBoxHelper( obj, 0x000000 );
-      // bb.update();
-      // scene.add(bb)
-    }
+    this.setSnapObjects()
+    this.calculateBBVolumes()
 
     container.style.cursor = 'move';
   }
