@@ -24,7 +24,7 @@
     {"type":"floor", "position":["0","2.8","2.7"], "size":3.2, "rotation":["0","0","0"]},
     {"type":"floor", "position":["0","2.8","3.0"], "size":3.2, "rotation":["0","0","0"]},
     {"type":"floor", "position":["0","2.8","3.3"], "size":3.2, "rotation":["0","0","0"]},
-    {"type":"floor", "position":["0","0.0","3.6"], "size":3.2, "rotation":["0","-90","0"]},
+    {"type":"floor", "position":["0","0.5","3.6"], "size":3.2, "rotation":["0","-90","0"]},
     {"type":"wall", "position":["0.0","0.3","0.0"], "rotation":["0","0","0"]},
     {"type":"wall", "position":["0.0","0.3","0.6"], "rotation":["0","0","0"]},
     {"type":"wall", "position":["0.0","0.3","1.2"], "rotation":["0","0","0"]},
