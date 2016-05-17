@@ -96,6 +96,7 @@ function init() {
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
+  controls.enableKeys = false;
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 

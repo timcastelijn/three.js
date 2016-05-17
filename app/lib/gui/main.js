@@ -14,8 +14,8 @@ $(function() {
   function addBlock(event){
 
     var geometry={
-      floor:{"type":"floor", "position":["0","0","0"], "size":3.2, "rotation":["0","0","0"]},
-      wall:{"type":"wall", "position":["3.2","0.3","0.6"], "rotation":["0","180","0"]},
+      floor:{"type":"floor", "position":["-1","0","0"], "size":3.2, "rotation":["0","0","0"]},
+      wall:{"type":"wall", "position":["-1","0","0"], "rotation":["0","180","0"]},
       roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
     }
 
@@ -30,6 +30,11 @@ $(function() {
   $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
   function saveConfig(event){
+    if($('#save_file_name').val() == "model1.json"){
+      alert("this name is not allowed");
+      return false;
+    }
+
     console.log("saving", Object.keys(config.geometry).length , "blocks to" , "config/" + $('#save_file_name').val(), config);
 
     $.ajax({
