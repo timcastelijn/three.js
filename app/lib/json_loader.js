@@ -14,9 +14,8 @@ var modelLoadedCallback = function(type, config_file){
     _mesh_objects[type] = new THREE.Mesh( geometry, material );
 
     _models_loading--
-    console.log('models left to load', _models_loading);
     if(_models_loading ==0){
-      console.log('ready to load config file');
+      console.log('all models loaded');
       loadConfig(config_file)
     }
   }

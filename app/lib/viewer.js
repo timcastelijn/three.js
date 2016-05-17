@@ -4,6 +4,7 @@ var container, stats;
 var camera, controls, scene, scene_geometry, renderer;
 var dragger, selector;
 var _mesh_objects =[];
+var price =0;
 
 var document_edited = false;
 var _models_loading = 0;
@@ -12,9 +13,9 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:'models/wall.json',
-  floor:'models/floor.json',
-  roof:'models/roof.json',
+  wall:{model:'models/wall.json', price:480},
+  floor:{model:'models/floor.json', price:560},
+  roof:{model:'models/roof.json', price:640},
 }
 
 
@@ -147,7 +148,7 @@ function loadBlocks(){
         _models_loading ++;
 
         // if models are loaded, load the config file
-        json_loader.load( block_files[type], modelLoadedCallback(type, 'config/model1.json'));
+        json_loader.load( block_files[type].model, modelLoadedCallback(type, 'config/model1.json'));
       }
   }
 
@@ -188,6 +189,9 @@ function addObject(geometry){
 
   scene_geometry.add(block);
 
+  price += block_files[geometry.type].price;
+  updatePriceGui();
+
   return block;
 
 }
@@ -200,6 +204,7 @@ function clearScene(){
 
   // reset config
   config  = {};
+  price = 0;
 
   // reset selector
   selector = new Selector(camera, controls);

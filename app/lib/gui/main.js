@@ -82,3 +82,8 @@ $(function() {
   });
 
 });
+
+
+function updatePriceGui(){
+  $('#label_price').text(price);
+}
