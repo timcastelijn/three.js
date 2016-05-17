@@ -1,3 +1,7 @@
+function updatePriceGui(){
+  $('#label_price').text(price);
+}
+
 $(function() {
 
   // toggle arrow when operating accodion
@@ -87,8 +91,3 @@ $(function() {
   });
 
 });
-
-
-function updatePriceGui(){
-  $('#label_price').text(price);
-}
