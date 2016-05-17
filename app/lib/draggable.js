@@ -301,6 +301,12 @@ Selector.prototype.bboxOverLap=function(){
   var bb      =  new THREE.Box3().setFromObject(this.dragged.object)//.mesh_object.geometry.boundingBox;
   var others  = this.snap_objects;
 
+  this.dragged.sphere_min.position.set(bb.min.x, bb.min.y, bb.min.z);
+  this.dragged.sphere_max.position.set(bb.max.x, bb.max.y, bb.max.z);
+  this.dragged.sphere_min.visible = true;
+  this.dragged.sphere_max.visible = true;
+
+
   for(var i =0; i<others.length; i++){
 
     var bb2 = others[i].bb;
@@ -308,6 +314,7 @@ Selector.prototype.bboxOverLap=function(){
     var volume = Math.max(Math.min(bb2.max.x, bb.max.x)-Math.max(bb2.min.x, bb.min.x),0)
     * Math.max(Math.min(bb2.max.y,bb.max.y)-Math.max(bb2.min.y,bb.min.y),0)
     * Math.max(Math.min(bb2.max.z,bb.max.z)-Math.max(bb2.min.z,bb.min.z),0)
+
     if (volume>0.1){
       this.snap_objects[i].material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
       return true;
@@ -318,7 +325,6 @@ Selector.prototype.bboxOverLap=function(){
 
 Selector.prototype.defineSnapPoint=function(intersect, parent){
   // console.log(intersect.faceIndex);
-
 
   //iterate over faceIndexes
   for (index in parent.object.patches) {
@@ -344,9 +350,6 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
         this.dragged.overlap = this.bboxOverLap()
         return;
       }
-    }else {
-      this.dragged.object.mesh_object.material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-
     }
   }
   this.dragged.position.copy(intersect.point)
@@ -443,6 +446,12 @@ function Selectable(object, selector){
 
   this.name = object.name
 
+  this.sphere_min = new THREE.Mesh( new THREE.SphereGeometry( 0.05, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0040 } ) );
+  scene.add( this.sphere_min );
+  this.sphere_min.visible =false
+  this.sphere_max = new THREE.Mesh( new THREE.SphereGeometry( 0.05, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0040 } ) );
+  scene.add( this.sphere_max );
+  this.sphere_max.visible =false
 
   // this.bbox = new THREE.BoundingBoxHelper( object.mesh_object, 0xff0000 );
   // this.bbox.update();

@@ -21,7 +21,7 @@ function Block(geometry){
 
   this.addPatches();
 
-  var axisHelper = new THREE.AxisHelper( 0.5 );
+  var axisHelper = new THREE.AxisHelper( 0.2 );
   this.add( axisHelper );
 
 }
