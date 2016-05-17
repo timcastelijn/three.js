@@ -408,16 +408,25 @@ Selector.prototype.onMouseDown=function(event){
   }
 }
 
-Selector.prototype.onMouseUp=function(event){
+Selector.prototype.updateConfig=function(event){
+  var fid = this.dragged.object.fid;
 
+  config.geometry[fid].position = [this.dragged.position.x, this.dragged.position.y, this.dragged.position.z];
+  config.geometry[fid].rotation = [0, this.dragged.rotation.y/Math.PI *180, 0];
+
+}
+
+Selector.prototype.onMouseUp=function(event){
 
   this.controls.enabled = true;
 
   if ( this.dragged ) {
     if (this.dragged.overlap){
       this.dragged.position.copy(  this.dragged.previous_position );
-      this.dragged.overlap = false;
     }
+
+    this.updateConfig()
+    this.dragged.overlap = false;
     this.dragged = null;
   }
 

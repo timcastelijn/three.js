@@ -21,7 +21,7 @@
 	<body>
 		<div id="content">
 			<div class="panel-group" id="accordion">
-	     		<p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p>
+	     		<!-- <p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p> -->
 
 					<div class="panel panel-default">
 	       		<div class="panel-heading">
@@ -39,7 +39,7 @@
 	         		</div>
 	       		</div>
 	     		</div>
-				<div class="panel panel-default">
+				<!-- <div class="panel panel-default">
 	       	<div class="panel-heading">
 	         	<h4 class="panel-title">
 	           	<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Opties<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
@@ -48,13 +48,13 @@
 	       	<div id="collapse2" class="panel-collapse collapse">
 	         	<div class="panel-body">
 	           	<div class="container-fluid">
-	             	<!-- <div class="row">
+	             	<div class="row">
 	               	<div class="col-sm-8">IR-heaters</div>
 	               	<div class="col-sm-4"><input id="numberInputHeaters" style="width:50px;" type="number" name="quantity" min="0" value="6" max="16" onchange='defineHeaterPositions(this.value)'></input></div>
 	             	</div>
 								<div class="row">
 									&nbsp
-	             	</div> -->
+	             	</div>
 	             	<div class="row">
 	               	<div class="col-sm-8">Zoutvernevelaar</div>
 	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
@@ -70,15 +70,14 @@
 							</div>
 	         	</div>
 	       	</div>
-	     	</div>
-	     	<div class="panel panel-default">
+	     	</div> -->
+	     	<!-- <div class="panel panel-default">
 	      	<div class="panel-heading">
 	         	<h4 class="panel-title">
 	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
 	         	</h4>
 	       	</div>
 	       	<div id="collapse3" class="panel-collapse collapse">
-						<!-- material selection -->
 						<div class="panel-body">
 							<div class='row'>
 								<div class="col-sm-4">
@@ -120,9 +119,34 @@
 							</div>
 						</div>
 	       	</div>
+	     	</div> -->
+	     	<div class="panel panel-default">
+	      	<div class="panel-heading">
+	         	<h4 class="panel-title">
+	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Load and save<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	         	</h4>
+	       	</div>
+	       	<div id="collapse4" class="panel-collapse collapse">
+						<!-- save/load -->
+						<div class="panel-body">
+							<div class='row'>
+								<div class="col-sm-12">
+  								<input type="text" class="form-control" id="save_file_name" value=model2.json>
+								</div>
+							</div>
+							<div class='row'>
+								<div class="col-sm-6">
+									<button type="button" id='save_config' class="btn btn-default btn-block">Save</button>
+								</div>
+								<div class="col-sm-6">
+									<button type="button" id='load_config' class="btn btn-default btn-block">Load</button>
+								</div>
+							</div>
+						</div>
+	       	</div>
 	     	</div>
 	     	<div class="panel panel-default">
-					<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Bestellen</button>
+					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Order now</button>
 				</div>
 				<a href="" data-toggle="modal" data-target="#helpModal" style="position:relative; right:0px;"><i class="glyphicon glyphicon-info-sign"> </i></a>
 		 	</div>
@@ -193,14 +217,7 @@
 	          <h4 class="modal-title">Help!</h4>
 	      	</div>
 	        	<div class="modal-body">
-							<h3>Afmetingen</h3>
-	          	<div >Sleep met de sliders tot de gewenste afmetingen. Een exacte maat kun je ook intypen. De waarden in de configurator betreffen de buitenmaat van de cabine en zijn beperkt tot minimaal 97 x 97 x 154 cm en maximaal 300 x 300 x 300 cm. Wil je een afwijkende maat, geef dit dan aan bij de opmerkingen in het bestelformulier.</div>
-							<h3>Opties</h3>
-	          	<div >Kies de opties die je in de cabine wilt hebben. Deze worden automatisch geplaatst afhankelijk van de afmetingen. Wil je de opties op een andere locatie geef dit dan aan bij de offerte-aanvraag.</div>
-							<h3>Kleuren</h3>
-	          	<div >klik op het gekleurde vakje om de gewenste kleur per onderdeel te selecteren</div>
-							<h3>Bestellen</h3>
-	          	<div >vul je contactgegevens in en klik op verzenden om een offerte aan te vragen. Nobelsaunas neemt contact met je op over de bestelling.</div>
+							<h3>help menu</h3>
 	         </div>
 	         <div class="modal-footer">
 	           <!-- <input id="submit" name="submit" type="submit" value="Verzenden" onclick="$('#myform').submit()" class="btn btn-primary" onC> -->

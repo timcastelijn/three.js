@@ -35,9 +35,9 @@ body {
 }
 
 .btn-default{
-  margin-top: 10px;
   width: 100%;
 }
+
 /*@media screen and (min-width: 900px) {
   #accordion{
     width:20%;

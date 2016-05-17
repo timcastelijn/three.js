@@ -1,7 +1,7 @@
 var browser_ok = browser_detector.detect()
 
 var container, stats;
-var camera, controls, scene, renderer;
+var camera, controls, scene, scene_geometry, renderer;
 var dragger, selector;
 var _mesh_objects =[];
 
@@ -18,26 +18,7 @@ var block_files = {
 }
 
 
-var config = {
-  dimensions:[
-    124,
-    200,
-    140,
-  ],
-  heaters:[
-    'B(1,0)',
-    'C(1,0)',
-    'C(1,1)',
-    'C(1,2)',
-    'C(1,3)',
-    'D(1,0)',
-  ],
-  options:{
-    vaporizer:false,
-    backrest:false,
-    aromatherapy:false,
-  }
-}
+var config = {}
 
 var colors = {
   exterior:"#333333",
@@ -145,6 +126,8 @@ function init() {
   document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
   selector = new Selector(camera, controls);
+  scene_geometry = new THREE.Object3D();
+  scene.add(scene_geometry);
 
   loadBlocks();
 
@@ -174,6 +157,12 @@ function addObject(geometry){
 
   var block;
 
+  // add to config with new id
+  var fid = geometry.type + "_" + new Date().getTime();
+  config.geometry[fid] = geometry;
+  config.geometry[fid].fid = fid;
+
+
   switch (geometry.type) {
     case 'floor':
       block = new Selectable( new Floor(geometry), selector);
@@ -191,15 +180,29 @@ function addObject(geometry){
 
   }
 
-  var pos = geometry.position
+  var pos = geometry.position;
+
   block.position.set(parseFloat(pos[0]),parseFloat(pos[1]),parseFloat(pos[2]));
 
   block.rotation.set(0, parseFloat(geometry.rotation[1])/180*Math.PI, 0);
 
-  scene.add(block);
+  scene_geometry.add(block);
 
   return block;
 
+}
+
+function clearScene(){
+  // reset scene
+  scene.remove(scene_geometry)
+  scene_geometry = new THREE.Object3D();
+  scene.add(scene_geometry);
+
+  // reset config
+  config  = {};
+
+  // reset selector
+  selector = new Selector(camera, controls);
 }
 
 function loadConfig(filename){
@@ -207,9 +210,17 @@ function loadConfig(filename){
   // $.ajaxSetup({ mimeType: "application/json" });
   var jqxhr = $.getJSON( filename, function(data) {
     console.log( "config file loaded sucessfully" );
+
+    // deep copy config file
+    config = jQuery.extend(true, {}, data);
+
     for (var name in data.geometry) {
         if (data.geometry.hasOwnProperty(name)) {
+          //remove from config
+          delete config.geometry[name];
+
           addObject(data.geometry[name])
+
         }
     }
     camera.position.set(-3,5,7)

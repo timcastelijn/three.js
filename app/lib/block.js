@@ -2,8 +2,9 @@ function Block(geometry){
   THREE.Object3D.call( this );
 
   this.placeholders = [];
-  this.type = geometry.type;
-  this.name = geometry.type;
+  this.type     = geometry.type;
+  this.name     = geometry.type;
+  this.fid      = geometry.fid;
 
   this.mesh_object = _mesh_objects[this.type].clone()
 

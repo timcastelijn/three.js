@@ -29,6 +29,33 @@ $(function() {
   $('#btn_add_floor').click( {type:"floor"}, addBlock);
   $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
+  function saveConfig(event){
+    console.log("saving", Object.keys(config.geometry).length , "blocks to" , "config/" + $('#save_file_name').val(), config);
+
+    $.ajax({
+        url: 'server/saveJson.php',
+        type: "POST",
+        dataType : 'json',
+        data: {
+          filename: "../config/" + $('#save_file_name').val(),
+          json: config
+        },
+        success: function(data) {console.log("succes", data); },
+        failure: function(data) {console.log("failure", data); },
+    });
+
+  }
+
+  function loadSavedConfig(event){
+      clearScene()
+
+      console.log("loading ", "config/" + $('#save_file_name').val());
+      loadConfig("config/" + $('#save_file_name').val())
+  }
+
+  $('#save_config').click( saveConfig );
+  $('#load_config').click( loadSavedConfig );
+
   // handle form submit
   $("#myform").on("submit", function(e) {
     if($('#myform').valid()){
