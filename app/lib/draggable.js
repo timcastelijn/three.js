@@ -262,7 +262,6 @@ Selector.prototype.deleteObject=function(object){
       this.selectables.splice(selected_index, 1)
     }
 
-    console.log(config.geometry[this.selected.object.fid]);
     delete config.geometry[this.selected.object.fid];
 
     price -= block_files[this.selected.object.type].price;
