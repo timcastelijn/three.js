@@ -24,7 +24,7 @@ $(function() {
     }
 
     var block = addObject(geometry[event.data.type])
-    selector.dragged = block;
+    selector.selected = block;
     selector.setSnapObjects()
     selector.calculateBBVolumes()
   }

@@ -125,7 +125,6 @@ function init() {
 
 
   window.addEventListener( 'resize', onWindowResize, false );
-  document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
   selector = new Selector(camera, controls);
   scene_geometry = new THREE.Object3D();
@@ -302,17 +301,6 @@ function onWindowResize() {
 
 }
 
-
-
-function onDocumentKeyDown( event ) {
-  switch( event.key ) {
-    // case 8: event.preventDefault(); console.log("Delete"); break;
-    case 'l':
-      addLights();
-
-  }
-
-}
 
 //
 

@@ -183,12 +183,18 @@ function Selector(camera, controls){
   this.parent_lookup   = [];
   this.intersected  = null;
   this.dragged      = null;
+  this.selected     = null;
   this.snap_objects = [];
   this.camera       = camera;
   this.controls     = controls;
 
   this.raycaster    = new THREE.Raycaster();
   this.mouse        = new THREE.Vector2();
+
+  this.materials={
+    selected: new THREE.MeshBasicMaterial( { color: 0x0000ff, opacity: 0.5, transparent: true } ),
+    prohibited: new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } ),
+  }
 
   // rollOverGeo = new THREE.BoxGeometry( 0.2, 2.5, 0.3 );
   // rollOverGeo.applyMatrix( new THREE.Matrix4().makeTranslation(0, 2.5/2, 0) );
@@ -209,6 +215,7 @@ function Selector(camera, controls){
   renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
   renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
   renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
 }
 function onDocumentMouseDown( event ) {
@@ -226,6 +233,42 @@ function onDocumentMouseUp( event ) {
 function onDocumentMouseMove( event ) {
   event.preventDefault();
   selector.onMouseMove(event);
+}
+
+function onDocumentKeyDown( event ) {
+  switch( event.keyCode ) {
+    case 8:
+      selector.deleteObject();
+      break;
+    case 46:
+      selector.deleteObject();
+      break;
+    case 27:
+      selector.forgetSelection();
+      break
+    default:
+  }
+
+}
+
+Selector.prototype.deleteObject=function(object){
+  if (this.selected){
+
+    scene_geometry.remove(this.selected);
+
+    // remove all children of selected from selectables
+    for(var i =0; i<this.selected.children_meshes.length; i++){
+      var selected_index = this.selectables.indexOf(this.selected.children_meshes[i]);
+      this.selectables.splice(selected_index, 1)
+    }
+
+    delete config.geometry[this.selected.fid];
+    price -= block_files[this.selected.object.type].price;
+    updatePriceGui()
+    this.selected = null;
+  } else{
+    console.log('nothing selected');
+  }
 }
 
 Selector.prototype.add=function(object){
@@ -256,12 +299,27 @@ Selector.prototype.moveDraggedObject = function(){
   }
 }
 
+Selector.prototype.startDrag=function(){
+  // only start dragging when moving mouse with button down
+
+  if (this.mouse_down && this.intersected) {
+    if(this.selected && !this.dragged){
+      // make selected object the dragged object
+      this.dragged = this.selected;
+      this.forgetSelection();
+    }
+  }
+}
+
 Selector.prototype.onMouseMove=function(event){
+
 
   this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
   this.raycaster.setFromCamera( this.mouse, this.camera );
+
+  this.startDrag();
 
   if ( this.dragged ) {
     this.moveDraggedObject();
@@ -275,22 +333,10 @@ Selector.prototype.onMouseMove=function(event){
 
     // intersected object changes
     if ( this.intersected != intersects[ 0 ].object ) {
-
-      // restore last intersected color
-      // if ( this.intersected ) this.intersected.material.color.set( this.originalColor );
-
-      // highlight next intersected object
       this.intersected = intersects[ 0 ].object;
-
-      // this.originalColor = this.intersected.material.color.getHex();
-      // this.intersected.material.color.set("#ff0000");
-
     }
     container.style.cursor = 'pointer';
   } else {
-    // unhighligh and forget intersected
-
-    // if ( this.intersected ) this.intersected.material.color.set( this.originalColor );
     this.intersected = null;
     container.style.cursor = 'auto';
   }
@@ -319,7 +365,7 @@ Selector.prototype.bboxOverLap=function(){
     * Math.max(Math.min(bb2.max.z,bb.max.z)-Math.max(bb2.min.z,bb.min.z),0)
 
     if (volume>0.1){
-      this.snap_objects[i].material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+      this.snap_objects[i].material = this.materials.basic;
       return true;
     };
   }
@@ -361,9 +407,11 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
 Selector.prototype.setSnapObjects = function(){
   //clone array
   this.snap_objects = this.selectables.slice(0);
-  for(var i =0; i<this.dragged.children_meshes.length; i++){
-    var dragged_index = this.snap_objects.indexOf(this.dragged.children_meshes[i]);
-    this.snap_objects.splice(dragged_index, 1)
+
+  // remove all children of selected from snap objects
+  for(var i =0; i<this.selected.children_meshes.length; i++){
+    var selected_index = this.snap_objects.indexOf(this.selected.children_meshes[i]);
+    this.snap_objects.splice(selected_index, 1)
   }
 }
 
@@ -381,30 +429,57 @@ Selector.prototype.calculateBBVolumes=function(event){
   }
 }
 
+
+
+Selector.prototype.forgetSelection = function(){
+  if (this.selected) {
+    this.selected.setMaterial("basic")
+    this.selected = null;
+  }
+}
+
+Selector.prototype.selectObject = function(intersect){
+  //forget previous selection
+  this.forgetSelection();
+
+  if(this.parent_lookup[intersect.object.id]){
+    this.selected = this.parent_lookup[intersect.object.id];
+  } else {
+    this.selected = intersect.object;
+  }
+
+  this.selected.setMaterial('selected')
+}
+
+
 Selector.prototype.onMouseDown=function(event){
 
-  this.raycaster.setFromCamera( this.mouse, this.camera );
+  switch ( event.button ) {
+    case 0: // left
 
-  var intersects = this.raycaster.intersectObjects( this.selectables );
+        this.mouse_down = true;
+        this.raycaster.setFromCamera( this.mouse, this.camera );
 
-  if ( intersects.length > 0 ) {
+        var intersects = this.raycaster.intersectObjects( this.selectables );
 
-    this.controls.enabled = false;
+        if ( intersects.length > 0 ) {
 
-    if(this.parent_lookup[intersects[0].object.id]){
+          this.controls.enabled = false;
 
-      this.dragged = this.parent_lookup[intersects[0].object.id];
+          this.selectObject(intersects[0]);
 
-    } else {
-      this.dragged = intersects[ 0 ].object;
-    }
+          this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
 
-    this.dragged.previous_position = new THREE.Vector3().copy( this.dragged.position);
+          this.setSnapObjects()
+          this.calculateBBVolumes()
 
-    this.setSnapObjects()
-    this.calculateBBVolumes()
-
-    container.style.cursor = 'move';
+          container.style.cursor = 'move';
+        }
+        break;
+    case 1: // middle
+        break;
+    case 2: // right
+        break;
   }
 }
 
@@ -417,7 +492,7 @@ Selector.prototype.updateConfig=function(event){
 }
 
 Selector.prototype.onMouseUp=function(event){
-
+  this.mouse_down = false;
   this.controls.enabled = true;
 
   if ( this.dragged ) {
@@ -466,6 +541,12 @@ function Selectable(object, selector){
 
   this.name = object.name
 
+  this.materials={
+    basic:this.object.mesh_object.material,
+    selected:selector.materials.selected,
+    prohibited:selector.materials.prohibited,
+  }
+
   this.sphere_min = new THREE.Mesh( new THREE.SphereGeometry( 0.05, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0040 } ) );
   scene.add( this.sphere_min );
   this.sphere_min.visible =false
@@ -489,3 +570,9 @@ function Selectable(object, selector){
 
 Selectable.prototype = new THREE.Object3D();
 Selectable.prototype.constructor = Selectable;
+
+Selectable.prototype.setMaterial = function(key){
+  for(var i =0; i<this.children_meshes.length; i++){
+    this.children_meshes[i].material = this.materials[key];
+  }
+}
