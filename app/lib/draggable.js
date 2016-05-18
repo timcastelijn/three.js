@@ -365,7 +365,7 @@ Selector.prototype.bboxOverLap=function(){
     * Math.max(Math.min(bb2.max.z,bb.max.z)-Math.max(bb2.min.z,bb.min.z),0)
 
     if (volume>0.1){
-      this.snap_objects[i].material = this.materials.basic;
+      this.snap_objects[i].material = this.materials.prohibited;
       return true;
     };
   }
@@ -386,10 +386,6 @@ Selector.prototype.defineSnapPoint=function(intersect, parent){
         var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
         this.dragged.position.copy( vector  );
 
-
-        if(parent.worldToLocal(intersect.point).z>0.3){
-
-        }
 
         //rotate if possible
         var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
