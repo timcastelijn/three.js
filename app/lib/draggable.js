@@ -313,7 +313,6 @@ Selector.prototype.startDrag=function(){
 
 Selector.prototype.onMouseMove=function(event){
 
-
   this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
@@ -328,9 +327,7 @@ Selector.prototype.onMouseMove=function(event){
 
   //else
   var intersects = this.raycaster.intersectObjects( this.selectables );
-
   if ( intersects.length > 0 ) {
-
     // intersected object changes
     if ( this.intersected != intersects[ 0 ].object ) {
       this.intersected = intersects[ 0 ].object;

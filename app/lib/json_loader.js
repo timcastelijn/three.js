@@ -13,6 +13,16 @@ var modelLoadedCallback = function(type, config_file){
 
     _mesh_objects[type] = new THREE.Mesh( geometry, material );
 
+    // if(geometry.morphTargets.length>0){
+    //   m = _mesh_objects[type].clone();
+    //   m.morphTargetInfluences[1] = 1;
+    //   m.material.wireframe = true
+    //   scene.add(m)
+    //   m.position.set(-2,0, 5)
+    //
+    //
+    // }
+
     _models_loading--
     if(_models_loading ==0){
       console.log('all models loaded');

@@ -6,13 +6,11 @@ function Block(geometry){
   this.name     = geometry.type;
   this.fid      = geometry.fid;
 
-  this.mesh_object = _mesh_objects[this.type].clone()
-
-
+  this.mesh_object = _mesh_objects[this.type].clone();
 
   this.width = geometry.size;
 
-  // this.updateSize();
+  this.updateSize();
 
 
   this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
@@ -33,12 +31,14 @@ Block.prototype.constructor = Block;
 
 Block.prototype.updateSize = function(){
   if(this.width){
-    console.log(this.width);
-    // this.mesh_object.morphTargetInfluences[0] = 0;
-    this.mesh_object.morphTargetInfluences[1] = this.width-1;
+    this.mesh_object.morphTargetInfluences[1] = 1;
 
-    // this.updateVertices()
+    this.updateVertices()
+    this.mesh_object.geometry.computeBoundingSphere();
+    this.mesh_object.geometry.computeBoundingBox();
+
   }
+
 }
 
 Block.prototype.updateVertices = function(){
