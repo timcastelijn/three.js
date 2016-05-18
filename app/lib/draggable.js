@@ -452,24 +452,26 @@ Selector.prototype.onMouseDown=function(event){
 
   switch ( event.button ) {
     case 0: // left
+        if(!this.dragged){
+          //ready to select an object
+          this.mouse_down = true;
+          this.raycaster.setFromCamera( this.mouse, this.camera );
 
-        this.mouse_down = true;
-        this.raycaster.setFromCamera( this.mouse, this.camera );
+          var intersects = this.raycaster.intersectObjects( this.selectables );
 
-        var intersects = this.raycaster.intersectObjects( this.selectables );
+          if ( intersects.length > 0 ) {
 
-        if ( intersects.length > 0 ) {
+            this.controls.enabled = false;
 
-          this.controls.enabled = false;
+            this.selectObject(intersects[0]);
 
-          this.selectObject(intersects[0]);
+            this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
 
-          this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
+            this.setSnapObjects()
+            this.calculateBBVolumes()
 
-          this.setSnapObjects()
-          this.calculateBBVolumes()
-
-          container.style.cursor = 'move';
+            container.style.cursor = 'move';
+          }
         }
         break;
     case 1: // middle

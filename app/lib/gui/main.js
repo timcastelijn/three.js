@@ -25,6 +25,8 @@ $(function() {
 
     var block = addObject(geometry[event.data.type])
     selector.selected = block;
+    selector.mouse_down = true;
+    selector.intersected = block;
     selector.setSnapObjects()
     selector.calculateBBVolumes()
   }
