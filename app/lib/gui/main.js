@@ -17,13 +17,15 @@ $(function() {
   // add block buttons
   function addBlock(event){
 
+    var width = event.data.width? event.data.width: 1;
+
     var geometry={
-      floor:{"type":"floor", "position":["-1","0","0"], "size":3.2, "rotation":["0","0","0"]},
+      floor:{"type":"floor", "position":["-1","0","0"], "size":width, "rotation":["0","0","0"]},
       wall:{"type":"wall", "position":["-1","0","0"], "rotation":["0","180","0"]},
       roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
     }
-
     var block = addObject(geometry[event.data.type])
+    console.log(block);
     selector.selected = block;
     selector.mouse_down = true;
     selector.intersected = block;
@@ -32,7 +34,8 @@ $(function() {
   }
 
   $('#btn_add_wall').click( {type:"wall"}, addBlock);
-  $('#btn_add_floor').click( {type:"floor"}, addBlock);
+  $('#btn_add_floor_32').click( {type:"floor", width:3.2}, addBlock);
+  $('#btn_add_floor_48').click( {type:"floor", width:4.8}, addBlock);
   $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
   function saveConfig(event){
