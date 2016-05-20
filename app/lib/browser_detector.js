@@ -118,17 +118,25 @@ var browser_detector = {
       var name = browser_detector.browsers[i].name;
       var version = browser_detector.browsers[i].version;
 
-      //test name and version
-      if(current_browser.os != 'windows8.1'){
-        // not 8.1
-        if (current_browser.name.match(name)){
-          // match one of the names
-          if (current_browser.version >= version ){
-            // version greater than minimum
-            return true;
-          }
+      //test platform and version
+      if(current_browser.os == 'windows8.1'){
+        // only allow chrome 48 or higher
+        if(current_browser.name == 'chrome' && current_browser.version >= 48){
+          return true;
+        }else{
+          return false
         }
       }
+
+      // not 8.1
+      if (current_browser.name.match(name)){
+        // match one of the names
+        if (current_browser.version >= version ){
+          // version greater than minimum
+          return true;
+        }
+      }
+
     }
     // name or version not ok:
     return false
