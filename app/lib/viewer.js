@@ -224,12 +224,12 @@ function onWindowResize() {
 
 
 function onDocumentKeyDown( event ) {
-  switch( event.key ) {
-    // case 8: event.preventDefault(); console.log("Delete"); break;
-    case 'l':
-      addLights();
-
-  }
+  // switch( event.key ) {
+  //   // case 8: event.preventDefault(); console.log("Delete"); break;
+  //   case 'l':
+  //     addLights();
+  //
+  // }
 
 }
 
