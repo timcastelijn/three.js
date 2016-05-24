@@ -33,11 +33,16 @@ body {
   border-width: 1px;
   border-color: #ddd;
 }
-/*@media screen and (min-width: 900px) {
+@media screen and (min-width:600px) {
   #accordion{
-    width:20%;
-  }
-}*/
+     visibility: visible;
+    }
+}
+@media screen and (max-width:600px) {
+  #accordion{
+     visibility: hidden;
+    }
+}
 input[type=range] {
   width: 100%; /* Specific width is required for Firefox. */
 }
