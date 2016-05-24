@@ -113,24 +113,7 @@ function init() {
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 
-  // // ---------- ADD DRAGGER TO THE SCENE ----------------
-  // dragger = new Dragger(camera, controls);
-  //
-  // var dir = new THREE.Vector3( 1, 0, 0 );
-  // var origin = new THREE.Vector3( 0, 0, 0 );
-  // var length = 0.5;
-  // var hex = '#165ba8';
-  //
-  // var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex, 0.4*length, 0.2*length);
-  //
-  // var arrow_width = new Draggable(arrowHelper, dragger);
-  // arrow_width.dof = new THREE.Vector3(1,0,0);
-  // arrow_width.position.set(1,0,0);
-  //
-  // scene.add(arrow_width);
-
-
-
+  // add info diff
   var info = document.createElement( 'div' );
   info.style.position = 'absolute';
   info.style.bottom = '10px';
@@ -139,13 +122,6 @@ function init() {
   info.style.textAlign = 'right';
   info.innerHTML = 'created by <a href="http://timcastelijn.nl">timcastelijn.nl</a> using <a href="http://threejs.org" target="_blank">three.js</a>';
   container.appendChild( info );
-
-  // stats = new Stats();
-  // stats.domElement.style.position = 'absolute';
-  // stats.domElement.style.top = '0px';
-  // stats.domElement.style.right = '0px';
-  // container.appendChild( stats.domElement );
-
 
   // before-unload warning message
   window.addEventListener("beforeunload", function (e) {
@@ -165,51 +141,6 @@ function init() {
   return true;
 }
 
-function addLights(){
-  // ----------------- Sprites --------------------
-  function generateSprite() {
-      var canvas = document.createElement( 'canvas' );
-      canvas.width = 16;
-      canvas.height = 16;
-      var context = canvas.getContext( '2d' );
-      var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
-      gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
-      gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
-      gradient.addColorStop( 0.4, 'rgba(0,0,64,0)' );
-      gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
-      context.fillStyle = gradient;
-      context.fillRect( 0, 0, canvas.width, canvas.height );
-      return canvas;
-  }
-
-  var material = new THREE.SpriteMaterial( {
-      map: new THREE.CanvasTexture( generateSprite() ),
-      blending: THREE.AdditiveBlending
-  } );
-
-
-  light1 = new THREE.PointLight( 0x2222ff, 1, 3 );
-  light1.position.set(0,1.79,0)
-  scene.add( light1 );
-
-  var radius = 10;
-
-  for ( var i = 0; i < 10; i++ ) {
-    for( var j =0; j< 10; j++){
-      particle = new THREE.Sprite( material );
-      particle.position.x = 1.04/10*i -1.0/2 ;
-      particle.position.y = 1.78;
-      particle.position.z = 1.2/10*j - 1.16 /2;
-
-      var scale = 0.2
-      particle.scale.x = scale;
-      particle.scale.y = scale;
-      particle.scale.z = scale;
-
-      scene.add( particle );
-    }
-  }
-}
 
 function onWindowResize() {
 
@@ -224,12 +155,10 @@ function onWindowResize() {
 
 
 function onDocumentKeyDown( event ) {
-  // switch( event.key ) {
-  //   // case 8: event.preventDefault(); console.log("Delete"); break;
-  //   case 'l':
-  //     addLights();
-  //
-  // }
+  switch( event.key ) {
+    // case 8: event.preventDefault(); console.log("Delete"); break;
+
+  }
 
 }
 

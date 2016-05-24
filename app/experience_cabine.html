@@ -70,6 +70,10 @@
 	               	<div class="col-sm-8">Aromatherapie</div>
 	               	<div class="col-sm-4"><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' /></div>
 	             	</div>
+	             	<div class="row">
+	               	<div class="col-sm-8">Sterrenhemel</div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxLed"  value='5' onchange='addOption(this.value, this.checked)' /></div>
+	             	</div>
 							</div>
 	         	</div>
 	       	</div>
@@ -223,7 +227,9 @@
 	<script src="../examples/js/Detector.js"></script>
 	<script src="../src/extras/helpers/AxisHelper.js"></script>
 
+	<script src="lib/gui/gui.js"></script>
 	<script src="lib/cabine_grid.js"></script>
+	<script src="lib/leds.js"></script>
 	<script src="lib/wall.js"></script>
 	<script src="lib/cell.js"></script>
 	<script src="lib/cap.js"></script>
@@ -233,60 +239,6 @@
 	<script src="lib/draggable.js"></script>
 	<script src="lib/viewer.js"></script>
 
-	<script>
-		$(function() {
-			//document ready
-			$('#colorselector1').colorselector({
-          callback: function (value, color, title) {
-						setColor('exterior', color);
-          }
-    	});
-			$('#colorselector2').colorselector({
-          callback: function (value, color, title) {
-						setColor('interior', color);
-          }
-    	});
-
-			$('#colorselector3').colorselector({
-	          callback: function (value, color, title) {
-							setColor('floor', color);
-	          }
-	    });
-
-			function handleChange(input) {
-				if (input.value < parseInt(input.min)) input.value = parseInt(input.min);
-				if (input.value > parseInt(input.max)) input.value = parseInt(input.max);
-			}
-
-			function toggleChevron(e) {
-			    $(e.target)
-			        .prev('.panel-heading')
-			        .find("i.indicator")
-			        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
-			}
-			$('#accordion').on('hidden.bs.collapse', toggleChevron);
-			$('#accordion').on('shown.bs.collapse', toggleChevron);
-
-			function defineHeaterPositions(number){
-				var slots = cabine.walls[2].n;
-				var array = [];
-
-				if (number>slots){
-					number = slots;
-					$('#numberInputHeaters').val(slots);
-				}
-				array.push(0);
-				if (number > 0 ) {
-					//add element 0
-					for(var i=1; i< number; i++){
-							array.push(Math.round(i*slots/number));
-					}
-				}
-				console.log(array);
-			}
-		})
-
-	</script>
 
 	</body>
 </html>

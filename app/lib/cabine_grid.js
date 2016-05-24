@@ -154,9 +154,25 @@ CabineGrid.prototype.setOption = function(index, boolean){
     case 4: //aromatherapie
       this.walls[3].addAromaTherapy( boolean )
       break;
+    case 5: //Sterrenhemel
+      this.addLeds( boolean )
+      break;
     default:
       console.log("default");
   }
+}
+
+// add backrest to the scene
+CabineGrid.prototype.addLeds = function(boolean){
+
+    if (this.leds){
+      this.leds.setVisible(boolean);
+    } else {
+      // create leds
+      this.leds = new Leds(this.width, this.height, this.depth);
+      this.leds.setVisible(boolean);
+    }
+
 }
 
 // add backrest to the scene
@@ -192,6 +208,11 @@ CabineGrid.prototype.setWidth=function(value){
 
   this.setBackrestWidth();
 
+
+  if (this.leds){
+    this.leds.setWidth(this.width);
+  }
+
   this.walls[1].position.x = this.width/2;
   this.walls[3].position.x = -this.width/2;
 
@@ -213,6 +234,9 @@ CabineGrid.prototype.setDepth = function(value){
 
   this.setBackrestWidth();
 
+  if (this.leds){
+    this.leds.setDepth(this.depth);
+  }
 
   this.walls[0].position.z = this.depth/2;
   this.walls[2].position.z = -this.depth/2;
@@ -233,6 +257,10 @@ CabineGrid.prototype.setHeight=function(value){
   }
 
   this.ceiling.position.y = this.height
+
+  if (this.leds){
+    this.leds.setHeight(this.height);
+  }
 
 }
 
