@@ -63,7 +63,7 @@ function CabineGrid(width, height, depth){
 
   json_loader.load( "models/backrest.json", loadBackrest);
 
-  json_loader.load( "models/aromatherapy.json", loadAromatherapy);
+  json_loader.load( "models/aromatherapy2.json", loadAromatherapy);
 
 
   // add ceiling

@@ -84,13 +84,29 @@ var loadBackrest = function ( geometry ) {
 }
 
 // type 3
+// var loadAromatherapy = function ( geometry, materials ) {
+//
+//   geometry.computeFaceNormals();
+//   geometry.computeVertexNormals();
+//
+//   materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+//   materials[3] = new THREE.MeshPhongMaterial( { color: 0xcccccc, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+//
+//   var material = new THREE.MultiMaterial( materials );
+//
+//   shelf_object = new THREE.Mesh( geometry, material);
+//   shelf_object.morphTargetInfluences[1]=1;
+//
+//   shelf_object.castShadow = SHADOWS_ENABLED
+//   shelf_object.receiveShadow = SHADOWS_ENABLED
+//
+// }
 var loadAromatherapy = function ( geometry, materials ) {
 
   geometry.computeFaceNormals();
   geometry.computeVertexNormals();
 
   materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  materials[3] = new THREE.MeshPhongMaterial( { color: 0xcccccc, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   var material = new THREE.MultiMaterial( materials );
 
