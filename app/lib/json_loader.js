@@ -19,16 +19,16 @@ var loadFloor = function ( geometry, materials ) {
   geometry.computeFaceNormals();
   geometry.computeVertexNormals();
 
-  materials[0] = new THREE.MeshPhongMaterial( { color: colors.floor, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  materials[1] = new THREE.MeshPhongMaterial( { color: colors.exterior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[0] = new THREE.MeshPhongMaterial( { color: colors.exterior, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  materials[1] = new THREE.MeshPhongMaterial( { color: colors.floor, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   var material = new THREE.MultiMaterial( materials );
-  floor_object = new THREE.Mesh( geometry, material );
+  cap_object = new THREE.Mesh( geometry, material );
 
-  floor_object.castShadow = SHADOWS_ENABLED
-  floor_object.receiveShadow = SHADOWS_ENABLED
+  cap_object.castShadow = SHADOWS_ENABLED
+  cap_object.receiveShadow = SHADOWS_ENABLED
 
-  cabine.floor.addCap()
+  cabine.addFloorCeiling()
 }
 
 var loadBench = function ( geometry, materials ) {

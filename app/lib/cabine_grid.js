@@ -67,13 +67,10 @@ function CabineGrid(width, height, depth){
 
 
   // add ceiling
-  this.ceiling  = new CeilingPlaceHolder(width, depth, CEILING_THICKNESS);
-  this.ceiling.position.set(0,this.height,0);
-  this.add(this.ceiling);
+  var json_loader = new THREE.JSONLoader( );
+  json_loader.load( "models/floor.json", loadFloor);
 
-  // //add floor
-  this.floor = new Cap(width, depth);
-  this.add(this.floor)
+
 
   this.bench = new Bench(this.width, this.depth);
   this.add(this.bench)
@@ -84,6 +81,18 @@ CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
 
 
+
+CabineGrid.prototype.addFloorCeiling=function(){
+
+  this.ceiling  = new Cap(this.width, this.depth);
+  this.ceiling.position.set(0,this.height,0);
+  this.ceiling.rotation.set(0,0,Math.PI);
+  this.add(this.ceiling);
+
+  // //add floor
+  this.floor = new Cap(this.width, this.depth);
+  this.add(this.floor)
+}
 
 CabineGrid.prototype.getCellLayout=function(){
   config.heaters = []
@@ -228,7 +237,7 @@ CabineGrid.prototype.setDepth = function(value){
 
   this.depth = value - 2* MODULE_THICKNESS;
 
-  this.ceiling.setLength(value);
+  this.ceiling.setDepth(value);
   this.floor.setDepth(value);
   this.bench.position.set(0,0,- this.depth/2 + MODULE_WIDTH);
 
@@ -276,8 +285,7 @@ CabineGrid.prototype.placeHeaters=function(){
 // set width of the complete cabine
 CabineGrid.prototype.updateColors=function(){
   this.floor.updateColors();
-
-  this.ceiling.mesh_object.material.color.set(colors.exterior);
+  this.ceiling.updateColors();
   this.bench.updateColors();
 
   for(var i=0; i<this.walls.length; i++){
