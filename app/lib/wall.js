@@ -145,7 +145,8 @@ Wall.prototype.setLength = function(value){
 
   this.updateVaporizerPosition();
 
-  this.corner_mesh.position.x = value/2;
+  this.updateCornerPosition();
+
   if (this.door_plate_mesh) {
     this.door_plate_mesh.position.x = -value/2 + 3*MODULE_WIDTH - 0.02;
   }
@@ -180,7 +181,10 @@ Wall.prototype.updateColors=function(){
       }
     }
   }
-  this.corner_mesh.material.color.set(colors.exterior);
+  for (var i = 0; i < 3; i++) {
+    this.corner_mesh[i].material.color.set(colors.exterior);
+  }
+
   if (this.door_plate_mesh) {
     this.door_plate_mesh.material.color.set(colors.exterior);
   }
@@ -238,25 +242,6 @@ Wall.prototype.addVaporizer = function( boolean){
   }
 }
 
-
-Wall.prototype.addAromaTherapy = function( boolean ){
-
-  var target_cell = this.cells[this.n-1][1];
-
-
-  var type_index = boolean? 3: 0;
-  target_cell.setType(type_index);
-  this.aromatherapy = boolean;
-}
-
-Wall.prototype.addSteun = function( boolean){
-
-}
-
-Wall.prototype.addAroma = function( boolean){
-
-}
-
 Wall.prototype.setHeight = function(value){
   this.height = value;
 
@@ -285,11 +270,10 @@ Wall.prototype.setHeight = function(value){
 
   this.updateVaporizerPosition();
 
-  // scale coreners
-  var factor = this.height / this.corner_mesh.geometry.parameters.height;
-  this.corner_mesh.scale.y = factor;
+  this.updateCornerHeight();
 
   if( this.door_plate_mesh){
+    var factor = this.height / this.door_plate_mesh.geometry.parameters.height;
     this.door_plate_mesh.scale.y = factor;
   }
 
@@ -393,20 +377,46 @@ Wall.prototype.removeRow = function(i){
 Wall.prototype.addCorner = function(){
 
   // create corner box
-  var geometry = new THREE.BoxGeometry( MODULE_THICKNESS, this.height, MODULE_THICKNESS );
-  this.corner_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  var geometry = new THREE.BoxGeometry( MODULE_THICKNESS/2, this.height, MODULE_THICKNESS/2 );
 
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/2, this.height/2, MODULE_THICKNESS/2 ));
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/4, this.height/2, MODULE_THICKNESS/4 ));
 
-  this.corner_mesh.position.set(this.length /2 , 0, 0);
+  this.corner_mesh = []
 
-  if(SHADOWS_ENABLED){
-    this.corner_mesh.castShadow = true;
-    this.corner_mesh.receiveShadow = true;
+  this.corner_mesh[0] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.corner_mesh[1] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.corner_mesh[2] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.corner_mesh[3] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: "#333333" } ) );
+
+  this.updateCornerPosition();
+
+  for (var i = 0; i < this.corner_mesh.length; i++) {
+    this.add(this.corner_mesh[i]);
   }
-
-  this.add( this.corner_mesh );
 }
+
+Wall.prototype.updateCornerPosition = function(){
+  var positions = [
+    [this.length/2, 0, MODULE_THICKNESS/2],
+    [this.length /2 + MODULE_THICKNESS/2 , 0, MODULE_THICKNESS/2],
+    [this.length /2 + MODULE_THICKNESS/2 , 0, 0],
+    [this.length /2 , 0, 0],
+  ]
+
+  for (var i = 0; i < this.corner_mesh.length; i++) {
+    this.corner_mesh[i].position.set(positions[i][0],positions[i][1],positions[i][2])
+  }
+}
+
+Wall.prototype.updateCornerHeight = function(){
+  // scale corners
+  var factor = this.height / this.corner_mesh[0].geometry.parameters.height;
+
+  for (var i = 0; i < this.corner_mesh.length; i++) {
+    this.corner_mesh[i].scale.y = factor
+  }
+}
+
 
 Wall.prototype.addDoorPlate = function(){
 
