@@ -143,6 +143,7 @@ Wall.prototype.setLength = function(value){
 
   this.setRestColSize(this.rest);
 
+  this.updateVaporizerPosition();
 
   this.corner_mesh.position.x = value/2;
   if (this.door_plate_mesh) {
@@ -212,19 +213,31 @@ Wall.prototype.addCol = function(n){
   }
 }
 
-Wall.prototype.addVaporizer = function( boolean){
+Wall.prototype.updateVaporizerPosition = function(){
+  if(this.vaporizer){
+    var pos_x = (this.n -1 )*0.256;
+    var pos_y = Math.min( (this.n_height * 0.67 + this.rest_height - 0.25), 3* 0.67 - 0.25 );
+    var pos_z = 0;
 
-  var target_cell = this.cells[this.n-1][this.n_height];
-  this.vaporizer = boolean;
+    this.vaporizer.visible = (this.height<1.65)? false: true;
 
-  var type_index = boolean? 2: 0;
-  target_cell.setType(type_index);
-
-  if (this.n_height < 3 && target_cell.height < 0.3 && boolean) {
-    alert("zoutvernevelaar past niet, maak hoogte groter of vraag offerte op maat aan");
+    this.vaporizer.position.set(pos_x, pos_y, pos_z);
   }
-
 }
+
+Wall.prototype.addVaporizer = function( boolean){
+  if(boolean){
+    this.vaporizer = _models.vaporizer.mesh;
+
+    this.updateVaporizerPosition();
+
+    this.base.add(this.vaporizer)
+  } else {
+    this.base.remove(this.vaporizer)
+    this.vaporizer = null;
+  }
+}
+
 
 Wall.prototype.addAromaTherapy = function( boolean ){
 
@@ -269,6 +282,8 @@ Wall.prototype.setHeight = function(value){
   }
 
   this.setRestRowSize(this.rest_height);
+
+  this.updateVaporizerPosition();
 
   // scale coreners
   var factor = this.height / this.corner_mesh.geometry.parameters.height;

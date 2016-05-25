@@ -3,7 +3,7 @@ var browser_ok = browser_detector.detect()
 var container, stats;
 var camera, controls, scene, renderer;
 var dragger;
-var cap_object, heater_object, vaporizer_object, shelf_object, bench_object, cabine;
+var cabine;
 
 var document_edited = false;
 
@@ -37,6 +37,16 @@ var colors = {
   interior:"#ffffff",
   floor:"#C28B6B",
   bamboo:"#C28B6B",
+}
+
+var _models_loading = 0;
+var _models={
+  vaporizer:{name:"vaporizer", model:"models/vaporizer.json" },
+  aromatherapy:{name:"aromatherapy", model:"models/aromatherapy.json" },
+  heater:{name:"heater", model:"models/heater.json" },
+  bench:{name:"bench", model:"models/bench.json" },
+  cap:{name:"cap", model:"models/floor.json" },
+  backrest:{name:"backrest", model:"models/backrest.json" },
 }
 
 if (browser_ok){
@@ -85,9 +95,7 @@ function init() {
 
   scene.add( light );
 
-  //create cabine
-  cabine = new CabineGrid(1.24, 2.0, 1.4);
-  scene.add(cabine);
+
 
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
   // renderer = new THREE.WebGLRenderer( { antialias: true} );
@@ -138,7 +146,31 @@ function init() {
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
+  // at the end of init, load the models
+  var json_loader = new THREE.JSONLoader( );
+  for(name in _models){
+    if(_models.hasOwnProperty(name)){
+      _models_loading++;
+      json_loader.load( _models[name].model, modelLoadedCallback(_models[name]));
+    }
+  }
+
   return true;
+}
+
+function loadConfig(){
+
+  //define materials
+  _models.aromatherapy.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.backrest.mesh.material = new THREE.MeshPhongMaterial( { color: colors.bamboo, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.heater.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#111111", shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.heater.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.vaporizer.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#D4D2E7", shininess:0.5, reflectivity:0.3, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
+  //create cabine
+  cabine = new CabineGrid(1.24, 2.0, 1.4);
+  scene.add(cabine);
+
 }
 
 

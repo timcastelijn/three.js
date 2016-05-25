@@ -53,24 +53,20 @@ function CabineGrid(width, height, depth){
 
     //add wall object to Cabinegrid
     this.walls[i] = wall;
+
+    this.walls[i].updateConfig();
+
   }
 
-  var json_loader = new THREE.JSONLoader( );
-
-  json_loader.load( "models/ir-module.json", modelLoadedCallback);
-
-  json_loader.load( "models/salt-vaporizer.json", loadVaporizer);
-
-  json_loader.load( "models/backrest.json", loadBackrest);
-
-  json_loader.load( "models/aromatherapy2.json", loadAromatherapy);
-
-
   // add ceiling
-  var json_loader = new THREE.JSONLoader( );
-  json_loader.load( "models/floor.json", loadFloor);
+  this.ceiling  = new Cap(this.width, this.depth);
+  this.ceiling.position.set(0,this.height,0);
+  this.ceiling.rotation.set(0,0,Math.PI);
+  this.add(this.ceiling);
 
-
+  // //add floor
+  this.floor = new Cap(this.width, this.depth);
+  this.add(this.floor)
 
   this.bench = new Bench(this.width, this.depth);
   this.add(this.bench)
@@ -80,19 +76,6 @@ function CabineGrid(width, height, depth){
 CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
 
-
-
-CabineGrid.prototype.addFloorCeiling=function(){
-
-  this.ceiling  = new Cap(this.width, this.depth);
-  this.ceiling.position.set(0,this.height,0);
-  this.ceiling.rotation.set(0,0,Math.PI);
-  this.add(this.ceiling);
-
-  // //add floor
-  this.floor = new Cap(this.width, this.depth);
-  this.add(this.floor)
-}
 
 CabineGrid.prototype.getCellLayout=function(){
   config.heaters = []
@@ -116,8 +99,8 @@ CabineGrid.prototype.getCellLayout=function(){
   } else {
     config.heaters = "de simpele editor ondersteunt deze optie nog niet"
   }
-
 }
+
 CabineGrid.prototype.getWallPositions=function(length, depth){
   var items =[];
 
@@ -151,6 +134,8 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       console.log("default");
   }
 }
+
+
 // updates the dimensions and walls accordingly
 CabineGrid.prototype.setOption = function(index, boolean){
   switch(index){
@@ -181,24 +166,23 @@ CabineGrid.prototype.addLeds = function(boolean){
       this.leds = new Leds(this.width, this.height, this.depth);
       this.leds.setVisible(boolean);
     }
-
 }
 
 // add backrest to the scene
 CabineGrid.prototype.addBackrest=function(boolean){
 
   if(boolean){
-    this.add(backrest_object);
+    this.add(_models.backrest.mesh);
   }else {
-    this.remove(backrest_object)
+    this.remove(_models.backrest.mesh)
   }
   this.setBackrestWidth();
 }
 
 CabineGrid.prototype.setBackrestWidth=function(){
-  backrest_object.morphTargetInfluences[1] = this.width/BACKREST_TOTAL_WIDTH;
+  _models.backrest.mesh.morphTargetInfluences[1] = this.width/BACKREST_TOTAL_WIDTH;
   // backrest_object.morphTargetInfluences[2] = 0.8;
-  backrest_object.position.set(-0.5*this.width, MODULE_FIXED_HEIGHT[0] + 0.05, -0.5 * this.depth + BACKREST_THICKNESS);
+  _models.backrest.mesh.position.set(-0.5*this.width, MODULE_FIXED_HEIGHT[0] + 0.05, -0.5 * this.depth + BACKREST_THICKNESS);
 }
 
 
@@ -273,15 +257,6 @@ CabineGrid.prototype.setHeight=function(value){
 
 }
 
-
-
-// set width of the complete cabine
-CabineGrid.prototype.placeHeaters=function(){
-  for(var i=1; i<this.walls.length; i++){
-    this.walls[i].updateConfig();
-  }
-}
-
 // set width of the complete cabine
 CabineGrid.prototype.updateColors=function(){
   this.floor.updateColors();
@@ -293,44 +268,5 @@ CabineGrid.prototype.updateColors=function(){
   }
 
   //update parent colors
-  heater_object.material.materials[1].color.set(colors.interior);
-  vaporizer_object.material.materials[0].color.set(colors.interior);
-}
-
-// var items;
-// parent class ModuleSmall
-function CeilingPlaceHolder(w, d, thickness){
-
-  THREE.Object3D.call( this );
-
-  // create floor box
-  var geometry = new THREE.BoxGeometry( w, thickness, d );
-
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, thickness/2, 0) );
-  this.mesh_object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-
-  this.mesh_object.castShadow = true;
-  this.mesh_object.receiveShadow = true;
-
-  // this.corner_mesh.position.set( 0, thickness/2, 0);
-  this.add( this.mesh_object );
-}
-CeilingPlaceHolder.prototype = new THREE.Object3D();
-CeilingPlaceHolder.prototype.constructor = CeilingPlaceHolder;
-
-// set width of the complete cabine
-CeilingPlaceHolder.prototype.setWidth=function(value){
-  var factor =  value / this.mesh_object.geometry.parameters.width; // === 1
-  this.mesh_object.scale.x = factor;
-}
-
-// set width of the complete cabine
-CeilingPlaceHolder.prototype.setLength=function(value){
-  var factor =  value / this.mesh_object.geometry.parameters.depth; // === 1
-  this.mesh_object.scale.z = factor;
-}
-
-// set width of the complete cabine
-CeilingPlaceHolder.prototype.setHeight=function(value){
-  console.log('height:' + value);
+  _models.heater.mesh.material.materials[1].color.set(colors.interior);
 }

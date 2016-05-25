@@ -46,6 +46,16 @@ function Cell(size, flip){
     this.mesh_interior.receiveShadow = true
   }
 
+  var geometry = new THREE.BoxGeometry( size[0], size[1], 0.01 );
+
+  // offset pivot to corner
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( this.flip * this.width / 2, size[1] / 2 , face_thickness/2 + size[2] /2) );
+
+  this.mesh_divider = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: "#333333" } ) );
+  this.mesh_divider.position.z = -0.05
+
+  this.add(this.mesh_divider);
+
 }
 Cell.prototype = new THREE.Object3D();
 Cell.prototype.constructor = Cell;
@@ -59,44 +69,20 @@ Cell.prototype.setWidth = function(value){
 
   this.mesh_interior.scale.x = factor2;
   this.mesh_exterior.scale.x = factor;
+  this.mesh_divider.scale.x = factor;
 
   this.width = value;
 
-}
-
-Cell.prototype.setVaporizerHeight = function(value){
-
-  if (value < 0.3 && this.vaporizer_visible){
-    //hide vaporizer, show normal cladding
-    this.replaceInteriorGometry(this.mesh_interior_clad);
-    this.vaporizer_visible = false;
-
-  }else if(value > 0.3 && !this.vaporizer_visible){
-    //show vaporzier
-    this.replaceInteriorGometry(vaporizer_object);
-    this.vaporizer_visible = true;
-  }
-
-  // update height
-  if(this.vaporizer_visible){
-    this.mesh_interior.morphTargetInfluences[1] = value;
-  }else{
-    var factor2 = (value - CELL_CREASE) / this.interior_height || 0.0000001;
-    this.mesh_interior.scale.y = factor2;
-  }
 }
 
 Cell.prototype.setHeight = function(value){
 
   var factor = value / this.initial_height || 0.0000001;
   this.mesh_exterior.scale.y = factor;
+  this.mesh_divider.scale.y = factor;
 
-  if (this.isVaporizer()){
-    this.setVaporizerHeight(value);
-  }else{
-    var factor2 = (value - CELL_CREASE) / this.interior_height || 0.0000001;
-    this.mesh_interior.scale.y = factor2;
-  }
+  var factor2 = (value - CELL_CREASE) / this.interior_height || 0.0000001;
+  this.mesh_interior.scale.y = factor2;
 
   this.height = value;
 }
@@ -108,15 +94,11 @@ Cell.prototype.setType = function(type){
   // check whether objects are defined
   switch(type){
     case 1:
-      this.replaceInteriorGometry(heater_object)
-      break
-    case 2:
-      this.replaceInteriorGometry(vaporizer_object);
-      this.vaporizer_visible = true;
-      this.setHeight(this.height);
+      this.replaceInteriorGometry(_models.heater.mesh)
+      this.mesh_interior.morphTargetInfluences[1]=0.67;
       break
     case 3:
-      this.replaceInteriorGometry(shelf_object);
+      this.replaceInteriorGometry(_models.aromatherapy.mesh);
       this.mesh_interior.morphTargetInfluences[1]=0.67;
       break
     default:

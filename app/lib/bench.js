@@ -4,19 +4,10 @@ function Bench(width, depth){
   this.width = width;
   this.depth = depth;
 
-  var json_loader = new THREE.JSONLoader( );
-  json_loader.load( "models/bench.json", loadBench);
+  this.mesh = _models.bench.mesh;
+  this.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  this.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: "#111111", shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
-
-}
-
-Bench.prototype = new THREE.Object3D();
-Bench.prototype.constructor = Bench;
-
-
-Bench.prototype.addBench = function(){
-
-  this.mesh = bench_object.clone()
 
   this.add(this.mesh )
 
@@ -24,7 +15,12 @@ Bench.prototype.addBench = function(){
   this.mesh.morphTargetInfluences[1]=this.width/4;
   this.position.z = -this.depth/2+MODULE_WIDTH;
 
+
 }
+
+Bench.prototype = new THREE.Object3D();
+Bench.prototype.constructor = Bench;
+
 
 Bench.prototype.setWidth = function(value){
   this.width = value;
