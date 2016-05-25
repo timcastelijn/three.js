@@ -187,6 +187,7 @@ Wall.prototype.updateColors=function(){
 
   if (this.door_plate_mesh) {
     this.door_plate_mesh.material.color.set(colors.exterior);
+    this.door_plate_mesh2.material.color.set(colors.exterior);
   }
 }
 
@@ -420,19 +421,18 @@ Wall.prototype.updateCornerHeight = function(){
 
 Wall.prototype.addDoorPlate = function(){
 
-  var plate_thickness = 0.02;
+  var plate_thickness = 0.005;
   // create corner box
   var geometry = new THREE.BoxGeometry( plate_thickness, this.height, MODULE_THICKNESS );
+
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( plate_thickness/2, this.height/2, MODULE_THICKNESS/2 ));
+
   this.door_plate_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( plate_thickness, this.height/2, MODULE_THICKNESS/2 ));
-
   this.door_plate_mesh.position.set(-this.length / 2 + 3*MODULE_WIDTH - plate_thickness, 0, 0);
 
-  if(SHADOWS_ENABLED){
-    this.door_plate_mesh.castShadow = true;
-    this.door_plate_mesh.receiveShadow = true;
-  }
+  this.door_plate_mesh2 = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.door_plate_mesh2.position.set( -this.length / 2 , 0, 0);
 
   this.add( this.door_plate_mesh );
+  this.add( this.door_plate_mesh2 );
 }
