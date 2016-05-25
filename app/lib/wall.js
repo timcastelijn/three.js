@@ -276,6 +276,7 @@ Wall.prototype.setHeight = function(value){
   if( this.door_plate_mesh){
     var factor = this.height / this.door_plate_mesh.geometry.parameters.height;
     this.door_plate_mesh.scale.y = factor;
+    this.door_plate_mesh2.scale.y = factor;
   }
 
 }
