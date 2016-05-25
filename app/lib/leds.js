@@ -36,9 +36,9 @@ Leds.prototype.setVisible = function(boolean){
 }
 
 Leds.prototype.setWidth = function(value){
+  this.width = value;
 
   if(this.visible){
-    this.width = value;
 
     for (var i = 0; i < this.sprites.length; i++) {
       scene.remove(this.sprites[i]);
@@ -50,9 +50,10 @@ Leds.prototype.setWidth = function(value){
 }
 
 Leds.prototype.setDepth = function(value){
-  if(this.visible){
 
-    this.depth = value;
+  this.depth = value;
+
+  if(this.visible){
 
     for (var i = 0; i < this.sprites.length; i++) {
       scene.remove(this.sprites[i]);
