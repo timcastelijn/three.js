@@ -9,6 +9,7 @@ function Leds(width, height, depth){
   this.DISTANCE = 0.2;
   this.CEILING_DIST = 0.01;
   this.color = 0x2222ff;
+  this.visible = false;
 
   this.sprite_material = this.generateSpriteMaterial()
   this.sprites = [];
@@ -21,34 +22,45 @@ function Leds(width, height, depth){
 }
 
 Leds.prototype.setVisible = function(boolean){
-  this.light.visible = boolean
-  for (var i = 0; i < this.sprites.length; i++) {
-    this.sprites[i].visible = boolean;
+
+  if (boolean){
+    this.createGrid();
+  }else{
+    for (var i = 0; i < this.sprites.length; i++) {
+      scene.remove(this.sprites[i]);
+    }
   }
+
+  this.light.visible = boolean
+  this.visible = boolean;
 }
 
 Leds.prototype.setWidth = function(value){
 
-  this.width = value;
+  if(this.visible){
+    this.width = value;
 
-  for (var i = 0; i < this.sprites.length; i++) {
-    scene.remove(this.sprites[i]);
+    for (var i = 0; i < this.sprites.length; i++) {
+      scene.remove(this.sprites[i]);
+    }
+
+    this.sprites = [];
+    this.createGrid();
   }
-
-  this.sprites = [];
-  this.createGrid();
 }
 
 Leds.prototype.setDepth = function(value){
+  if(this.visible){
 
-  this.depth = value;
+    this.depth = value;
 
-  for (var i = 0; i < this.sprites.length; i++) {
-    scene.remove(this.sprites[i]);
+    for (var i = 0; i < this.sprites.length; i++) {
+      scene.remove(this.sprites[i]);
+    }
+
+    this.sprites = [];
+    this.createGrid();
   }
-
-  this.sprites = [];
-  this.createGrid();
 }
 
 Leds.prototype.setHeight = function(value){
