@@ -193,6 +193,15 @@ Wall.prototype.updateColors=function(){
 
 
 
+Wall.prototype.colBehindBench = function(index, i){
+  if(index ==2){
+    return true;
+  } else if ( (index ==1 || index ==3) && i <= 1 ) {
+    return true;
+  }
+  return false
+}
+
 Wall.prototype.addCol = function(n){
 
   // copy previous rest coll to new coll
@@ -205,13 +214,28 @@ Wall.prototype.addCol = function(n){
   //ADDCELLS
   for(var i =0; i<this.n_height+1; i++){
 
-    var cell_height = (i<this.n_height)? MODULE_HEIGHT: this.rest_height;
+    var is_col_behind_bench = this.colBehindBench(this.index, n)
+
+    var module_height = is_col_behind_bench?  MODULE_FIXED_HEIGHT[i]: MODULE_HEIGHT;
+
+    var cell_height = (i<this.n_height)? module_height: this.rest_height;
+
     var width       = (n<this.n)? MODULE_WIDTH: this.rest;
 
     var size    = [width, cell_height, MODULE_THICKNESS];
     var cell_id = this.index + "-" + n + "-" + i;
     this.cells[n][i] = new Cell(size, this.flip, cell_id);
-    this.cells[n][i].position.set(n*MODULE_WIDTH, MODULE_HEIGHT * i, 0);
+
+    var pos_y =0;
+    if(is_col_behind_bench){
+      for(var j = 0; j < i; j++) {
+        pos_y += MODULE_FIXED_HEIGHT[j];  // Iterate over your first array and then grab the second element add the values up
+      }
+    }else {
+      pos_y = MODULE_HEIGHT * i;
+    }
+
+    this.cells[n][i].position.set(n*MODULE_WIDTH, pos_y, 0);
 
 
     this.base.add( this.cells[n][i] );

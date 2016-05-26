@@ -95,11 +95,11 @@ Cell.prototype.setType = function(type){
   switch(type){
     case 1:
       this.replaceInteriorGometry(_models.heater.mesh)
-      this.mesh_interior.morphTargetInfluences[1]=0.67;
+      this.mesh_interior.morphTargetInfluences[1]=this.height;
       break
     case 3:
       this.replaceInteriorGometry(_models.aromatherapy.mesh);
-      this.mesh_interior.morphTargetInfluences[1]=0.67;
+      this.mesh_interior.morphTargetInfluences[1]=this.height;
       break
     default:
       this.replaceInteriorGometry(this.mesh_interior_clad);
