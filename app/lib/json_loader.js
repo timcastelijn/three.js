@@ -8,6 +8,8 @@ var modelLoadedCallback = function(model){
     var material = new THREE.MultiMaterial( materials );
 
     model.mesh = new THREE.Mesh( geometry, material );
+    model.mesh.updateBoundingVolumes();
+
 
     _models_loading--
     if(_models_loading ==0){
