@@ -148,7 +148,7 @@ Wall.prototype.setLength = function(value){
   this.updateCornerPosition();
 
   if (this.door_plate_mesh) {
-    this.door_plate_mesh.position.x = -value/2 + 3*MODULE_WIDTH - 0.02;
+    this.updateDoorPlatePos()
   }
 
 }
@@ -422,18 +422,24 @@ Wall.prototype.updateCornerHeight = function(){
 
 Wall.prototype.addDoorPlate = function(){
 
-  var plate_thickness = 0.005;
+  this.door_plate_thickness = 0.005;
   // create corner box
-  var geometry = new THREE.BoxGeometry( plate_thickness, this.height, MODULE_THICKNESS );
+  var geometry = new THREE.BoxGeometry( this.door_plate_thickness, this.height, MODULE_THICKNESS );
 
-  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( plate_thickness/2, this.height/2, MODULE_THICKNESS/2 ));
+  geometry.applyMatrix( new THREE.Matrix4().makeTranslation( this.door_plate_thickness/2, this.height/2, MODULE_THICKNESS/2 ));
 
   this.door_plate_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-  this.door_plate_mesh.position.set(-this.length / 2 + 3*MODULE_WIDTH - plate_thickness, 0, 0);
 
   this.door_plate_mesh2 = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-  this.door_plate_mesh2.position.set( -this.length / 2 , 0, 0);
+
+  this.updateDoorPlatePos()
 
   this.add( this.door_plate_mesh );
   this.add( this.door_plate_mesh2 );
+}
+
+Wall.prototype.updateDoorPlatePos = function(){
+  this.door_plate_mesh.position.set(-this.length / 2 + 3*MODULE_WIDTH - this.door_plate_thickness, 0, 0);
+  this.door_plate_mesh2.position.set( -this.length / 2 , 0, 0);
+
 }
