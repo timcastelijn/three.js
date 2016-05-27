@@ -267,6 +267,16 @@ Wall.prototype.addVaporizer = function( boolean){
   }
 }
 
+Wall.prototype.addAromaTherapy = function( boolean ){
+
+  var target_cell = this.cells[this.n-1][1];
+
+
+  var type_index = boolean? 3: 0;
+  target_cell.setType(type_index);
+  this.aromatherapy = boolean;
+}
+
 Wall.prototype.setHeight = function(value){
   this.height = value;
 
