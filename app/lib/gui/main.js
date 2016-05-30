@@ -21,7 +21,7 @@ $(function() {
 
     var geometry={
       floor:{"type":"floor", "position":["-1","0","0"], "size":width, "rotation":["0","0","0"]},
-      wall:{"type":"wall", "position":["-1","0","0"], "rotation":["0","180","0"]},
+      wall:{"type":"wall", "position":["-1","0","0"], "size":2.5, "rotation":["0","180","0"]},
       roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
     }
     var block = addObject(geometry[event.data.type])

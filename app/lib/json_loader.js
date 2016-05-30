@@ -7,7 +7,7 @@ var modelLoadedCallback = function(type, config_file){
     if(geometry.morphTargets.length>0){
       materials[0].morphTargets = true
     }
-    // var material = new THREE.MultiMaterial( materials );
+    var material = new THREE.MultiMaterial( materials );
     var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
     // var material = new THREE.MeshLambertMaterial( { color: 0xffffff, morphTargets: true, vertexColors: THREE.FaceColors} );
 

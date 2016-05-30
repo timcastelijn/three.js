@@ -238,6 +238,8 @@ function onDocumentMouseMove( event ) {
 function onDocumentKeyDown( event ) {
   switch( event.keyCode ) {
     case 8:
+      //delete key:
+      event.preventDefault();
       selector.deleteObject();
       break;
     case 46:
@@ -267,6 +269,21 @@ Selector.prototype.deleteObject=function(object){
     price -= block_files[this.selected.object.type].price;
     updatePriceGui()
     this.selected = null;
+  } else{
+    console.log('nothing selected');
+  }
+}
+
+Selector.prototype.rotateObject=function(dir){
+  if (this.selected){
+
+    //rotate selected object
+    var rotation  = (dir=="CW")?  -Math.PI/2: Math.PI/2;
+    this.selected.rotation.y += rotation;
+
+    //update config file
+    config.geometry[this.selected.object.fid].rotation += (rotation /Math.PI * 180);
+
   } else{
     console.log('nothing selected');
   }
@@ -371,10 +388,15 @@ Selector.prototype.bboxOverLap=function(){
 }
 
 Selector.prototype.defineSnapPoint=function(intersect, parent){
-  // console.log(intersect.faceIndex);
+
+  var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex
+  // console.log(intersect.object);
 
   //iterate over faceIndexes
+  // for (index in parent.object.patches) {
+    // if((index) == intersect.faceIndex){
   for (index in parent.object.patches) {
+
     if((index) == intersect.faceIndex){
 
       // test wether object is allowed to snap on patch
@@ -469,6 +491,8 @@ Selector.prototype.onMouseDown=function(event){
             this.calculateBBVolumes()
 
             container.style.cursor = 'move';
+          }else{
+            this.forgetSelection()
           }
         }
         break;

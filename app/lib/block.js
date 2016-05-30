@@ -15,6 +15,8 @@ function cloneGeometry(geometry){
   return geometry2;
 }
 
+
+
 function Block(geometry){
   THREE.Object3D.call( this );
 
@@ -24,8 +26,8 @@ function Block(geometry){
   this.fid      = geometry.fid;
 
   this.geometry = cloneGeometry(_mesh_objects[this.type].geometry);
-  var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-
+  // var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  var material = _mesh_objects[this.type].material
   this.mesh_object = new THREE.Mesh(this.geometry, material);
 
   // this.mesh_object = _mesh_objects[this.type].clone();
@@ -58,6 +60,7 @@ Block.prototype.updateSize = function(){
   if(this.width){
     this.mesh_object.morphTargetInfluences[1] = this.width;
 
+
     this.updateVertices()
     this.mesh_object.updateMorphTargets();
     this.mesh_object.geometry.computeBoundingSphere();
@@ -65,6 +68,16 @@ Block.prototype.updateSize = function(){
 
   }
 
+}
+
+Block.prototype.updateMaterials = function(){
+  // if  multimaterial
+  var material = this.mesh_object.material
+  if(material.materials.length > 0 ){
+    for (var i = 0; i < material.materials.length; i++) {
+      material.materials[i] = this.mesh_material.normal
+    }
+  }
 }
 
 Block.prototype.updateVertices = function(){

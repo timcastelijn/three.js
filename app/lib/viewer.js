@@ -13,9 +13,10 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:{model:'models/wall.json', price:480},
+  wall:{model:'models/wo_i_600.json', price:480},
   floor:{model:'models/floor.json', price:560},
   roof:{model:'models/roof.json', price:640},
+  wo_i_300:{model:'models/wo-i-300.json', price:640},
 }
 
 
