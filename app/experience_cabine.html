@@ -22,7 +22,11 @@
 		<div id="content">
 			<div class="panel-group" id="accordion">
 	     		<p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p>
-
+					<!-- <div id='view-selector' class="btn-group" role="group" aria-label="...">
+					  <button id='btn-view-exterior' value=0 type="button" class="btn btn-default">Buiten</button>
+					  <button id='btn-view-interior' value=1 type="button" class="btn btn-default">Binnen</button>
+						<p>&nbsp</p>
+					</div> -->
 					<div class="panel panel-default">
 	       		<div class="panel-heading">
 	         		<h4 class="panel-title">
@@ -88,6 +92,18 @@
 						<!-- material selection -->
 						<div class="panel-body">
 							<div class='row'>
+								<div class="col-sm-12">
+							   	<label for="sel1">materiaal presets:</label>
+							   	<select class="form-control" id="sel1">
+							     	<option>modern</option>
+							     	<option>natuurlijk</option>
+							     	<option>strand</option>
+							     	<option>gek</option>
+							   	</select>
+							 	</div>
+							 </div>
+							<div class='row'>&nbsp</div>
+							<div class='row'>
 								<div class="col-sm-6">
 									Exterieur
 								</div>
@@ -124,6 +140,29 @@
 								    <option value="3" data-color="#C28B6B" selected="selected">Bamboo</option>
 									</select>
 								</div>
+							</div>
+						</div>
+	       	</div>
+	     	</div>
+	     	<div class="panel panel-default">
+	      	<div class="panel-heading">
+	         	<h4 class="panel-title">
+	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	         	</h4>
+	       	</div>
+	       	<div id="collapse4" class="panel-collapse collapse">
+						<!-- material selection -->
+						<div class="panel-body">
+							<div class='row'>
+								<div class="col-sm-4">
+									<img class="img-preset" src='images/modern.png'>
+							 	</div>
+								<div class="col-sm-4">
+									<img class="img-preset" src='images/modern.png'>
+							 	</div>
+								<div class="col-sm-4">
+									<img class="img-preset" src='images/gek.png'>
+							 	</div>
 							</div>
 						</div>
 	       	</div>

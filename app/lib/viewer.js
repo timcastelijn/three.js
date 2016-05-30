@@ -171,6 +171,15 @@ function loadConfig(){
   cabine = new CabineGrid(1.24, 2.0, 1.4);
   scene.add(cabine);
 
+  // var map = new THREE.TextureLoader().load( "images/eye.png" );
+  // var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+  // var sprite = new THREE.Sprite( material );
+  // sprite.scale.x = 0.2;
+  // sprite.scale.y = 0.2;
+  // sprite.position.y = 1
+  // sprite.scale.z = 0.2;
+  // scene.add( sprite );
+
 }
 
 

@@ -1,6 +1,25 @@
+
+
 $(function() {
-  
   //document ready
+  $( "#view-selector" ).find( "button" ).click(function(e){
+    console.log(e.target.value);
+  });
+
+
+  var color_presets = {
+    modern:{interior:"#ffffff", exterior:"#333333", floor:"#C28B6B"},
+    gek:{interior:"#969690", exterior:"#F2E16F", floor:"#969690", backrest:"#ffffff"},
+  }
+
+  $('#sel1').on("change", function (event) {
+    var preset = color_presets[event.target.value]
+    for(target in preset){
+      setColor(target, preset[target]);
+    }
+  });
+
+  //colorselectors
   $('#colorselector1').colorselector({
       callback: function (value, color, title) {
         setColor('exterior', color);
