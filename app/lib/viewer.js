@@ -167,18 +167,18 @@ function addObject(geometry){
 
   switch (geometry.type) {
     case 'floor':
-      block = new Selectable( new Floor(geometry), selector);
+      block = new Floor(geometry, selector);
       // block =  new Floor(geometry);
       break;
     case 'wall':
-      block = new Selectable( new Wall(geometry), selector);
+      block = new Wall(geometry, selector);
       break;
     case 'roof':
-      block = new Selectable( new Roof(geometry), selector);
+      block = new Roof(geometry, selector);
       break;
     default:
       console.log(geometry);
-      block = new Selectable( new Block(geometry), selector);
+      block = Block(geometry, selector);
 
   }
 

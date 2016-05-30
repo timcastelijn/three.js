@@ -258,9 +258,9 @@ Selector.prototype.deleteObject=function(object){
       this.selectables.splice(selected_index, 1)
     }
 
-    delete config.geometry[this.selected.object.fid];
+    delete config.geometry[this.selected.fid];
 
-    price -= block_files[this.selected.object.type].price;
+    price -= block_files[this.selected.type].price;
     updatePriceGui()
     this.selected = null;
   } else{
@@ -276,7 +276,7 @@ Selector.prototype.rotateObject=function(dir){
     this.selected.rotation.y += rotation;
 
     //update config file
-    config.geometry[this.selected.object.fid].rotation += (rotation /Math.PI * 180);
+    config.geometry[this.selected.fid].rotation += (rotation /Math.PI * 180);
 
   } else{
     console.log('nothing selected');
@@ -360,7 +360,7 @@ Selector.prototype.updateDebugSpheres = function(bb){
 
 Selector.prototype.bboxOverLap=function(){
 
-  var bb      =  new THREE.Box3().setFromObject(this.dragged.object)//.mesh_object.geometry.boundingBox;
+  var bb      =  new THREE.Box3().setFromObject(this.dragged)//.mesh_object.geometry.boundingBox;
   var others  = this.snap_objects;
 
   // this.updateDebugSpheres(bb)
@@ -430,12 +430,7 @@ Selector.prototype.calculateBBVolumes=function(event){
   //for each snap object, calculate bb
   for(var i = 0; i<this.snap_objects.length; i++){
     var obj   = this.snap_objects[i]
-
     this.snap_objects[i].bb = new THREE.Box3().setFromObject(obj);
-
-    // var bb      =   new THREE.BoundingBoxHelper( obj, 0x000000 );
-    // bb.update();
-    // scene.add(bb)
   }
 }
 
@@ -452,11 +447,7 @@ Selector.prototype.selectObject = function(intersect){
   //forget previous selection
   this.forgetSelection();
 
-  if(this.parent_lookup[intersect.object.id]){
-    this.selected = this.parent_lookup[intersect.object.id];
-  } else {
-    this.selected = intersect.object;
-  }
+  this.selected = intersect.object.parent;
 
   this.selected.setMaterial('selected')
 }
@@ -498,7 +489,7 @@ Selector.prototype.onMouseDown=function(event){
 }
 
 Selector.prototype.updateConfig=function(event){
-  var fid = this.dragged.object.fid;
+  var fid = this.dragged.fid;
 
   config.geometry[fid].position = [this.dragged.position.x, this.dragged.position.y, this.dragged.position.z];
   config.geometry[fid].rotation = [0, this.dragged.rotation.y/Math.PI *180, 0];
@@ -547,38 +538,14 @@ function getChildMeshes(object){
 
 //Selectable class
 /////////////////
-function Selectable(object, selector){
+function Selectable(){
   THREE.Object3D.call( this );
 
-  this.object = object
-  this.add(this.object);
+  this.material={}
+  this.material.basic = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } )
+  this.material.selected = new THREE.MeshBasicMaterial({color:"#0000ff", opacity: 0.5, transparent: true})
+  this.material.prohibited = new THREE.MeshBasicMaterial({color:"#0000ff", opacity: 0.5, transparent: true})
 
-  this.name = object.name
-
-  this.materials={
-    basic:this.object.mesh_object.material,
-    selected:selector.materials.selected,
-    prohibited:selector.materials.prohibited,
-  }
-
-  this.sphere_min = new THREE.Mesh( new THREE.SphereGeometry( 0.05, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0040 } ) );
-  scene.add( this.sphere_min );
-  this.sphere_min.visible =false
-  this.sphere_max = new THREE.Mesh( new THREE.SphereGeometry( 0.05, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0040 } ) );
-  scene.add( this.sphere_max );
-  this.sphere_max.visible =false
-
-  // this.bbox = new THREE.BoundingBoxHelper( object.mesh_object, 0xff0000 );
-  // this.bbox.update();
-  // this.add( this.bbox );
-
-  //traverse over children and add parent to draggables under child identifier
-  var children = getChildMeshes(this);
-  this.children_meshes = children;
-  for(var i = 0; i<children.length; i++){
-    selector.selectables.push(children[i]);
-    selector.parent_lookup[children[i].id] = this;
-  }
 
 }
 
@@ -586,27 +553,37 @@ Selectable.prototype = new THREE.Object3D();
 Selectable.prototype.constructor = Selectable;
 
 Selectable.prototype.setMaterial = function(key){
-  for(var i =0; i<this.children_meshes.length; i++){
-    this.children_meshes[i].material = this.materials[key];
+  for (var i = 0; i < this.children_meshes.length; i++) {
+    this.children_meshes[i].material = this.material[key];
   }
+}
+
+Selectable.prototype.setSelector = function(mesh_object, selector){
+  this.selector = selector;
+
+  this.children_meshes = getChildMeshes(this);
+
+
+  //traverse over children and add parent to draggables under child identifier
+  this.selector.selectables.push(mesh_object);
+
 }
 
 Selectable.prototype.snap = function(intersect){
 
-  var intersect_parent = selector.parent_lookup[intersect.object.id]
+  var intersect_parent = intersect.object.parent;
 
   var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
 
   //iterate over faceIndexes
-  var snap_areas = intersect_parent.object.snap_areas[this.object.type];
-
-  console.log(m_index, this.object.type, snap_areas);
+  var snap_areas = intersect_parent.snap_areas[this.type];
 
   if(snap_areas){
     // this can snap to intersected object
+    console.log(m_index);
     for (index in snap_areas) {
       if(m_index == index){
-        this.moveToArea(snap_areas[index], intersect_parent)
+        this.moveToArea(snap_areas[index], intersect)
         return true
       }
     }
@@ -616,15 +593,16 @@ Selectable.prototype.snap = function(intersect){
   this.position.copy(intersect.point)
 }
 
-Selectable.prototype.moveToArea = function(snap_area, intersect_parent){
+Selectable.prototype.moveToArea = function(snap_area, intersect){
   // move object to patch reference point
-  var vector = intersect_parent.object.localToWorld(new THREE.Vector3().copy(snap_area.position) )
+  var vector = intersect.object.parent.localToWorld(new THREE.Vector3().copy(snap_area.position) )
   this.position.copy( vector  );
 
 
   //rotate if possible
-  // var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
+  var rot_y = (snap_area.rotation)?  snap_area.rotation: 0;
+  this.rotation.y =   intersect.object.parent.rotation.y + rot_y
 
-  this.overlap = selector.bboxOverLap()
+  this.overlap = this.selector.bboxOverLap()
   return;
 }

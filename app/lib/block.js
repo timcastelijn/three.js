@@ -17,18 +17,21 @@ function cloneGeometry(geometry){
 
 
 
-function Block(geometry){
-  THREE.Object3D.call( this );
+function Block(geometry, selector){
+  Selectable.call( this );
 
-  this.placeholders = [];
   this.type     = geometry.type;
   this.name     = geometry.type;
   this.fid      = geometry.fid;
+
+
+
 
   this.geometry = cloneGeometry(_mesh_objects[this.type].geometry);
   // var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   var material = _mesh_objects[this.type].material
   this.mesh_object = new THREE.Mesh(this.geometry, material);
+  this.add(this.mesh_object)
 
   // this.mesh_object = _mesh_objects[this.type].clone();
   // this.mesh_object.visible = false;
@@ -40,7 +43,6 @@ function Block(geometry){
 
   this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
   this.add(this.edges);
-  this.add(this.mesh_object)
 
 
   this.addPatches();
@@ -48,11 +50,12 @@ function Block(geometry){
   var axisHelper = new THREE.AxisHelper( 0.2 );
   this.add( axisHelper );
 
-
+  // add block to the selector
+  this.setSelector(this.mesh_object, selector)
 
 }
 
-Block.prototype = new THREE.Object3D();
+Block.prototype = new Selectable();
 Block.prototype.constructor = Block;
 
 
