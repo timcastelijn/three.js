@@ -17,6 +17,7 @@ var block_files = {
   floor:{model:'models/floor.json', price:560},
   roof:{model:'models/roof.json', price:640},
   wo_i_300:{model:'models/wo-i-300.json', price:640},
+  wo_w_900:{model:'models/wo-w-900.json', price:640},
 }
 
 
@@ -164,20 +165,25 @@ function addObject(geometry){
   config.geometry[fid] = geometry;
   config.geometry[fid].fid = fid;
 
+  var category = geometry.type.substring(0,2)
 
-  switch (geometry.type) {
-    case 'floor':
+
+  switch (category) {
+    case 'fl':
       block = new Floor(geometry, selector);
       // block =  new Floor(geometry);
       break;
-    case 'wall':
+    case 'wa':
       block = new Wall(geometry, selector);
       break;
-    case 'roof':
+    case 'wo':
+      block = new Wall(geometry, selector);
+      break;
+    case 'ro':
       block = new Roof(geometry, selector);
       break;
     default:
-      console.log(geometry);
+      console.log('default geometry loaded' ,geometry);
       block = Block(geometry, selector);
 
   }

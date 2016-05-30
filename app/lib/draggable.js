@@ -242,6 +242,12 @@ function onDocumentKeyDown( event ) {
     case 27:
       selector.forgetSelection();
       break
+    case 37:
+      selector.rotateObject("CW");
+      break
+    case 39:
+      selector.rotateObject("CCW");
+      break
     default:
   }
 
@@ -263,7 +269,7 @@ Selector.prototype.deleteObject=function(object){
     price -= block_files[this.selected.type].price;
     updatePriceGui()
     this.selected = null;
-  } else{
+  }else{
     console.log('nothing selected');
   }
 }
@@ -278,6 +284,10 @@ Selector.prototype.rotateObject=function(dir){
     //update config file
     config.geometry[this.selected.fid].rotation += (rotation /Math.PI * 180);
 
+  } else if(this.dragged){
+    //rotate selected object
+    var rotation  = (dir=="CW")?  -Math.PI/2: Math.PI/2;
+    this.dragged.rotation.y += rotation;
   } else{
     console.log('nothing selected');
   }
@@ -576,11 +586,12 @@ Selectable.prototype.snap = function(intersect){
   var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
 
   //iterate over faceIndexes
-  var snap_areas = intersect_parent.snap_areas[this.type];
+  var category = this.type.substring(0,2)
+  var snap_areas = intersect_parent.snap_areas[category];
 
   if(snap_areas){
     // this can snap to intersected object
-    console.log(m_index);
+    // console.log(m_index);
     for (index in snap_areas) {
       if(m_index == index){
         this.moveToArea(snap_areas[index], intersect)

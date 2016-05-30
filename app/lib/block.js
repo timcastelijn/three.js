@@ -28,15 +28,14 @@ function Block(geometry, selector){
 
 
   this.geometry = cloneGeometry(_mesh_objects[this.type].geometry);
-  // var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   var material = _mesh_objects[this.type].material
   this.mesh_object = new THREE.Mesh(this.geometry, material);
   this.add(this.mesh_object)
 
-  // this.mesh_object = _mesh_objects[this.type].clone();
-  // this.mesh_object.visible = false;
 
   this.width = geometry.size;
+
+  console.log(this);
 
   this.updateSize();
 

@@ -21,8 +21,9 @@ $(function() {
 
     var geometry={
       floor:{"type":"floor", "position":["-1","0","0"], "size":width, "rotation":["0","0","0"]},
-      wall:{"type":"wall", "position":["-1","0","0"], "size":2.5, "rotation":["0","180","0"]},
+      wall:{"type":"wall", "position":["-1","0","0"], "size":2.7, "rotation":["0","180","0"]},
       roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
+      wo_w_900:{"type":"wo_w_900", "position":["0","0","0"], "size":2.7, "rotation":["0","0","0"]},
     }
     var block = addObject(geometry[event.data.type])
     console.log(block);
@@ -34,7 +35,8 @@ $(function() {
   }
 
   $('#btn_add_wall').click( {type:"wall"}, addBlock);
-  $('#btn_add_floor_32').click( {type:"floor", width:3.2}, addBlock);
+  $('#btn_add_window').click( {type:"wo_w_900"}, addBlock);
+  $('#btn_add_floor_36').click( {type:"floor", width:3.6}, addBlock);
   $('#btn_add_floor_48').click( {type:"floor", width:4.8}, addBlock);
   $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
