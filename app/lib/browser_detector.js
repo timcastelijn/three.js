@@ -70,27 +70,6 @@ var browser_detector = {
 
 		parent.appendChild( element );
 
-    var svg_element = document.createElement( 'img' );
-    svg_element.id = 'browser-error-svg';
-    svg_element.src="images/sensiks_static.svg"
-
-    // svg_element.style.fontFamily = 'sans-serif';
-    // svg_element.style.fontSize = '13px';
-    // svg_element.style.fontWeight = 'normal';
-    // svg_element.style.textAlign = 'center';
-    // svg_element.style.background = '#fff';
-    // svg_element.style.color = '#000';
-    // svg_element.style.padding = '1.5em';
-    // svg_element.style.width = '400px';
-    svg_element.style.display= 'block';
-    svg_element.style.margin = '30px auto';
-
-
-
-
-		parent.appendChild( svg_element );
-
-
   },
 
   browsers:[

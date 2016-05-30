@@ -196,12 +196,6 @@ function Selector(camera, controls){
     prohibited: new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } ),
   }
 
-  // rollOverGeo = new THREE.BoxGeometry( 0.2, 2.5, 0.3 );
-  // rollOverGeo.applyMatrix( new THREE.Matrix4().makeTranslation(0, 2.5/2, 0) );
-  // rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
-  // this.rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
-  // scene.add( this.rollOverMesh );
-
   //create intersection plane
   this.plane = new THREE.Mesh(
     new THREE.PlaneBufferGeometry( 20, 20, 8, 8 ),
@@ -302,8 +296,8 @@ Selector.prototype.moveDraggedObject = function(){
   var intersects = this.raycaster.intersectObjects( this.snap_objects );
   if ( intersects.length > 0 ) {
     // intersected object change
-
-    this.defineSnapPoint(intersects[0], this.parent_lookup[intersects[0].object.id]);
+    // this.defineSnapPoint(intersects[0], this.parent_lookup[intersects[0].object.id]);
+    this.dragged.snap(intersects[0])
   } else {
 
     // else move over plane
@@ -595,4 +589,42 @@ Selectable.prototype.setMaterial = function(key){
   for(var i =0; i<this.children_meshes.length; i++){
     this.children_meshes[i].material = this.materials[key];
   }
+}
+
+Selectable.prototype.snap = function(intersect){
+
+  var intersect_parent = selector.parent_lookup[intersect.object.id]
+
+  var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
+
+  //iterate over faceIndexes
+  var snap_areas = intersect_parent.object.snap_areas[this.object.type];
+
+  console.log(m_index, this.object.type, snap_areas);
+
+  if(snap_areas){
+    // this can snap to intersected object
+    for (index in snap_areas) {
+      if(m_index == index){
+        this.moveToArea(snap_areas[index], intersect_parent)
+        return true
+      }
+    }
+  }else {
+    return false;
+  }
+  this.position.copy(intersect.point)
+}
+
+Selectable.prototype.moveToArea = function(snap_area, intersect_parent){
+  // move object to patch reference point
+  var vector = intersect_parent.object.localToWorld(new THREE.Vector3().copy(snap_area.position) )
+  this.position.copy( vector  );
+
+
+  //rotate if possible
+  // var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
+
+  this.overlap = selector.bboxOverLap()
+  return;
 }

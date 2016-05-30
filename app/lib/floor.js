@@ -26,6 +26,12 @@ Floor.prototype.addPatches = function(){
       35:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
       22:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
       23:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
+  },
+  this.snap_areas ={
+    wall:{
+      1:{position:new THREE.Vector3(this.width,0.3,0.3), rotation:0},
+      2:{position:new THREE.Vector3(0, 0.3, 0), rotation:Math.PI}
+    }
   }
 }
 
