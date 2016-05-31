@@ -28,16 +28,22 @@ function Block(geometry, selector){
 
 
   this.geometry = cloneGeometry(_mesh_objects[this.type].geometry);
-  var material = _mesh_objects[this.type].material
-  this.mesh_object = new THREE.Mesh(this.geometry, material);
+  this.material.basic = _mesh_objects[this.type].material
+  this.mesh_object = new THREE.Mesh(this.geometry, this.material.basic);
   this.add(this.mesh_object)
 
 
-  this.width = geometry.size;
+  this.size = geometry.size;
 
-  console.log(this);
+  this.mt_index = []
+  for (var i = 0; i < 3; i++) {
+    this.mt_index[i] = block_files[this.type].mt[i]
+  }
+
 
   this.updateSize();
+
+
 
 
   this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
@@ -59,16 +65,23 @@ Block.prototype.constructor = Block;
 
 
 Block.prototype.updateSize = function(){
-  if(this.width){
-    this.mesh_object.morphTargetInfluences[1] = this.width;
 
-
-    this.updateVertices()
-    this.mesh_object.updateMorphTargets();
-    this.mesh_object.geometry.computeBoundingSphere();
-    this.mesh_object.geometry.computeBoundingBox();
-
+  if(!this.mesh_object.morphTargetInfluences){
+    return;
   }
+
+  for (var i = 0; i < this.size.length; i++) {
+    if(this.size[i]){
+      var size = parseFloat(this.size[i]);
+      this.mesh_object.morphTargetInfluences[ this.mt_index[i] ] = size;
+    }
+  }
+
+  this.updateVertices()
+  this.mesh_object.updateMorphTargets();
+  this.mesh_object.geometry.computeBoundingSphere();
+  this.mesh_object.geometry.computeBoundingBox();
+
 
 }
 

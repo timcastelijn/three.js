@@ -4,12 +4,30 @@ var modelLoadedCallback = function(type, config_file){
     geometry.computeFaceNormals();
     geometry.computeVertexNormals();
 
-    if(geometry.morphTargets.length>0){
-      materials[0].morphTargets = true
+
+    for (var i = 0; i < materials.length; i++) {
+      if (materials[i].opacity<1) {
+
+        materials[i] = new THREE.MeshPhongMaterial( {
+          color: materials[i].color,
+          shininess:0.5,
+          reflectivity:0.2,
+          transparent:true,
+          opacity:materials[i].opacity,
+          morphTargets: true,
+          vertexColors: THREE.FaceColors,
+          shading: THREE.FlatShading } );
+
+      }else{
+        materials[i] = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+      }
     }
+
     var material = new THREE.MultiMaterial( materials );
-    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+    // var material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
     // var material = new THREE.MeshLambertMaterial( { color: 0xffffff, morphTargets: true, vertexColors: THREE.FaceColors} );
+
+
 
     _mesh_objects[type] = new THREE.Mesh( geometry, material );
 

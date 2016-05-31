@@ -300,7 +300,7 @@ Selector.prototype.add=function(object){
 Selector.prototype.moveDraggedObject = function(){
 
   for(var i=0; i<this.snap_objects.length;i++){
-    this.snap_objects[i].material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+    this.snap_objects[i].parent.setMaterial('basic');
   }
 
   var intersects = this.raycaster.intersectObjects( this.snap_objects );
@@ -521,7 +521,7 @@ Selector.prototype.onMouseUp=function(event){
   }
 
   for(var i =0; i<this.snap_objects.length; i++){
-    this.snap_objects[i].material = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+    this.snap_objects[i].parent.setMaterial('basic')
   }
 
   container.style.cursor = 'auto';
@@ -589,9 +589,11 @@ Selectable.prototype.snap = function(intersect){
   var category = this.type.substring(0,2)
   var snap_areas = intersect_parent.snap_areas[category];
 
+  console.log(category, snap_areas, m_index);
+
+
   if(snap_areas){
     // this can snap to intersected object
-    // console.log(m_index);
     for (index in snap_areas) {
       if(m_index == index){
         this.moveToArea(snap_areas[index], intersect)

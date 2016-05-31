@@ -17,16 +17,14 @@ $(function() {
   // add block buttons
   function addBlock(event){
 
-    var width = event.data.width? event.data.width: 1;
+    var type = event.data.type;
+    var size = event.data.size;
 
-    var geometry={
-      floor:{"type":"floor", "position":["-1","0","0"], "size":width, "rotation":["0","0","0"]},
-      wall:{"type":"wall", "position":["-1","0","0"], "size":2.7, "rotation":["0","180","0"]},
-      roof:{"type":"roof", "position":["0","0","0"], "rotation":["0","0","0"]},
-      wo_w_900:{"type":"wo_w_900", "position":["0","0","0"], "size":2.7, "rotation":["0","0","0"]},
-    }
-    var block = addObject(geometry[event.data.type])
-    console.log(block);
+    var geom_input = block_files[type];
+    geom_input.size = size;
+
+    var block = addObject(geom_input)
+
     selector.selected = block;
     selector.mouse_down = true;
     selector.intersected = block;
@@ -34,10 +32,10 @@ $(function() {
     selector.calculateBBVolumes()
   }
 
-  $('#btn_add_wall').click( {type:"wall"}, addBlock);
-  $('#btn_add_window').click( {type:"wo_w_900"}, addBlock);
-  $('#btn_add_floor_36').click( {type:"floor", width:3.6}, addBlock);
-  $('#btn_add_floor_48').click( {type:"floor", width:4.8}, addBlock);
+  $('#btn_add_wall').click( {type:"wo_i_600", size:[0,2.7,0] }, addBlock);
+  $('#btn_add_window').click( {type:"wo_w_900", size:[0,2.7,0]}, addBlock);
+  $('#btn_add_floor_36').click( {type:"floor", size:[3.6,0,0]}, addBlock);
+  $('#btn_add_floor_48').click( {type:"floor", size:[4.8,0,0]}, addBlock);
   $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
   function saveConfig(event){

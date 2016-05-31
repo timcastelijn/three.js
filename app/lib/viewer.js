@@ -13,11 +13,12 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:{model:'models/wo_i_600.json', price:480},
-  floor:{model:'models/floor.json', price:560},
-  roof:{model:'models/roof.json', price:640},
-  wo_i_300:{model:'models/wo-i-300.json', price:640},
-  wo_w_900:{model:'models/wo-w-900.json', price:640},
+  wall:     {type:"wall",     model:'models/wo_i_600.json',  price:480,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
+  floor:    {type:"floor",    model:'models/floor.json',     price:560,  size:[3.6,0,0],    mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
+  roof:     {type:"roof",     model:'models/roof.json',      price:640,  size:[1.8,1,0],    mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
+  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
 }
 
 
@@ -150,7 +151,7 @@ function loadBlocks(){
         _models_loading ++;
 
         // if models are loaded, load the config file
-        json_loader.load( block_files[type].model, modelLoadedCallback(type, 'config/model1.json'));
+        json_loader.load( block_files[type].model, modelLoadedCallback(type, 'config/model2.json'));
       }
   }
 
