@@ -9,8 +9,9 @@
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
 		<link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
 
-		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 		<script src="order_form/validate.js"></script>
 
 		<script src="lib/colorselector/bootstrap-colorselector.js"></script>
@@ -20,8 +21,14 @@
 	</head>
 	<body>
 		<div id="content">
+      <!-- Accordion -->
 			<div class="panel-group" id="accordion">
-	     		<p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p>
+	     		<!-- <div>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</div> -->
+					<!-- <div>
+            <svg style="height:48px; width:48px;" viewBox="0 0 512 512">
+						  <path d="M240 24c115.2 0 209.6 94.4 209.6 209.6s-94.4 209.6-209.6 209.6-209.6-94.4-209.6-209.6 94.4-209.6 209.6-209.6zm0-30.4c-132.8 0-240 107.2-240 240s107.2 240 240 240 240-107.2 240-240-107.2-240-240-240zm80 256h-160c-9.6 0-16-6.4-16-16s6.4-16 16-16h160c9.6 0 16 6.4 16 16s-6.4 16-16 16zm-80 80c-9.6 0-16-6.4-16-16v-160c0-9.6 6.4-16 16-16s16 6.4 16 16v160c0 9.6-6.4 16-16 16z"></path>
+					  </svg>
+          </div> -->
 					<!-- <div id='view-selector' class="btn-group" role="group" aria-label="...">
 					  <button id='btn-view-exterior' value=0 type="button" class="btn btn-default">Buiten</button>
 					  <button id='btn-view-interior' value=1 type="button" class="btn btn-default">Binnen</button>
@@ -30,7 +37,7 @@
 					<div class="panel panel-default">
 	       		<div class="panel-heading">
 	         		<h4 class="panel-title">
-	           		<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Afmetingen<i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
+	           		<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Afmetingen<i class="indicator glyphicon glyphicon-minus-sign  pull-right"></i></a>
 	         		</h4>
 	       		</div>
 	       		<div id="collapse1" class="panel-collapse collapse in">
@@ -49,7 +56,7 @@
 				<div class="panel panel-default">
 	       	<div class="panel-heading">
 	         	<h4 class="panel-title">
-	           	<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Opties<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	           	<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Opties<i class="indicator glyphicon glyphicon-plus-sign  pull-right"></i></a>
 	         	</h4>
 	       	</div>
 	       	<div id="collapse2" class="panel-collapse collapse">
@@ -85,7 +92,7 @@
 	     	<div class="panel panel-default">
 	      	<div class="panel-heading">
 	         	<h4 class="panel-title">
-	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-plus-sign  pull-right"></i></a>
 	         	</h4>
 	       	</div>
 	       	<div id="collapse3" class="panel-collapse collapse">
@@ -145,34 +152,11 @@
 	       	</div>
 	     	</div>
 	     	<div class="panel panel-default">
-	      	<div class="panel-heading">
-	         	<h4 class="panel-title">
-	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
-	         	</h4>
-	       	</div>
-	       	<div id="collapse4" class="panel-collapse collapse">
-						<!-- material selection -->
-						<div class="panel-body">
-							<div class='row'>
-								<div class="col-sm-4">
-									<img class="img-preset" src='images/modern.png'>
-							 	</div>
-								<div class="col-sm-4">
-									<img class="img-preset" src='images/modern.png'>
-							 	</div>
-								<div class="col-sm-4">
-									<img class="img-preset" src='images/gek.png'>
-							 	</div>
-							</div>
-						</div>
-	       	</div>
-	     	</div>
-	     	<div class="panel panel-default">
 					<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Bestellen</button>
 				</div>
 				<a href="" data-toggle="modal" data-target="#helpModal" style="position:relative; right:0px;"><i class="glyphicon glyphicon-info-sign"> </i></a>
 		 	</div>
-
+      <!-- Accordion end -->
 			<!-- Modal -->
 	   	<div id="myModal" class="modal fade" role="dialog">
 	     	<div class="modal-dialog">
@@ -226,8 +210,8 @@
 	       </div>
 
 	     </div>
-	   </div>
-		 <!-- modal end -->
+	    </div>
+		  <!-- modal end -->
 			<!-- Modal -->
 	   	<div id="helpModal" class="modal fade" role="dialog">
 	     	<div class="modal-dialog">
@@ -255,8 +239,8 @@
 	       </div>
 
 	     </div>
-	   </div>
-		 <!-- modal end -->
+	    </div>
+		  <!-- modal end -->
 	</div>
 
 	<script src="../build/three.min.js"></script>

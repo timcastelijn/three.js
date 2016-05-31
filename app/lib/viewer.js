@@ -66,7 +66,7 @@ function init() {
 
   scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
+  camera = new THREE.PerspectiveCamera( 70, (window.innerWidth * 0.8)/ window.innerHeight, 0.05, 100 );
   camera.position.set( 0, 1.5, 2.5 );
 
   scene.add( new THREE.AmbientLight( 0x707070 ) );
@@ -101,7 +101,7 @@ function init() {
   // renderer = new THREE.WebGLRenderer( { antialias: true} );
   renderer.setClearColor( 0x000000, 0);
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( window.innerWidth * 0.8, window.innerHeight );
   renderer.sortObjects = false;
 
   if(SHADOWS_ENABLED){
@@ -171,6 +171,7 @@ function loadConfig(){
   cabine = new CabineGrid(1.24, 2.0, 1.4);
   scene.add(cabine);
 
+  //EYE sprite
   // var map = new THREE.TextureLoader().load( "images/eye.png" );
   // var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
   // var sprite = new THREE.Sprite( material );
@@ -185,10 +186,12 @@ function loadConfig(){
 
 function onWindowResize() {
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  var width_ratio = (window.innerWidth <640)? 1: 0.8;
+
+  camera.aspect = (window.innerWidth * width_ratio) / window.innerHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( window.innerWidth * width_ratio, window.innerHeight );
 
 
 }

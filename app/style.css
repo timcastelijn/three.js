@@ -1,17 +1,63 @@
 body {
+  font-family: "Dosis";
   background-color: #f0f0f0;
-  /*background: linear-gradient(pink, pink, yellow); /* Standard syntax */*/
+
   margin: 0px;
   overflow: hidden;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Dosis";
+}
+
+#renderer{
+  position: absolute;
+  right:0px;
+  background: red; /* For browsers that do not support gradients */
+  background: -webkit-radial-gradient(white, white, grey); /* Safari 5.1 to 6.0 */
+  background: -o-radial-gradient(white, white, grey); /* For Opera 11.6 to 12.0 */
+  background: -moz-radial-gradient(white, white, grey); /* For Firefox 3.6 to 15 */
+  background: radial-gradient(white, white, grey); /* Standard syntax */
 }
 
 #accordion{
   position: absolute;
   top: 0px;
   left: 0px;
-  margin: 10px;
-  width:250px;
+  margin: 0px;
+  width:20%;
 }
+@media screen and (min-width:640px) {
+  #accordion{
+     visibility: visible;
+    }
+  #renderer{
+    width:80%
+  }
+}
+@media screen and (max-width:640px) {
+  #accordion{
+     visibility: hidden;
+    }
+  #renderer{
+    width:100%
+  }
+}
+
+.panel-group .panel+.panel {
+  margin-top: 0px;
+}
+
 
 .img-preset{
   width:100%;
@@ -39,16 +85,7 @@ body {
   border-width: 1px;
   border-color: #ddd;
 }
-@media screen and (min-width:600px) {
-  #accordion{
-     visibility: visible;
-    }
-}
-@media screen and (max-width:600px) {
-  #accordion{
-     visibility: hidden;
-    }
-}
+
 input[type=range] {
   width: 100%; /* Specific width is required for Firefox. */
 }
