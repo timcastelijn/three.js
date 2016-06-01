@@ -4,7 +4,12 @@ $(function() {
   //document ready
   $( "#view-selector" ).find( "button" ).click(function(e){
     console.log(e.target.value);
+    setCameraPosition(e.target.value)
   });
+
+
+  $( "#view-selector" ).find( "button" ).tooltip()
+
 
 
   var color_presets = {

@@ -1,7 +1,5 @@
 
 
-
-
 THREE.Mesh.prototype.updateBoundingVolumes = function(){
 
   var vertexSets = this.geometry.morphTargets.map(function(target) { return target.vertices; })
@@ -12,7 +10,6 @@ THREE.Mesh.prototype.updateBoundingVolumes = function(){
   this.geometry.boundingBox = new THREE.Box3();
   this.geometry.boundingBox.setFromPoints(allVertices);
 }
-
 
 
 THREE.Mesh.prototype.updateVertices = function(){
@@ -77,4 +74,16 @@ THREE.Mesh.prototype.cloneGeometry = function(){
   }
 
   return clone;
+}
+
+THREE.Mesh.prototype.setBoundingVolume = function(w,h,d){
+
+  var box = new THREE.BoxGeometry(w,h,d);
+
+  var allVertices = this.geometry.vertices.concat.apply(this.geometry.vertices, box.vertices);
+
+  this.geometry.boundingSphere = new THREE.Sphere();
+  this.geometry.boundingSphere.setFromPoints(allVertices);
+  this.geometry.boundingBox = new THREE.Box3();
+  this.geometry.boundingBox.setFromPoints(allVertices);
 }

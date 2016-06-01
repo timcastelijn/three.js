@@ -23,17 +23,27 @@
 		<div id="content">
       <!-- Accordion -->
 			<div class="panel-group" id="accordion">
+          <!-- <div>
+
+          </div> -->
 	     		<!-- <div>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</div> -->
 					<!-- <div>
             <svg style="height:48px; width:48px;" viewBox="0 0 512 512">
 						  <path d="M240 24c115.2 0 209.6 94.4 209.6 209.6s-94.4 209.6-209.6 209.6-209.6-94.4-209.6-209.6 94.4-209.6 209.6-209.6zm0-30.4c-132.8 0-240 107.2-240 240s107.2 240 240 240 240-107.2 240-240-107.2-240-240-240zm80 256h-160c-9.6 0-16-6.4-16-16s6.4-16 16-16h160c9.6 0 16 6.4 16 16s-6.4 16-16 16zm-80 80c-9.6 0-16-6.4-16-16v-160c0-9.6 6.4-16 16-16s16 6.4 16 16v160c0 9.6-6.4 16-16 16z"></path>
 					  </svg>
           </div> -->
-					<!-- <div id='view-selector' class="btn-group" role="group" aria-label="...">
-					  <button id='btn-view-exterior' value=0 type="button" class="btn btn-default">Buiten</button>
-					  <button id='btn-view-interior' value=1 type="button" class="btn btn-default">Binnen</button>
-						<p>&nbsp</p>
-					</div> -->
+          <div id="view-selector">
+            <div class="col-sm-4">
+              <button id='btn-view-interior' value=1 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="interior view"><i class="glyphicon glyphicon-log-in"/></i></button>
+            </div>
+            <div class="col-sm-4">
+  					  <button id='btn-view-exterior' value=0 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="exterior view"><i class="glyphicon glyphicon-log-out"></i></button>
+            </div>
+            <div class="col-sm-4">
+  					  <button id='btn-info' type="button" class="btn btn-default" data-toggle="modal" data-target="#helpModal"><i class="glyphicon glyphicon-question-sign"/></i></button>
+            </div>
+            <p>&nbsp</p>
+					</div>
 					<div class="panel panel-default">
 	       		<div class="panel-heading">
 	         		<h4 class="panel-title">
@@ -161,7 +171,6 @@
 	     	<div class="panel panel-default">
 					<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#myModal">Bestellen</button>
 				</div>
-				<a href="" data-toggle="modal" data-target="#helpModal" style="position:relative; right:0px;"><i class="glyphicon glyphicon-info-sign"> </i></a>
 		 	</div>
       <!-- Accordion end -->
 			<!-- Modal -->
@@ -257,8 +266,9 @@
 	<script src="../examples/js/Detector.js"></script>
 	<script src="../src/extras/helpers/AxisHelper.js"></script>
 
+  <script src="lib/extensions/mesh.js"></script>
 	<script src="lib/gui/gui.js"></script>
-	<script src="lib/extensions/mesh.js"></script>
+  <script src="lib/gui/scroll_timer.js"></script>
 	<script src="lib/cabine_grid.js"></script>
 	<script src="lib/leds.js"></script>
 	<script src="lib/wall.js"></script>
@@ -269,6 +279,7 @@
 	<script src="lib/json_loader.js"></script>
 	<script src="lib/draggable.js"></script>
 	<script src="lib/viewer.js"></script>
+
 
 
 	</body>

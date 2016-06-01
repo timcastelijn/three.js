@@ -39,6 +39,11 @@ var colors = {
   bamboo:"#C28B6B",
 }
 
+var _camera_position = [
+  {position:[0, 1.5, 2.5], target:[0,0.8,0]},
+  {position:[0, 0.8, 0], target:[0,0.8,0.1]},
+]
+
 var _models_loading = 0;
 var _models={
   vaporizer:{name:"vaporizer", model:"models/vaporizer.json" },
@@ -117,9 +122,11 @@ function init() {
   //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
-  controls.enableZoom = true;
+  controls.enableZoom = false;
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
+
+  var scroll_timer = new ScrollTimer(controls);
 
   // add info diff
   var info = document.createElement( 'div' );
@@ -141,6 +148,7 @@ function init() {
       }
 
   });
+
 
 
   window.addEventListener( 'resize', onWindowResize, false );
@@ -166,6 +174,26 @@ function loadConfig(){
   _models.heater.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#111111", shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.heater.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.vaporizer.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#D4D2E7", shininess:0.5, reflectivity:0.3, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
+
+  // THREE.Mesh.prototype.updateBoundingVolumes = function(){
+  //
+  //   var vertexSets = this.geometry.morphTargets.map(function(target) { return target.vertices; })
+  //   var allVertices = this.geometry.vertices.concat.apply(this.geometry.vertices, vertexSets);
+  //
+  //   this.geometry.boundingSphere = new THREE.Sphere();
+  //   this.geometry.boundingSphere.setFromPoints(allVertices);
+  //   this.geometry.boundingBox = new THREE.Box3();
+  //   this.geometry.boundingBox.setFromPoints(allVertices);
+  // }
+  //
+  for(name in _models){
+    if(_models.hasOwnProperty(name)){
+      var model  = _models[name];
+      model.mesh.updateBoundingVolumes();
+    }
+  }
+
 
   //create cabine
   cabine = new CabineGrid(1.24, 2.0, 1.4);
@@ -206,6 +234,8 @@ function onDocumentKeyDown( event ) {
 
 }
 
+
+
 //
 
 function animate() {
@@ -222,6 +252,14 @@ function render() {
   controls.update();
 
   renderer.render( scene, camera );
+
+}
+
+function setCameraPosition(index){
+  var pos = _camera_position[index].position;
+  var tar = _camera_position[index].target;
+  camera.position.set( pos[0], pos[1], pos[2] );
+  controls.target = new THREE.Vector3().fromArray(tar);
 
 }
 
