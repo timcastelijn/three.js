@@ -51,7 +51,7 @@ body {
 }
 
 .btn-toggle.active{
-  background-color: black;
+  background-color: #dddddd;
 }
 .btn-toggle:hover{
   background-color: #dddddd;

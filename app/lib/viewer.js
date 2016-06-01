@@ -40,8 +40,8 @@ var colors = {
 }
 
 var _camera_position = [
-  {position:[0, 1.5, 2.5], target:[0,0.8,0]},
-  {position:[0, 0.8, 0], target:[0,0.8,0.1]},
+  {position:[0, 1.5, 2.5], target:[0,1.0,0]},
+  {position:[0, 1.0, 0.4], target:[0,1.0,0]},
 ]
 
 var _models_loading = 0;
@@ -124,7 +124,7 @@ function init() {
   controls.dampingFactor = 0.25;
   controls.enableZoom = false;
   controls.rotateSpeed = 0.25;
-  controls.target = new THREE.Vector3(0,0.8,0)
+  controls.target = new THREE.Vector3(0,1,0)
 
   var scroll_timer = new ScrollTimer(controls);
 
