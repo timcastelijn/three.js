@@ -71,7 +71,12 @@ function init() {
 
   scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera( 70, (window.innerWidth * 0.8)/ window.innerHeight, 0.05, 100 );
+  var screen_width_ratio = (window.innerWidth <640)? 1: 0.8;
+
+
+
+
+  camera = new THREE.PerspectiveCamera( 70, (window.innerWidth * screen_width_ratio)/ window.innerHeight, 0.05, 100 );
   camera.position.set( 0, 1.5, 2.5 );
 
   scene.add( new THREE.AmbientLight( 0x707070 ) );
@@ -106,7 +111,7 @@ function init() {
   // renderer = new THREE.WebGLRenderer( { antialias: true} );
   renderer.setClearColor( 0x000000, 0);
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth * 0.8, window.innerHeight );
+  renderer.setSize( window.innerWidth * screen_width_ratio, window.innerHeight );
   renderer.sortObjects = false;
 
   if(SHADOWS_ENABLED){
