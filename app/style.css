@@ -81,6 +81,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 #accordion * {
   border: 0px;
 }
+
+#accordion * a{
+  color: #000000;
+}
+#accordion * .panel-heading {
+  background-color: #dddddd;
+}
+#accordion * .panel-heading:hover {
+  background-color: grey;
+}
 @media screen and (min-width:640px) {
   #accordion{
      visibility: visible;
