@@ -7,13 +7,31 @@ body {
 }
 
 .btn-circle {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+  margin-right: 5px;
   text-align: center;
   padding: 6px 0;
   font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
+  color: white;
+  border-radius: 20px;
+}
+
+.btn-toggle {
+  background-color: #f0f0f0;
+  color: grey;
+  border-width: 0px;
+  height: 30px;
+  text-align: center;
+  padding: 2px;
+}
+
+.btn-toggle.active{
+  background-color: black;
+}
+.btn-toggle:hover{
+  background-color: #888888;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
