@@ -54,7 +54,7 @@ body {
   background-color: black;
 }
 .btn-toggle:hover{
-  background-color: #888888;
+  background-color: #dddddd;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -86,10 +86,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: #000000;
 }
 #accordion * .panel-heading {
-  background-color: #dddddd;
+  background-color: #f0f0f0;
 }
 #accordion * .panel-heading:hover {
-  background-color: grey;
+  background-color: #dddddd;
 }
 @media screen and (min-width:640px) {
   #accordion{
