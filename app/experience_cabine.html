@@ -77,12 +77,12 @@
 	       		<div id="collapse1" class="panel-collapse collapse in">
 	         		<div class="panel-body">
 								<div class="container-fluid">
-		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="quantity" min="97" max="300" value="124" onchange='handleChange(this); applyDim(0, this.value)' /></div>
-		              <div class="row"><input id='slider-width' class="slider_100" type="range" value="124" min="10" max="240" oninput="applyDim(0,this.value);" onchange="applyDim(0,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="quantity" min="97" max="300" value="140" onchange='handleChange(this); applyDim(2, this.value)' /></div>
-			            <div class="row"><input id='slider-depth' class="slider_100" type="range" value="140" min="10" max="240" oninput="applyDim(2,this.value);" onchange="applyDim(2,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="quantity" min="154" max="300" value="200" onchange='handleChange(this); applyDim(1, this.value)' /></div>
-		              <div class="row"><input id='slider-height' class="slider_100" type="range" value="200" min="10" max="240" oninput="applyDim(1,this.value);" onchange="applyDim(1,this.value);" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="width" min="97" max="300" value="124" /></div>
+		              <div class="row"><input id='slider-width' class="slider_100" type="range" name="width" value="124" min="10" max="240"  data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="depth" min="97" max="300" value="140" /></div>
+			            <div class="row"><input id='slider-depth' class="slider_100" type="range" name="depth" value="140" min="10" max="240" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
+		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="height" min="154" max="300" value="200" /></div>
+		              <div class="row"><input id='slider-height' class="slider_100" type="range" name="height" value="200" min="10" max="240" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 								</div>
 	         		</div>
 	       		</div>
@@ -104,19 +104,19 @@
 	             	</div>
 	             	<div class="row">
 	               	<div class="col-sm-8">Zoutvernevelaar</div>
-	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer" name='salt_vaporizer' value='2'  /></div>
 	             	</div>
 	             	<div class="row">
 		              <div class="col-sm-8">Rugsteun</div>
-		              <div class="col-sm-4"><input type="checkbox" id="cboxBackrest"  value='3' onchange='addOption(this.value, this.checked)' /></div>
+		              <div class="col-sm-4"><input type="checkbox" id="cboxBackrest" name='backrest' value='3'  /></div>
 	             	</div>
 	             	<div class="row">
 	               	<div class="col-sm-8">Aromatherapie</div>
-	               	<div class="col-sm-4"><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' /></div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxAroma"  name='aromatherapy' value='4' /></div>
 	             	</div>
 	             	<div class="row">
 	               	<div class="col-sm-8">Sterrenhemel</div>
-	               	<div class="col-sm-4"><input type="checkbox" id="cboxLed"  value='5' onchange='addOption(this.value, this.checked)' /></div>
+	               	<div class="col-sm-4"><input type="checkbox" id="cboxLed"  name='led_lighting' value='5' /></div>
 	             	</div>
 							</div>
 	         	</div>
@@ -134,21 +134,21 @@
 						<!-- material selection -->
 						<div class="panel-body">
               <div class='row'>
-                <div class="btn-group btn-group-justified" data-toggle="buttons" style='width:100%;'>
-                  <label class="btn btn-toggle">
-                    <input type="radio" name="options" id="option1">Interieur
+                <div class="btn-group btn-group-justified" id="part-selector" data-toggle="buttons" style='width:100%;'>
+                  <label class="btn btn-toggle active">
+                    <input type="radio" name="options" id="interior">Interieur</input>
                   </label>
                   <label class="btn btn-toggle">
-                    <input type="radio" name="options" id="option2">Exterieur
+                    <input type="radio" name="options" id="exterior">Exterieur</input>
                   </label>
                   <label class="btn btn-toggle">
-                    <input type="radio" name="options" id="option3">Vloer
+                    <input type="radio" name="options" id="floor">Vloer</input>
                   </label>
                 </div>
               </div>
               <div class='row'>
 								<div class="col-sm-4">
-                  <button class="btn btn-circle" style="background-color:#CEC0B5;   padding: 1px 0;">l. grey</button>
+                  <button class="btn btn-circle" style="background-color:#CEC0B5;">l. grey</button>
 							  </div>
 								<div class="col-sm-4">
                   <button class="btn btn-circle" style="background-color:#908579;">grey</button>

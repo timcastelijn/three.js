@@ -2,51 +2,15 @@
 
 $(function() {
   //document ready
+
+  // view selector
   $( "#view-selector" ).find( "button" ).click(function(e){
     console.log(e.target.value);
     setCameraPosition(e.target.value)
   });
-
-
   $( "#view-selector" ).find( "button" ).tooltip()
 
-
-
-  var color_presets = {
-    modern:{interior:"#ffffff", exterior:"#333333", floor:"#C28B6B"},
-    gek:{interior:"#969690", exterior:"#F2E16F", floor:"#969690", backrest:"#ffffff"},
-  }
-
-  $('#sel1').on("change", function (event) {
-    var preset = color_presets[event.target.value]
-    for(target in preset){
-      setColor(target, preset[target]);
-    }
-  });
-
-  //colorselectors
-  $('#colorselector1').colorselector({
-      callback: function (value, color, title) {
-        setColor('exterior', color);
-      }
-  });
-  $('#colorselector2').colorselector({
-      callback: function (value, color, title) {
-        setColor('interior', color);
-      }
-  });
-
-  $('#colorselector3').colorselector({
-        callback: function (value, color, title) {
-          setColor('floor', color);
-        }
-  });
-
-  function handleChange(input) {
-    if (input.value < parseInt(input.min)) input.value = parseInt(input.min);
-    if (input.value > parseInt(input.max)) input.value = parseInt(input.max);
-  }
-
+  //accordion
   function toggleChevron(e) {
       $(e.target)
           .prev('.panel-heading')
@@ -55,6 +19,94 @@ $(function() {
   }
   $('#accordion').on('hidden.bs.collapse', toggleChevron);
   $('#accordion').on('shown.bs.collapse', toggleChevron);
+
+  //////////////
+  // dimensions
+  //////////////
+  var slider_index = {
+    depth:2,
+    width:0,
+    height:1,
+  }
+
+  function sliderChange(e){
+
+    var index = slider_index[e.target.name];
+    var value = e.target.value;
+
+    applyDim(index, e.target.value);
+
+    var number_input = $('#number-' + e.target.name)[0];
+    number_input.value =  clamp(value, parseInt(number_input.min), parseInt(number_input.max) );
+  }
+
+  function numberChange(e){
+    var index = slider_index[e.target.name];
+    var value = e.target.value;
+
+    e.target.value =  clamp(value, parseInt(e.target.min), parseInt(e.target.max) );
+
+    applyDim(index, e.target.value);
+
+    //update slider with number nput value
+    $('#slider-' + e.target.name).val(e.target.value);
+  }
+
+  $("#collapse1").find('input[type=range]').on('change', sliderChange).on('input', sliderChange);
+  $("#collapse1").find('input[type=number]').on('change', numberChange);
+
+  // option checkboxes
+  ////////////////////
+
+  // 0:zoutvernevelaar
+  // 1:rugsteun
+  // 2:aromatherapie
+  function addOption(e){
+    var index       = e.target.value;
+    var boolean_add = e.target.checked;
+    var name        = e.target.name;
+
+    config.options[name] = boolean_add;
+
+    if(cabine){
+      cabine.setOption(parseInt(index), boolean_add);
+    }
+
+    document_edited = true;
+  }
+  $("#collapse2").find('input[type=checkbox]').on('change', addOption);
+
+
+  // color options
+  ////////////////
+
+  function setColor(id, color){
+    colors[id] = color;
+
+    config.colors[id] = color;
+
+    if(cabine){
+      cabine.updateColors();
+    }
+    document_edited = true;
+  }
+
+  $("#collapse3").find('button').click( function(e){
+    var part = $('#part-selector input:radio:checked').attr('id')
+
+    var color = e.target.style['background-color'];
+    console.log(part, color);
+
+    setColor(part, color);
+
+
+  })
+
+
+
+
+
+
 
   $("#myform").on("submit", function(e) {
     if($('#myform').valid()){
@@ -99,22 +151,23 @@ $(function() {
 
   });
 
-
-  function defineHeaterPositions(number){
-    var slots = cabine.walls[2].n;
-    var array = [];
-
-    if (number>slots){
-      number = slots;
-      $('#numberInputHeaters').val(slots);
-    }
-    array.push(0);
-    if (number > 0 ) {
-      //add element 0
-      for(var i=1; i< number; i++){
-          array.push(Math.round(i*slots/number));
-      }
-    }
-    console.log(array);
-  }
 })
+
+
+function clamp(value, min, max){
+  return Math.min(Math.max(value, min), max)
+}
+
+//apply dimension change to grid
+function applyDim(dim_index, value){
+
+  config.dimensions[dim_index] = value
+
+  value = value/100;
+  document_edited = true;
+
+  if(cabine){
+    // 0:width 1:height 2:length
+    cabine.setDim(dim_index, value);
+  }
+}

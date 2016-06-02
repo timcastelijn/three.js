@@ -16,20 +16,18 @@ var config = {
     200,
     140,
   ],
-  heaters:[
-    'B(1,0)',
-    'C(1,0)',
-    'C(1,1)',
-    'C(1,2)',
-    'C(1,3)',
-    'D(1,0)',
-  ],
+  heaters:6,
   options:{
-    vaporizer:false,
+    salt_vaporizer:false,
     backrest:false,
     aromatherapy:false,
+    led_lighting:false,
+  },
+  colors:{
+    exterior:"#333333",
+    interior:"#ffffff",
+    floor:"#C28B6B",
   }
-
 }
 
 var colors = {
@@ -180,26 +178,6 @@ function loadConfig(){
   _models.heater.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.vaporizer.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#D4D2E7", shininess:0.5, reflectivity:0.3, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
-
-  // THREE.Mesh.prototype.updateBoundingVolumes = function(){
-  //
-  //   var vertexSets = this.geometry.morphTargets.map(function(target) { return target.vertices; })
-  //   var allVertices = this.geometry.vertices.concat.apply(this.geometry.vertices, vertexSets);
-  //
-  //   this.geometry.boundingSphere = new THREE.Sphere();
-  //   this.geometry.boundingSphere.setFromPoints(allVertices);
-  //   this.geometry.boundingBox = new THREE.Box3();
-  //   this.geometry.boundingBox.setFromPoints(allVertices);
-  // }
-  //
-  for(name in _models){
-    if(_models.hasOwnProperty(name)){
-      var model  = _models[name];
-      model.mesh.updateBoundingVolumes();
-    }
-  }
-
-
   //create cabine
   cabine = new CabineGrid(1.24, 2.0, 1.4);
   scene.add(cabine);
@@ -266,78 +244,4 @@ function setCameraPosition(index){
   camera.position.set( pos[0], pos[1], pos[2] );
   controls.target = new THREE.Vector3().fromArray(tar);
 
-}
-
-//apply dimension change to grid
-function applyDim(dim_index, value){
-
-  config.dimensions[dim_index] = value
-
-  value = value/100;
-
-  document_edited = true;
-
-  switch (dim_index) {
-    case 0:
-        $("#slider-width").val(Math.round(value*100));
-        var min = $("#number-width").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-width").val(Math.round(value_temp));
-        break;
-    case 2:
-        $("#slider-depth").val(Math.round(value*100));
-        var min = $("#number-depth").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-depth").val(Math.round(value_temp));
-        break;
-    case 1:
-        $("#slider-height").val(Math.round(value*100));
-        var min = $("#number-height").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-height").val(Math.round(value_temp));
-      break;
-    default:
-  }
-  if(cabine){
-    // 0:width 1:height 2:length
-    cabine.setDim(dim_index, value);
-  }
-}
-
-// 0:zoutvernevelaar
-// 1:rugsteun
-// 2:aromatherapie
-function addOption(index, boolean_add){
-
-  switch (parseInt(index)) {
-    case 2:
-      config.options.vaporizer = boolean_add
-      break;
-    case 3:
-      config.options.backrest = boolean_add
-      break;
-    case 4:
-      config.options.aromatherapy = boolean_add
-      break;
-    default:
-
-
-  }
-
-
-  if(cabine){
-    cabine.setOption(parseInt(index), boolean_add);
-  }
-
-  document_edited = true;
-
-}
-
-function setColor(id, color){
-  colors[id] = color;
-
-  if(cabine){
-    cabine.updateColors();
-  }
-  document_edited = true;
 }

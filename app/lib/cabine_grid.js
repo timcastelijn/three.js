@@ -131,6 +131,7 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       this.setDepth(value);
       break;
     default:
+      console.log(dim_index);
       console.log("default");
   }
 }
