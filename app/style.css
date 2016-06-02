@@ -1,9 +1,108 @@
 body {
   font-family: "Dosis";
-  /*background-color: #f0f0f0;*/
-
   margin: 0px;
   overflow: hidden;
+}
+
+#no-configurator{
+  width: 80%;
+  position: absolute;
+  right: 0px;
+}
+
+#browser_error_message{
+  width:400px;
+  background-color: white;
+  margin: auto;
+  position: relative;
+  top: 100px;
+  padding: 1.5em;
+  text-align: center;
+}
+
+.cb-slideshow,
+.cb-slideshow:after {
+    list-style: none;
+    position: fixed;
+    width: 80%;
+    height: 100%;
+    overflow: hidden;
+    top: 0px;
+    right: 0px;
+    z-index: -2;
+}
+.cb-slideshow:after {
+    content: '';
+    /*background: transparent url(../images/pattern.png) repeat top left; */
+}
+
+.cb-slideshow li span {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: transparent;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: none;
+    opacity: 0;
+    z-index: -2;
+    animation: imageAnimation 36s linear infinite 0s;
+}
+
+
+
+.cb-slideshow li:nth-child(1) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_kleurstalen.jpg");
+}
+.cb-slideshow li:nth-child(2) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_ruggensteun.jpg");
+    animation-delay: 6s;
+}
+.cb-slideshow li:nth-child(3) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal_staunir_loft.jpg");
+    animation-delay: 12s;
+}
+.cb-slideshow li:nth-child(4) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal_staunir_whitebathroom.jpg");
+    animation-delay: 18s;
+}
+.cb-slideshow li:nth-child(5) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_kleurstalen.jpg");
+  animation-delay: 24s;
+}
+.cb-slideshow li:nth-child(6) span {
+  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_ruggensteun.jpg");
+    animation-delay: 30s;
+}
+
+
+
+
+
+
+@keyframes imageAnimation {
+	0% {
+	    opacity: 0;
+	    animation-timing-function: ease-in;
+	}
+	8% {
+	    opacity: 0.5;
+	    animation-timing-function: ease-out;
+	}
+	17% {
+	    opacity: 0.5;
+      transform: scale(1.1);
+	}
+	25% {
+	    opacity: 0;
+      transform: scale(1.15);
+	}
+	100% {
+      opacity: 0;
+      transform: scale(1);
+}
 }
 
 .btn-circle {
@@ -78,7 +177,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin: 0px;
   width:20%;
 }
-#accordion * {
+#accordion *:not(.number-dim){
   border: 0px;
 }
 
@@ -106,17 +205,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   #renderer{
     width:100%
   }
+  .cb-slideshow{
+    width:100%
+  }
+  #no-configurator{
+    width:100%
+  }
 }
 
 .panel-group .panel+.panel {
   margin-top: 0px;
-}
-
-
-.img-preset{
-  width:100%;
-  height:100%;
-  cursor:pointer;
 }
 
 .modal {

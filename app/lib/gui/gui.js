@@ -56,6 +56,43 @@ $(function() {
   $('#accordion').on('hidden.bs.collapse', toggleChevron);
   $('#accordion').on('shown.bs.collapse', toggleChevron);
 
+  $("#myform").on("submit", function(e) {
+    if($('#myform').valid()){
+      //prevent default redirrecting
+
+      cabine.getCellLayout();
+
+      e.preventDefault();
+      $.ajax({
+          url: $(this).attr("action"),
+          type: 'POST',
+          data: $(this).serialize() + "&config=" + JSON.stringify(config),
+          beforeSend: function() {
+              $("#message").html("sending...");
+          },
+          success: function(data) {
+              $("#message").hide();
+              $("#myform").hide();
+              $("#submit").hide();
+              $("#response").html(data);
+          }
+      });
+    }
+  });
+
+  $("#accordion").on('simple_mode', function(event) {
+
+    // add new description
+    $( "#view-selector" ).html(
+      "<div style='padding: 5px;'>get a quote for your STAUNIR cabine by selecting your options</div>"
+    );
+
+    // hide sliders
+    $( "#accordion" ).find( "input[type=range]" ).hide();
+
+  });
+
+
   function defineHeaterPositions(number){
     var slots = cabine.walls[2].n;
     var array = [];

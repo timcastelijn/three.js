@@ -20,6 +20,28 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
+		<div id='no-configurator'>
+			<ul class="cb-slideshow">
+				<li>
+					<span>Image 01</span>
+				</li>
+				<li>
+					<span>Image 02</span>
+				</li>
+				<li>
+					<span>Image 03</span>
+				</li>
+				<li>
+					<span>Image 04</span>
+				</li>
+				<li>
+					<span>Image 05</span>
+				</li>
+				<li>
+					<span>Image 06</span>
+				</li>
+			</ul>
+		</div>
 		<div id="content">
       <!-- Accordion -->
 			<div class="panel-group" id="accordion">
@@ -77,6 +99,10 @@
 	         	<div class="panel-body">
 	           	<div class="container-fluid">
 	             	<div class="row">
+	               	<div class="col-sm-8">aantal heaters</div>
+	               	<div class="col-sm-4"><input class="number-dim" type="number" id="number-heaters"  value='8' onchange="console.log(this.value)" /></div>
+	             	</div>
+	             	<div class="row">
 	               	<div class="col-sm-8">Zoutvernevelaar</div>
 	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
 	             	</div>
@@ -122,7 +148,7 @@
               </div>
               <div class='row'>
 								<div class="col-sm-4">
-                  <button class="btn btn-circle" style="background-color:#CEC0B5;   padding: 1px 0;">light<br>grey</button>
+                  <button class="btn btn-circle" style="background-color:#CEC0B5;   padding: 1px 0;">l. grey</button>
 							  </div>
 								<div class="col-sm-4">
                   <button class="btn btn-circle" style="background-color:#908579;">grey</button>

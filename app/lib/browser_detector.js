@@ -44,66 +44,29 @@ var browser_detector = {
 
   getCompatible : function (message) {
 
-    var element = document.createElement( 'div' );
-    element.id = 'browser-error-message';
-    element.style.fontFamily = 'monospace';
-    element.style.fontSize = '13px';
-    element.style.fontWeight = 'normal';
-    element.style.textAlign = 'center';
-    element.style.background = '#fff';
-    element.style.color = '#000';
-    element.style.padding = '1.5em';
-    element.style.width = '400px';
-    element.style.margin = '5em auto 0';
+		// parent.appendChild( element );
+    $("#no-configurator").append(
+      "<div id='browser_error_message'>" + message + "</div>"
+    );
 
-
-
-    element.innerHTML = message;
-
-
-    var parent, id;
-
-    // set paramater defaults if not set before
-		var parameters = parameters || {};
-		parent = parameters.parent !== undefined ? parameters.parent : document.body;
-		id = parameters.id !== undefined ? parameters.id : 'oldie';
-
-		parent.appendChild( element );
-
-    var svg_element = document.createElement( 'img' );
-    svg_element.id = 'browser-error-svg';
-    svg_element.src="images/sensiks_static.svg"
-
-    // svg_element.style.fontFamily = 'sans-serif';
-    // svg_element.style.fontSize = '13px';
-    // svg_element.style.fontWeight = 'normal';
-    // svg_element.style.textAlign = 'center';
-    // svg_element.style.background = '#fff';
-    // svg_element.style.color = '#000';
-    // svg_element.style.padding = '1.5em';
-    // svg_element.style.width = '400px';
-    svg_element.style.display= 'block';
-    svg_element.style.margin = '30px auto';
-
-
-
-
-		parent.appendChild( svg_element );
-
+    // trigger event
+    $(function() {
+      $("#accordion").trigger('simple_mode');
+    })
 
   },
 
   browsers:[
     {name:'firefox', version:44},
     {name:'chrome', version:48},
-    {name:'safari', version:9},
+    {name:'safari', version:500},
     {name:'msie', version:11},
   ],
   // browsers:[
   //   {name:'firefox', version:100},
-  //   {name:'chrome', version:48},
-  //   {name:'safari', version:9},
-  //   {name:'msie', version:11},
+  //   {name:'chrome', version:100},
+  //   {name:'safari', version:800},
+  //   {name:'msie', version:100},
   // ],
 
   compatible: function(){
@@ -148,23 +111,26 @@ var browser_detector = {
     if ( ! Detector.webgl ) {
 
       var message = [
-          "WebGL is not supported by your graphics card. You cannot use the dynamic 3d viewer, but you can still use the user interface to get your customized design",
+          "WebGL is not supported by your graphics card. You cannot use the dynamic 3d viewer.",
         ].join( '\n' );
 
+      this.message = message;
       browser_detector.getCompatible(message);
 
       return false;
     } else if (!browser_detector.compatible() ) {
 
       var message = [
-          "Your browser: '" + this.current_browser.name + " " + this.current_browser.version + "' is not supported by the dynamic 3d viewer.",
-          'Please use a preferred browser like the latest version of <a href="https://www.google.nl/chrome/browser/desktop/" style="color:#00f">Google Chrome</a>.',
+          "Your browser: '" + this.current_browser.name + " " + this.current_browser.version + "' does not support the dynamic 3d viewer.",
+          'Try a preferred browser like the latest version of <a href="https://www.google.nl/chrome/browser/desktop/" >Google Chrome</a>.',
         ].join( '\n' );
 
+        this.message = message;
       browser_detector.getCompatible(message);
       return false;
 
     } else {
+      $("#no-configurator").hide();
       return true;
     }
 
