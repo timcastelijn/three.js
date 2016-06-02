@@ -5,8 +5,9 @@ $(function() {
 
   // view selector
   $( "#view-selector" ).find( "button" ).click(function(e){
-    console.log(e.target.value);
-    setCameraPosition(e.target.value)
+    if(e.target.id != "btn-info"){
+      setCameraPosition(e.target.value);
+    } 
   });
   $( "#view-selector" ).find( "button" ).tooltip()
 
@@ -101,17 +102,17 @@ $(function() {
     document_edited = true;
   }
 
+  $("#collapse3").find('#btn-backrest-color').hide();
+
 
   $("#collapse3").find('button').click( function(e){
     var part = $('#part-selector input:radio:checked').attr('id')
 
     var color = e.target.style['background-color'];
-    console.log(part, color);
 
     setColor(part, color);
   })
 
-  $("#collapse3").find('#btn-backrest-color').hide();
 
 
 
