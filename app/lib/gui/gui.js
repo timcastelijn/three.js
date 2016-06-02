@@ -68,8 +68,18 @@ $(function() {
 
     config.options[name] = boolean_add;
 
+
+
     if(cabine){
       cabine.setOption(parseInt(index), boolean_add);
+
+      if(name == "backrest"){
+        if(boolean_add){
+          $("#collapse3").find('#btn-backrest-color').show();
+        }else{
+          $("#collapse3").find('#btn-backrest-color').hide();
+        }
+      }
     }
 
     document_edited = true;
@@ -91,6 +101,7 @@ $(function() {
     document_edited = true;
   }
 
+
   $("#collapse3").find('button').click( function(e){
     var part = $('#part-selector input:radio:checked').attr('id')
 
@@ -98,9 +109,9 @@ $(function() {
     console.log(part, color);
 
     setColor(part, color);
-
-
   })
+
+  $("#collapse3").find('#btn-backrest-color').hide();
 
 
 

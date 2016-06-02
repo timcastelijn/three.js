@@ -26,7 +26,8 @@ var config = {
   colors:{
     exterior:"#333333",
     interior:"#ffffff",
-    floor:"#C28B6B",
+    backrest:"#885C3F",
+    floor:"#885C3F",
   }
 }
 
@@ -34,7 +35,7 @@ var colors = {
   exterior:"#333333",
   interior:"#ffffff",
   floor:"#C28B6B",
-  bamboo:"#C28B6B",
+  backrest:"#C28B6B",
 }
 
 var _camera_position = [
@@ -173,7 +174,7 @@ function loadConfig(){
 
   //define materials
   _models.aromatherapy.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  _models.backrest.mesh.material = new THREE.MeshPhongMaterial( { color: colors.bamboo, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.backrest.mesh.material = new THREE.MeshPhongMaterial( { color: colors.backrest, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.heater.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#111111", shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.heater.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   _models.vaporizer.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: "#D4D2E7", shininess:0.5, reflectivity:0.3, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );

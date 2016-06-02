@@ -131,7 +131,6 @@ CabineGrid.prototype.setDim=function(dim_index, value){
       this.setDepth(value);
       break;
     default:
-      console.log(dim_index);
       console.log("default");
   }
 }
@@ -260,6 +259,7 @@ CabineGrid.prototype.setHeight=function(value){
 
 // set width of the complete cabine
 CabineGrid.prototype.updateColors=function(){
+
   this.floor.updateColors();
   this.ceiling.updateColors();
   this.bench.updateColors();
@@ -267,6 +267,7 @@ CabineGrid.prototype.updateColors=function(){
   for(var i=0; i<this.walls.length; i++){
     this.walls[i].updateColors();
   }
+  _models.backrest.mesh.material.color.set(colors.backrest)
 
   //update parent colors
   _models.heater.mesh.material.materials[1].color.set(colors.interior);
