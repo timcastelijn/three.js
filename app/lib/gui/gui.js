@@ -80,7 +80,7 @@ $(function() {
     }
   });
 
-  $("#accordion").on('simple_mode', function(event) {
+  $(document.body).on('simple_mode', function(event) {
 
     // add new description
     $( "#view-selector" ).html(
@@ -89,6 +89,13 @@ $(function() {
 
     // hide sliders
     $( "#accordion" ).find( "input[type=range]" ).hide();
+
+  });
+
+  $(document.body).on('normal_mode', function(event) {
+    //hide heater input and placeholder screen
+    $("#no-configurator").hide();
+    $("#heater-input").hide();
 
   });
 

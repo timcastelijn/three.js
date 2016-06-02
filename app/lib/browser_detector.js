@@ -44,14 +44,15 @@ var browser_detector = {
 
   getCompatible : function (message) {
 
-		// parent.appendChild( element );
-    $("#no-configurator").append(
-      "<div id='browser_error_message'>" + message + "</div>"
-    );
+		// browser error message
+    console.log(message);
+    // $("#no-configurator").append(
+    //   "<div id='browser_error_message'>" + message + "</div>"
+    // );
 
     // trigger event
     $(function() {
-      $("#accordion").trigger('simple_mode');
+      $(document.body).trigger('simple_mode');
     })
 
   },
@@ -130,7 +131,9 @@ var browser_detector = {
       return false;
 
     } else {
-      $("#no-configurator").hide();
+      $(function() {
+        $(document.body).trigger('normal_mode');
+      })
       return true;
     }
 

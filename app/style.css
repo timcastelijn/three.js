@@ -149,9 +149,18 @@ body {
   padding: 2px;
 }
 
-.btn-toggle.active{
+.btn.active, .btn:active{
+  color: grey;
+  background-color: #dddddd;
+  box-shadow: none;
+}
+
+
+
+.btn-toggle.active,.btn.active:hover,{
   background-color: #dddddd;
 }
+
 .btn-toggle:hover{
   background-color: #dddddd;
 }

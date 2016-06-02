@@ -98,7 +98,7 @@
 	       	<div id="collapse2" class="panel-collapse collapse">
 	         	<div class="panel-body">
 	           	<div class="container-fluid">
-	             	<div class="row">
+	             	<div class="row" id='heater-input'>
 	               	<div class="col-sm-8">aantal heaters</div>
 	               	<div class="col-sm-4"><input class="number-dim" type="number" id="number-heaters"  value='8' onchange="console.log(this.value)" /></div>
 	             	</div>
@@ -135,14 +135,14 @@
 						<div class="panel-body">
               <div class='row'>
                 <div class="btn-group btn-group-justified" data-toggle="buttons" style='width:100%;'>
-                  <label class="btn btn-default btn-toggle">
-                    <input type="radio" name="options" id="option1">Interior
+                  <label class="btn btn-toggle">
+                    <input type="radio" name="options" id="option1">Interieur
                   </label>
-                  <label class="btn btn-default btn-toggle">
-                    <input type="radio" name="options" id="option2">Exterior
+                  <label class="btn btn-toggle">
+                    <input type="radio" name="options" id="option2">Exterieur
                   </label>
-                  <label class="btn btn-default btn-toggle">
-                    <input type="radio" name="options" id="option3">Floor
+                  <label class="btn btn-toggle">
+                    <input type="radio" name="options" id="option3">Vloer
                   </label>
                 </div>
               </div>
