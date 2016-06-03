@@ -24,18 +24,35 @@ var config = {
     led_lighting:false,
   },
   colors:{
-    exterior:"#333333",
-    interior:"#ffffff",
-    backrest:"#885C3F",
-    floor:"#885C3F",
+    exterior:"black",
+    interior:"white",
+    backrest:"bamboo",
+    floor:"bamboo",
   }
 }
 
+var color_table = {
+  "l. grey" :"#CEC0B5",
+  "grey"    :"#908579",
+  "black"   :"#2A2829",
+  "choco"   :"#866C53",
+  "brown"   :"#885C3F",
+  "yellow"  :"#D6A368",
+  "mint"    :"#69AB95",
+  "green"   :"#4B645B",
+  "blue"    :"#275B65",
+  "violet"  :"#634956",
+  "red"     :"#CE2C25",
+  "orange"  :"#E47120",
+  "white"   :"#ffffff",
+  "bamboo"  :"#885C3F",
+}
+
 var colors = {
-  exterior:"#333333",
+  exterior:"#2A2829",
   interior:"#ffffff",
-  floor:"#C28B6B",
-  backrest:"#C28B6B",
+  floor:"#885C3F",
+  backrest:"#885C3F",
 }
 
 var _camera_position = [

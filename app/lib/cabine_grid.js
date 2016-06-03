@@ -76,28 +76,24 @@ function CabineGrid(width, height, depth){
 CabineGrid.prototype = new THREE.Object3D();
 CabineGrid.prototype.constructor = CabineGrid;
 
-
 CabineGrid.prototype.getCellLayout=function(){
-  config.heaters = []
+  config.heaters = 0;
 
   if(cabine){
     for(var i = 0; i<this.walls.length; i++){
       var wall = this.walls[i];
       for(var j = 0; j<wall.cells.length; j++){
         var column = wall.cells[j];
-        console.log(column);
         if(column){
           for(var k = 0; k<this.walls[i].cells[j].length; k++){
             var cell = column[k];
             if (cell.type == 1){
-              config.heaters.push(i + '-'+ j +',' + k);
+              config.heaters ++;
             }
           }
         }
       }
     }
-  } else {
-    config.heaters = "de simpele editor ondersteunt deze optie nog niet"
   }
 }
 

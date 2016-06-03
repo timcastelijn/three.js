@@ -7,7 +7,7 @@ $(function() {
   $( "#view-selector" ).find( "button" ).click(function(e){
     if(e.target.id != "btn-info"){
       setCameraPosition(e.target.value);
-    } 
+    }
   });
   $( "#view-selector" ).find( "button" ).tooltip()
 
@@ -59,6 +59,13 @@ $(function() {
   // option checkboxes
   ////////////////////
 
+  $('#number-heaters').on('change', function(e){
+
+    e.target.value =  clamp(e.target.value, 0, 100 );
+
+    config.heaters = e.target.value;
+  })
+
   // 0:zoutvernevelaar
   // 1:rugsteun
   // 2:aromatherapie
@@ -68,8 +75,6 @@ $(function() {
     var name        = e.target.name;
 
     config.options[name] = boolean_add;
-
-
 
     if(cabine){
       cabine.setOption(parseInt(index), boolean_add);
@@ -92,11 +97,12 @@ $(function() {
   ////////////////
 
   function setColor(id, color){
-    colors[id] = color;
 
     config.colors[id] = color;
+    console.log(config);
 
     if(cabine){
+      colors[id] = color_table[color];
       cabine.updateColors();
     }
     document_edited = true;
@@ -108,23 +114,19 @@ $(function() {
   $("#collapse3").find('button').click( function(e){
     var part = $('#part-selector input:radio:checked').attr('id')
 
-    var color = e.target.style['background-color'];
+    var color = e.target.innerHTML;
 
     setColor(part, color);
   })
-
-
-
-
-
-
 
 
   $("#myform").on("submit", function(e) {
     if($('#myform').valid()){
       //prevent default redirrecting
 
-      cabine.getCellLayout();
+      if(cabine){
+        cabine.getCellLayout();
+      }
 
       e.preventDefault();
       $.ajax({
