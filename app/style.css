@@ -54,26 +54,26 @@ body {
 
 
 .cb-slideshow li:nth-child(1) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_kleurstalen.jpg");
+  background-image: url("images/gal-staunir_kleurstalen.jpg");
 }
 .cb-slideshow li:nth-child(2) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_ruggensteun.jpg");
+  background-image: url("images/gal-staunir_ruggensteun.jpg");
     animation-delay: 6s;
 }
 .cb-slideshow li:nth-child(3) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal_staunir_loft.jpg");
+  background-image: url("images/gal_staunir_loft.jpg");
     animation-delay: 12s;
 }
 .cb-slideshow li:nth-child(4) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal_staunir_whitebathroom.jpg");
+  background-image: url("images/gal_staunir_whitebathroom.jpg");
     animation-delay: 18s;
 }
 .cb-slideshow li:nth-child(5) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_kleurstalen.jpg");
+  background-image: url("images/gal-staunir_kleurstalen.jpg");
   animation-delay: 24s;
 }
 .cb-slideshow li:nth-child(6) span {
-  background-image: url("http://www.staunir.com/wp-content/uploads/2016/05/gal-staunir_ruggensteun.jpg");
+  background-image: url("images/gal-staunir_ruggensteun.jpg");
     animation-delay: 30s;
 }
 
