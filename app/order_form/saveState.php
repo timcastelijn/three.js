@@ -18,7 +18,7 @@
 		$message .= "naam: " . $_POST['name'] . "<br>";
 		$message .= "telefoonnummer: " . $_POST['telephone'] . "<br>";
 		$message .= "emailadres: " . $_POST['email'] . "<br>";
-		$message .= "opmerkingen:" . $_POST['message'] . "<br>";
+		$message .= "opmerkingen: <br>" . $_POST['message'] . "<br>";
 		$message .= "<br>";
 
 		$json_a = json_decode($_POST['config'], true);
@@ -63,8 +63,8 @@
 		$subject 	= 'offerteaanvraag ';
 		$headers 	= 'MIME-Version: 1.0' . "\r\n";
 		$headers 	.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		// $headers 	.= 'From: _www@macbook-pro-van-tim-castelijn.local' . "\r\n";
-		$headers 	.= 	'From: ' . $_POST['name'] .'<staunir@timcastelijn.nl>' . "\r\n" .
+		// $headers 	.= 	'From: ' . $_POST['name'] .'<staunir@timcastelijn.nl>' . "\r\n" .
+		$headers 	.= 	'From: ' . $_POST['name'] .'<'. $_POST['email'] .'>' . "\r\n" .
 									'Reply-To: ' . $_POST['email'] . "\r\n" .
     							'X-Mailer: PHP/' . phpversion();
 		$message 	= "<html><head>" .
