@@ -126,14 +126,15 @@ Leds.prototype.generateSpriteMaterial = function(){
 }
 
 
-function Heater(parent, x, y, w, h){
+function Heater(parent, x, y, z, w, h, n_width, n_height){
 
   this.sprite_material = this.generateSpriteMaterial()
   this.sprites = [];
   this.parent = parent;
 
-  var n_width = 2;
-  var n_height  = 40;
+  var flip = (parent.flip)? parent.flip: 1;
+
+
   for ( var i = 0; i < n_width ; i++ ) {
     for( var j =0; j< n_height ; j++){
 
@@ -141,9 +142,9 @@ function Heater(parent, x, y, w, h){
 
         // sprites are alternating
         var particle = new THREE.Sprite( this.sprite_material );
-        particle.position.x = parent.flip * (0.128 - ( - w/2 +  w/(n_width) *i) );
+        particle.position.x = flip * (x - ( - w/2 +  w/(n_width) *i) );
         particle.position.y = y + h/n_height * j;
-        particle.position.z = -0.005;
+        particle.position.z = z;
 
         var scale = 0.1;
         particle.scale.x = scale;

@@ -99,7 +99,7 @@ Cell.prototype.setType = function(type){
   switch(type){
     case 1:
       this.replaceInteriorGometry(_models.heater.mesh)
-      this.leds = new Heater(this, 0.1, 0.085, 0.03, 0.75);
+      this.leds = new Heater(this, 0.128, 0.085, -0.005, 0.03, 0.75, 2, 40);
       this.mesh_interior.morphTargetInfluences[1]=this.height;
       break
     case 3:

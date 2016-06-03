@@ -1,4 +1,5 @@
 
+
 HEATER_CONFIG = [
   [
     // FRONT
@@ -274,6 +275,8 @@ Wall.prototype.addAromaTherapy = function( boolean ){
 
   var type_index = boolean? 3: 0;
   target_cell.setType(type_index);
+  target_cell.updateColor();
+
   this.aromatherapy = boolean;
 }
 
