@@ -21,6 +21,7 @@ function Leds(width, height, depth){
 
 }
 
+
 Leds.prototype.setVisible = function(boolean){
 
   if (boolean){
@@ -112,6 +113,67 @@ Leds.prototype.generateSpriteMaterial = function(){
       gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
       gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
       gradient.addColorStop( 0.4, 'rgba(0,0,64,0)' );
+      gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
+      context.fillStyle = gradient;
+      context.fillRect( 0, 0, canvas.width, canvas.height );
+
+      var material = new THREE.SpriteMaterial( {
+          map: new THREE.CanvasTexture( canvas ),
+          blending: THREE.AdditiveBlending
+      } );
+
+      return material;
+}
+
+
+function Heater(parent, x, y, w, h){
+
+  this.sprite_material = this.generateSpriteMaterial()
+  this.sprites = [];
+  this.parent = parent;
+
+  var n_width = 2;
+  var n_height  = 40;
+  for ( var i = 0; i < n_width ; i++ ) {
+    for( var j =0; j< n_height ; j++){
+
+
+
+        // sprites are alternating
+        var particle = new THREE.Sprite( this.sprite_material );
+        particle.position.x = parent.flip * (0.128 - ( - w/2 +  w/(n_width) *i) );
+        particle.position.y = y + h/n_height * j;
+        particle.position.z = -0.005;
+
+        var scale = 0.1;
+        particle.scale.x = scale;
+        particle.scale.y = scale;
+        particle.scale.z = scale;
+
+        parent.add( particle );
+        this.sprites.push(particle);
+
+    }
+  }
+}
+
+Heater.prototype.constructor = Heater;
+
+Heater.prototype.ditch = function(){
+  for (var i = 0; i < this.sprites.length; i++) {
+    this.parent.remove(this.sprites[i]);
+  }
+}
+
+Heater.prototype.generateSpriteMaterial = function(){
+      var canvas = document.createElement( 'canvas' );
+      canvas.width = 16;
+      canvas.height = 16;
+      var context = canvas.getContext( '2d' );
+      var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+      gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
+      gradient.addColorStop( 0.2, 'rgba(255,0,0,1)' );
+      gradient.addColorStop( 0.4, 'rgba(64,0,0,0)' );
       gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
       context.fillStyle = gradient;
       context.fillRect( 0, 0, canvas.width, canvas.height );

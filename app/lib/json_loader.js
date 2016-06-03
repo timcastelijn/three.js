@@ -1,8 +1,8 @@
 var modelLoadedCallback = function(model){
   return function ( geometry, materials ) {
 
-    geometry.computeFaceNormals();
-    geometry.computeVertexNormals();
+    // geometry.computeFaceNormals();
+    // geometry.computeVertexNormals();
 
 
     var material = new THREE.MultiMaterial( materials );

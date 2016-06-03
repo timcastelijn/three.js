@@ -91,10 +91,15 @@ Cell.prototype.setType = function(type){
 
   this.type = type;
 
+  if(this.leds){
+    this.leds.ditch();
+    this.leds = null;
+  }
   // check whether objects are defined
   switch(type){
     case 1:
       this.replaceInteriorGometry(_models.heater.mesh)
+      this.leds = new Heater(this, 0.1, 0.085, 0.03, 0.75);
       this.mesh_interior.morphTargetInfluences[1]=this.height;
       break
     case 3:
