@@ -32,13 +32,9 @@ function Block(geometry, selector){
   this.mesh_object = new THREE.Mesh(this.geometry, this.material.basic);
   this.add(this.mesh_object)
 
-
   this.size = geometry.size;
+  this.mt_index = block_files[this.type].mt
 
-  this.mt_index = []
-  for (var i = 0; i < 3; i++) {
-    this.mt_index[i] = block_files[this.type].mt[i]
-  }
 
 
   this.updateSize();
@@ -66,15 +62,21 @@ Block.prototype.constructor = Block;
 
 Block.prototype.updateSize = function(){
 
+
+
   if(!this.mesh_object.morphTargetInfluences){
+
     return;
+
   }
 
-  for (var i = 0; i < this.size.length; i++) {
-    if(this.size[i]){
-      var size = parseFloat(this.size[i]);
-      this.mesh_object.morphTargetInfluences[ this.mt_index[i] ] = size;
-    }
+  for (var i = 0; i < this.mt_index.length; i++) {
+
+    var index = this.mt_index[i];
+    var size = parseFloat(this.size[index]);
+
+    this.mesh_object.morphTargetInfluences[ i + 1] = size;
+    console.log(i, size);
   }
 
   this.updateVertices()
@@ -117,6 +119,9 @@ Block.prototype.updateVertices = function(){
 
         vA.addScaledVector( tempA.subVectors( targets[ i ], fvA ), influence ); // targets index must match vertex index
 
+        if(this instanceof Wall && i==3){
+          console.log(influence, targets[i], fvA, vA);
+        }
     }
 
     fvA.add( vA ); // the transformed value
