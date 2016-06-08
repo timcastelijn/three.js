@@ -1,3 +1,8 @@
+<?php
+   session_start();
+   /*session is started if you don't write this line can't use $_Session  global variable*/
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -27,7 +32,8 @@
         </h3>
       </div>
       <div class="panel-group" id="accordion">
-	     		<!-- <p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p> -->
+          <p><?php echo $_SESSION["newsession"] ?></p>
+          <!-- <p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p> -->
   				<div>
 						<h3>
 							<span><a id="btn-rotate-CCW" href="javascript:selector.rotateObject('CCW')" class="glyphicon glyphicon-repeat" aria-hidden="true"></a></span>

@@ -99,7 +99,7 @@ $(function() {
 
               var img = item.image? ('<img src="' + item.image + '" width="35"/>'): name3;
               // create buttons
-              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size}, addBlock )
+              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size}, startBlockAdder )
 
 
               $col.append($button);
@@ -111,29 +111,19 @@ $(function() {
     }
   }
 
-
-
-  // add block buttons
-  function addBlock(event){
-
+  function startBlockAdder(event){
     var type = event.data.type;
     var size = event.data.size;
 
-    var geom_input = block_files[type];
-    geom_input.size = size;
-
-
-    var block = addObject(geom_input)
-
-    selector.selected = block;
-    selector.mouse_down = true;
-    selector.intersected = block;
-    selector.setSnapObjects()
-    selector.calculateBBVolumes()
+    if(selector){
+      selector.keep_adding = {type:type, size:size};
+      selector.addBlock(type, size);
+    }
   }
 
 
   function saveConfig(event){
+
     if($('#save_file_name').val() == "model1.json"){
       alert("this name is not allowed");
       return false;
@@ -144,13 +134,20 @@ $(function() {
     $.ajax({
         url: 'server/saveJson.php',
         type: "POST",
-        dataType : 'json',
+        // dataType : 'json',
         data: {
           filename: "../config/" + $('#save_file_name').val(),
           json: config
         },
-        success: function(data) {console.log("succes", data); },
-        failure: function(data) {console.log("failure", data); },
+        beforeSend: function() {
+          console.log('sending')
+        },
+        success: function(data) {
+          console.log("succes", data);
+        },
+        failure: function(data) {
+          console.log("failure", data);
+        },
     });
 
   }

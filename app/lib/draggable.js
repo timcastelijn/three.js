@@ -65,6 +65,7 @@ function onDocumentKeyDown( event ) {
       break;
     case 27:
       selector.forgetSelection();
+      selector.stopAdding();
       break
     case 37:
       selector.rotateObject("CW");
@@ -78,21 +79,24 @@ function onDocumentKeyDown( event ) {
 }
 
 Selector.prototype.deleteObject=function(object){
-  if (this.selected){
 
-    scene_geometry.remove(this.selected);
+  if (this.selected){
+    object = this.selected;
+    this.selected = null;
+  }
+  if(object){
+    scene_geometry.remove(object);
 
     // remove all children of selected from selectables
-    for(var i =0; i<this.selected.children_meshes.length; i++){
-      var selected_index = this.selectables.indexOf(this.selected.children_meshes[i]);
+    for(var i =0; i<object.children_meshes.length; i++){
+      var selected_index = this.selectables.indexOf(object.children_meshes[i]);
       this.selectables.splice(selected_index, 1)
     }
 
-    delete config.geometry[this.selected.fid];
+    delete config.geometry[object.fid];
 
-    price -= block_files[this.selected.type].price;
+    price -= block_files[object.type].price;
     updatePriceGui()
-    this.selected = null;
   }else{
     console.log('nothing selected');
   }
@@ -287,18 +291,52 @@ Selector.prototype.onMouseDown=function(event){
 Selector.prototype.updateConfig=function(event){
   var fid = this.dragged.fid;
 
+  console.log(fid);
   config.geometry[fid].position = [this.dragged.position.x, this.dragged.position.y, this.dragged.position.z];
   config.geometry[fid].rotation = [0, this.dragged.rotation.y/Math.PI *180, 0];
 
+}
+
+
+
+Selector.prototype.addBlock=function(type, size){
+
+    var object = {type:type, size:size, position:[0,0,0], rotation:[0,0,0]}
+    var block = addObject(object)
+
+
+    this.selected = block;
+    this.dragged = block;
+    this.mouse_down = true;
+    this.intersected = block;
+    this.setSnapObjects()
+    this.calculateBBVolumes()
+}
+Selector.prototype.stopAdding=function(){
+    this.keep_adding = null;
+    this.deleteObject(this.dragged);
+    this.dragged.overlap = false;
+    this.dragged = null;
 }
 
 Selector.prototype.onMouseUp=function(event){
   this.mouse_down = false;
   this.controls.enabled = true;
 
+  // only if object was dragged
   if ( this.dragged ) {
     if (this.dragged.overlap){
-      this.dragged.position.copy(  this.dragged.previous_position );
+      // placement failed
+      if (this.dragged.previous_position){
+        this.dragged.position.copy(  this.dragged.previous_position );
+      }else{
+        return
+      }
+    } else {
+      // placement succesful
+      if(this.keep_adding){
+        this.addBlock(this.keep_adding.type, this.keep_adding.size);
+      }
     }
 
     this.updateConfig()
@@ -306,6 +344,7 @@ Selector.prototype.onMouseUp=function(event){
     this.dragged = null;
   }
 
+  //reset to basic material
   for(var i =0; i<this.snap_objects.length; i++){
     this.snap_objects[i].parent.setMaterial('basic')
   }
@@ -411,6 +450,8 @@ Selectable.prototype.moveOverPlane = function(){
 
   }
 }
+
+
 
 Selectable.prototype.moveToArea = function(snap_area, intersect){
 

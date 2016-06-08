@@ -13,14 +13,14 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:     {type:"wall",     model:'models/wo_i_600.json',  type_class:Wall,   price:480,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  floor:    {type:"floor",    model:'models/floor.json',     type_class:Floor,  price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,180,0]},
-  fl_e:     {type:"fl_e",     model:'models/floor_end.json', type_class:FloorEnd, price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,0,0]},
-  roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,   price:640,  size:[1.8,1,0.3],  mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
-  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wall:     {type:"wall",     model:'models/wo_i_600.json',  type_class:Wall,     price:480,    mt:[1]     },
+  floor:    {type:"floor",    model:'models/floor.json',     type_class:Floor,    price:560,    mt:[0]     },
+  fl_e:     {type:"fl_e",     model:'models/floor_end.json', type_class:FloorEnd, price:560,    mt:[0]     },
+  roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,     price:640,    mt:[1,2,3] },
+  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  type_class:Wall,     price:640,    mt:[1]     },
+  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  type_class:Wall,     price:640,    mt:[1]     },
 }
 
 
@@ -159,26 +159,31 @@ function loadBlocks(){
 
 }
 
-function addObject(object){
+function addObject(object, fid){
 
   // create new fabfield-id
-  var fid   = object.type + "_" + new Date().getTime();
   var type  = object.type
 
-  var type_class = block_files[type].type_class;
+  if(!config.geometry[fid]){
+    // add to config with new id
+    var fid   = object.type + "_" + new Date().getTime();
+    object.fid = fid;
 
+    config.geometry[fid] = object;
+    console.log("addconfig", fid);
+  }
+
+  // create new block
+  var type_class = block_files[type].type_class;
   var block = new type_class(object, selector);
   block.setTransformations(object.position, object.rotation )
   scene_geometry.add(block);
 
-  if(!config.geometry[fid]){
-    // add to config with new id
-    config.geometry[fid] = object;
-    config.geometry[fid].fid = fid;
-  }
 
 
+  // update display price
   price += block_files[type].price;
+  config.price = price;
   updatePriceGui();
 
   return block;
@@ -208,13 +213,11 @@ function loadConfig(filename){
     // deep copy config file
     config = jQuery.extend(true, {}, data);
 
-    for (var name in data.geometry) {
-        if (data.geometry.hasOwnProperty(name)) {
-          //remove from config
-          delete config.geometry[name];
+    for (var fid in data.geometry) {
+        if (data.geometry.hasOwnProperty(fid)) {
 
-
-          addObject(data.geometry[name]);
+          // for each entry add an object
+          addObject(data.geometry[fid], fid);
 
 
         }
