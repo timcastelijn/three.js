@@ -13,14 +13,14 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:     {type:"wall",     model:'models/wo_i_600.json',  price:480,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  floor:    {type:"floor",    model:'models/floor.json',     price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,180,0]},
-  fl_e:    {type:"fl_e",      model:'models/floor_end.json', price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,0,0]},
-  roof:     {type:"roof",     model:'models/roof.json',      price:640,  size:[1.8,1,0.3],  mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
-  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wall:     {type:"wall",     model:'models/wo_i_600.json',  type_class:Wall,   price:480,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  floor:    {type:"floor",    model:'models/floor.json',     type_class:Floor,  price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,180,0]},
+  fl_e:     {type:"fl_e",     model:'models/floor_end.json', type_class:FloorEnd, price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,0,0]},
+  roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,   price:640,  size:[1.8,1,0.3],  mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
+  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  type_class:Wall,   price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
 }
 
 
@@ -159,51 +159,26 @@ function loadBlocks(){
 
 }
 
-function addObject(geometry){
+function addObject(object){
 
-  var block;
+  // create new fabfield-id
+  var fid   = object.type + "_" + new Date().getTime();
+  var type  = object.type
 
-  // add to config with new id
-  var fid = geometry.type + "_" + new Date().getTime();
-  config.geometry[fid] = geometry;
-  config.geometry[fid].fid = fid;
+  var type_class = block_files[type].type_class;
 
-  var category = geometry.type.substring(0,2)
-
-  // block = new geometry.class(geometry, selector)
-
-  switch (category) {
-    case 'fl':
-      if (geometry.type == 'fl_e') {
-        block = new FloorEnd(geometry, selector);
-      }else{
-        block = new Floor(geometry, selector);
-      }
-      break;
-    case 'wa':
-      block = new Wall(geometry, selector);
-      break;
-    case 'wo':
-      block = new Wall(geometry, selector);
-      break;
-    case 'ro':
-      block = new Roof(geometry, selector);
-      break;
-    default:
-      console.log('default geometry loaded' ,geometry);
-      block = Block(geometry, selector);
-
-  }
-
-  var pos = geometry.position;
-
-  block.position.set(parseFloat(pos[0]),parseFloat(pos[1]),parseFloat(pos[2]));
-
-  block.rotation.set(0, parseFloat(geometry.rotation[1])/180*Math.PI, 0);
-
+  var block = new type_class(object, selector);
+  block.setTransformations(object.position, object.rotation )
   scene_geometry.add(block);
 
-  price += block_files[geometry.type].price;
+  if(!config.geometry[fid]){
+    // add to config with new id
+    config.geometry[fid] = object;
+    config.geometry[fid].fid = fid;
+  }
+
+
+  price += block_files[type].price;
   updatePriceGui();
 
   return block;
@@ -238,7 +213,9 @@ function loadConfig(filename){
           //remove from config
           delete config.geometry[name];
 
-          addObject(data.geometry[name])
+
+          addObject(data.geometry[name]);
+
 
         }
     }
@@ -259,51 +236,7 @@ function zoomAll(){
 
 }
 
-function addLights(){
-  // ----------------- Sprites --------------------
-  function generateSprite() {
-      var canvas = document.createElement( 'canvas' );
-      canvas.width = 16;
-      canvas.height = 16;
-      var context = canvas.getContext( '2d' );
-      var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
-      gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
-      gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
-      gradient.addColorStop( 0.4, 'rgba(0,0,64,0)' );
-      gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
-      context.fillStyle = gradient;
-      context.fillRect( 0, 0, canvas.width, canvas.height );
-      return canvas;
-  }
 
-  var material = new THREE.SpriteMaterial( {
-      map: new THREE.CanvasTexture( generateSprite() ),
-      blending: THREE.AdditiveBlending
-  } );
-
-
-  light1 = new THREE.PointLight( 0x2222ff, 1, 3 );
-  light1.position.set(0,1.79,0)
-  scene.add( light1 );
-
-  var radius = 10;
-
-  for ( var i = 0; i < 10; i++ ) {
-    for( var j =0; j< 10; j++){
-      particle = new THREE.Sprite( material );
-      particle.position.x = 1.04/10*i -1.0/2 ;
-      particle.position.y = 1.78;
-      particle.position.z = 1.2/10*j - 1.16 /2;
-
-      var scale = 0.2
-      particle.scale.x = scale;
-      particle.scale.y = scale;
-      particle.scale.z = scale;
-
-      scene.add( particle );
-    }
-  }
-}
 
 function onWindowResize() {
 
@@ -335,70 +268,7 @@ function render() {
 
 }
 
-//apply dimension change to grid
-function applyDim(dim_index, value){
 
-  config.dimensions[dim_index] = value
-
-  value = value/100;
-
-  document_edited = true;
-
-  switch (dim_index) {
-    case 0:
-        $("#slider-width").val(Math.round(value*100));
-        var min = $("#number-width").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-width").val(Math.round(value_temp));
-        break;
-    case 2:
-        $("#slider-depth").val(Math.round(value*100));
-        var min = $("#number-depth").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-depth").val(Math.round(value_temp));
-        break;
-    case 1:
-        $("#slider-height").val(Math.round(value*100));
-        var min = $("#number-height").attr("min");
-        var value_temp = value*100<min? min:value*100
-        $("#number-height").val(Math.round(value_temp));
-      break;
-    default:
-  }
-  if(cabine){
-    // 0:width 1:height 2:length
-    cabine.setDim(dim_index, value);
-  }
-}
-
-// 0:zoutvernevelaar
-// 1:rugsteun
-// 2:aromatherapie
-function addOption(index, boolean_add){
-
-  switch (parseInt(index)) {
-    case 2:
-      config.options.vaporizer = boolean_add
-      break;
-    case 3:
-      config.options.backrest = boolean_add
-      break;
-    case 4:
-      config.options.aromatherapy = boolean_add
-      break;
-    default:
-
-
-  }
-
-
-  if(cabine){
-    cabine.setOption(parseInt(index), boolean_add);
-  }
-
-  document_edited = true;
-
-}
 
 function setColor(id, color){
   colors[id] = color;

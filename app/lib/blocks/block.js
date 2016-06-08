@@ -76,7 +76,6 @@ Block.prototype.updateSize = function(){
     var size = parseFloat(this.size[index]);
 
     this.mesh_object.morphTargetInfluences[ i + 1] = size;
-    console.log(i, size);
   }
 
   this.updateVertices()
@@ -119,14 +118,17 @@ Block.prototype.updateVertices = function(){
 
         vA.addScaledVector( tempA.subVectors( targets[ i ], fvA ), influence ); // targets index must match vertex index
 
-        if(this instanceof Wall && i==3){
-          console.log(influence, targets[i], fvA, vA);
-        }
     }
 
     fvA.add( vA ); // the transformed value
     // this.mesh_object.geometry.vertices[ i ] = vA.add( fvA ); // the transformed value
   }
+}
+
+Block.prototype.setTransformations = function(position, rotation){
+  this.position.set(parseFloat(position[0]),parseFloat(position[1]),parseFloat(position[2]));
+
+  this.rotation.set(0, parseFloat(rotation[1])/180*Math.PI, 0);
 }
 
 Block.prototype.addPatches = function(){
@@ -138,9 +140,7 @@ Block.prototype.addBlock = function(){
 
 }
 
-Block.prototype.setWidth = function(value){
 
-}
 
 
 Block.prototype.updateColors = function(){
