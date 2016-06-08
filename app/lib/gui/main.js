@@ -2,6 +2,54 @@ function updatePriceGui(){
   $('#label_price').text(price);
 }
 
+_button_table = {
+  floor:{
+    normal:{
+      "l2.4":{button_text:"2.4m", image:'images/label1.jpg', type:"floor", size:[2.4, 0.3, 0.3]},
+      "l3.6":{button_text:"3.6m", type:"floor", size:[3.6, 0.3, 0.3]},
+      "l4.8":{button_text:"4.8m", type:"floor", size:[4.8, 0.3, 0.3]},
+      "l5.4":{button_text:"5.4m", type:"floor", size:[5.4, 0.3, 0.3]},
+    },
+    end_pieces:{
+      "l2.4":{button_text:"2.4m", type:"fl_e", size:[2.4, 0.3, 0.3]},
+      "l3.6":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
+      "l4.8":{button_text:"4.8m", type:"fl_e", size:[4.8, 0.3, 0.3]},
+    },
+  },
+  wall:{
+    normal:{
+      "h2.7":{button_text:"2.7m", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+      "h3.0":{button_text:"3.0m", type:"wo_i_600", size:[0.6, 3.0, 0.3]},
+    },
+    corner_pieces:{
+      "h2.7":{button_text:"2.7m", type:"wo_oc", size:[0.6, 2.7, 0.3]},
+    }
+  },
+  roof:{
+    "h1.2":{
+      "l1.2_h3.6":{button_text:"3.6m", type:"roof", size:[1.2, 1.2, 0.3]},
+      "l1.8_h2.4":{button_text:"3.6m", type:"roof", size:[1.8, 1.2, 0.3]},
+      "l2.4_h1.2":{button_text:"3.6m", type:"roof", size:[2.4, 1.2, 0.3]},
+    },
+    "h2.4":{
+      "l1.2_h2.4":{button_text:"3.6m", type:"roof", size:[1.2, 2.4, 0.3]},
+      "l1.8_h2.4":{button_text:"3.6m", type:"roof", size:[1.8, 2.4, 0.3]},
+      "l2.4_h2.4":{button_text:"3.6m", type:"roof", size:[2.4, 2.4, 0.3]},
+    },
+    "h3.6":{
+      "l1.2_h3.6":{button_text:"3.6m", type:"roof", size:[1.2, 3.6, 0.3]},
+      "l1.8_h3.6":{button_text:"3.6m", type:"roof", size:[1.8, 3.6, 0.3]},
+      "l2.4_h3.6":{button_text:"3.6m", type:"roof", size:[2.4, 3.6, 0.3]},
+    },
+  },
+  window:{
+    all:{
+      "h2.7":{button_text:"3.6m", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+    }
+  },
+}
+
+
 $(function() {
 
   // toggle arrow when operating accodion
@@ -14,6 +62,57 @@ $(function() {
   $('#accordion').on('hidden.bs.collapse', toggleChevron);
   $('#accordion').on('shown.bs.collapse', toggleChevron);
 
+
+
+  for (var name in _button_table) {
+    if (_button_table.hasOwnProperty(name)) {
+      //floor
+      var category = _button_table[name];
+
+      for (var name2 in category) {
+        if (category.hasOwnProperty(name2)) {
+
+          var $row = $('<div/>', {
+            text: name2,
+            class: "row",
+          });
+
+          var $row2 = $('<div/>', {
+             class: "row",
+          });
+
+          $("#collapse1").find("#"+name).find('.container-fluid').append($row);
+          $("#collapse1").find("#"+name).find('.container-fluid').append($row2);
+
+
+          //normal
+          var subcategory = category[name2];
+
+          for (var name3 in subcategory) {
+            if (subcategory.hasOwnProperty(name3)) {
+
+              var $col = $('<div/>', {
+                 class: "col-sm-4",
+              });
+
+              var item = subcategory[name3];
+
+              var img = item.image? ('<img src="' + item.image + '" width="35"/>'): name3;
+              // create buttons
+              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size}, addBlock )
+
+
+              $col.append($button);
+              $row2.append($col);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
   // add block buttons
   function addBlock(event){
 
@@ -22,6 +121,7 @@ $(function() {
 
     var geom_input = block_files[type];
     geom_input.size = size;
+
 
     var block = addObject(geom_input)
 
@@ -32,11 +132,6 @@ $(function() {
     selector.calculateBBVolumes()
   }
 
-  $('#btn_add_wall').click( {type:"wo_i_600", size:[0,2.7,0] }, addBlock);
-  $('#btn_add_window').click( {type:"wo_w_900", size:[0,2.7,0]}, addBlock);
-  $('#btn_add_floor_36').click( {type:"floor", size:[3.6,0,0]}, addBlock);
-  $('#btn_add_floor_48').click( {type:"floor", size:[4.8,0,0]}, addBlock);
-  $('#btn_add_roof').click( {type:"roof"}, addBlock);
 
   function saveConfig(event){
     if($('#save_file_name').val() == "model1.json"){

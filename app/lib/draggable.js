@@ -1,180 +1,4 @@
 
-// DRAGGER class
-////////////////
-function Dragger(camera, controls){
-  this.draggables   = [];
-  this.parent_lookup   = [];
-  this.intersected  = null;
-  this.dragged      = null;
-  this.camera       = camera;
-  this.controls     = controls;
-
-  this.raycaster    = new THREE.Raycaster();
-  this.mouse        = new THREE.Vector2();
-
-  //create intersection plane
-  this.plane = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry( 20, 20, 8, 8 ),
-    new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
-  );
-  // rotate plane to xz orientation
-  this.plane.rotation.x = Math.PI * -0.5;
-  this.plane.material.visible = false;
-  scene.add( this.plane );
-
-  renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-  renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
-
-}
-function onDocumentMouseDown( event ) {
-
-  event.preventDefault();
-  dragger.onMouseDown(event);
-
-}
-
-function onDocumentMouseUp( event ) {
-  event.preventDefault();
-  dragger.onMouseUp(event);
-}
-
-function onDocumentMouseMove( event ) {
-  event.preventDefault();
-  dragger.onMouseMove(event);
-}
-
-Dragger.prototype.add=function(object){
-  this.draggables.push(object)
-}
-Dragger.prototype.onMouseMove=function(event){
-
-  this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-  this.raycaster.setFromCamera( this.mouse, this.camera );
-
-  if ( this.dragged ) {
-    var intersects = this.raycaster.intersectObject( this.plane );
-    if ( intersects.length > 0 ) {
-
-      this.dragged.moveTo(intersects[ 0 ].point);
-      // this.dragged.position.copy( intersects[ 0 ].point );
-    }
-    return;
-  }
-
-  //else
-  var intersects = this.raycaster.intersectObjects( this.draggables );
-  if ( intersects.length > 0 ) {
-    // intersected object changes
-    if ( this.intersected != intersects[ 0 ].object ) {
-
-      // restore last intersected color
-      if ( this.intersected ) this.intersected.material.color.set( this.originalColor );
-
-      // highlight next intersected object
-      this.intersected = intersects[ 0 ].object;
-      this.originalColor = this.intersected.material.color.getHex();
-      this.intersected.material.color.set("#ff0000");
-
-    }
-    container.style.cursor = 'pointer';
-  } else {
-    // unhighligh and forget intersected
-
-    if ( this.intersected ) this.intersected.material.color.set( this.originalColor );
-    this.intersected = null;
-    container.style.cursor = 'auto';
-  }
-}
-
-Dragger.prototype.onMouseDown=function(event){
-
-  this.raycaster.setFromCamera( this.mouse, this.camera );
-
-  var intersects = this.raycaster.intersectObjects( this.draggables );
-
-  if ( intersects.length > 0 ) {
-
-    this.controls.enabled = false;
-
-    if(this.parent_lookup[intersects[0].object.id]){
-
-      this.dragged = this.parent_lookup[intersects[0].object.id];
-
-    } else {
-      this.dragged = intersects[ 0 ].object;
-    }
-    container.style.cursor = 'move';
-  }
-}
-
-Dragger.prototype.onMouseUp=function(event){
-
-
-  this.controls.enabled = true;
-
-  if ( this.intersected ) {
-
-    this.dragged = null;
-
-  }
-  container.style.cursor = 'auto';
-}
-
-function getChildMeshes(object){
-  var child_array = [];
-
-  function iterate(object, child_array){
-    for(var i = 0; i < object.children.length; i++){
-      var child = object.children[i];
-      if (child instanceof THREE.Mesh) {
-        child_array.push(child)
-      }
-      if (child.children.length > 0) {
-        iterate(child, child_array);
-      }
-    }
-  }
-
-  iterate(object, child_array);
-  return child_array
-}
-
-//Draggable class
-/////////////////
-function Draggable(object, dragger){
-  THREE.Object3D.call( this );
-
-  this.add(object);
-
-  //traverse over children and add parent to draggables under child identifier
-  var children = getChildMeshes(this);
-
-  for(var i = 0; i<children.length; i++){
-    dragger.draggables.push(children[i]);
-    dragger.parent_lookup[children[i].id] = this;
-  }
-
-  // add object to the dragger
-  dragger.draggables.push(this);
-}
-
-Draggable.prototype = new THREE.Object3D();
-Draggable.prototype.constructor = Draggable;
-
-Draggable.prototype.moveTo=function( target){
-  var pos = new THREE.Vector3(0,0,0);
-  pos.x = this.dof.x * target.x
-  pos.y = this.dof.y * target.y
-  pos.z = this.dof.z * target.z
-
-  this.position.copy( pos );
-
-  cabine.setWidth(pos.x - 1 + 1.24)
-}
-
 
 // SELECTOR class
 ////////////////
@@ -310,13 +134,7 @@ Selector.prototype.moveDraggedObject = function(){
     this.dragged.snap(intersects[0])
   } else {
 
-    // else move over plane
-    var intersects = this.raycaster.intersectObject( this.plane );
-    if ( intersects.length > 0 ) {
-
-      // this.dragged.moveTo(intersects[ 0 ].point);
-      this.dragged.position.copy( intersects[ 0 ].point );
-    }
+    this.dragged.moveOverPlane();
     return;
   }
 }
@@ -391,38 +209,6 @@ Selector.prototype.bboxOverLap=function(){
   return false
 }
 
-Selector.prototype.defineSnapPoint=function(intersect, parent){
-
-  var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex
-  // console.log(intersect.object);
-
-  //iterate over faceIndexes
-  // for (index in parent.object.patches) {
-    // if((index) == intersect.faceIndex){
-  for (index in parent.object.patches) {
-
-    if((index) == intersect.faceIndex){
-
-      // test wether object is allowed to snap on patch
-      if( parent.object.patches[index].types.indexOf(this.dragged.object.type)> -1 ){
-
-        // move object to patch reference point
-        var vector = parent.object.localToWorld(new THREE.Vector3().copy(parent.object.patches[index].position) )
-        this.dragged.position.copy( vector  );
-
-
-        //rotate if possible
-        var rot_y = (parent.object.patches[index].rotation)?  parent.object.patches[index].rotation: 0;
-
-        this.dragged.rotation.y =  parent.rotation.y + rot_y
-
-        this.dragged.overlap = this.bboxOverLap()
-        return;
-      }
-    }
-  }
-  this.dragged.position.copy(intersect.point)
-}
 
 Selector.prototype.setSnapObjects = function(){
   //clone array
@@ -579,6 +365,16 @@ Selectable.prototype.setSelector = function(mesh_object, selector){
 
 }
 
+Selectable.prototype.getSnapAreas = function(intersect_parent){
+  var category;
+  if(intersect_parent.snap_areas[this.type]){
+    category = this.type
+  }else{
+    category = this.type.substring(0,2)
+  }
+
+  return intersect_parent.snap_areas[category];
+}
 Selectable.prototype.snap = function(intersect){
 
   var intersect_parent = intersect.object.parent;
@@ -586,11 +382,9 @@ Selectable.prototype.snap = function(intersect){
   var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
 
   //iterate over faceIndexes
-  var category = this.type.substring(0,2)
-  var snap_areas = intersect_parent.snap_areas[category];
+  var snap_areas = this.getSnapAreas(intersect_parent);
 
-  console.log(category, snap_areas, m_index);
-
+  console.log(m_index, snap_areas);
 
   if(snap_areas){
     // this can snap to intersected object
@@ -606,16 +400,51 @@ Selectable.prototype.snap = function(intersect){
   this.position.copy(intersect.point)
 }
 
+Selectable.prototype.moveOverPlane = function(){
+
+  // else move over plane
+  var intersects = this.selector.raycaster.intersectObject( this.selector.plane );
+  if ( intersects.length > 0 ) {
+
+    // this.dragged.moveTo(intersects[ 0 ].point);
+    this.position.copy( intersects[ 0 ].point );
+
+  }
+}
+
 Selectable.prototype.moveToArea = function(snap_area, intersect){
-  // move object to patch reference point
-  var vector = intersect.object.parent.localToWorld(new THREE.Vector3().copy(snap_area.position) )
-  this.position.copy( vector  );
 
 
-  //rotate if possible
-  var rot_y = (snap_area.rotation)?  snap_area.rotation: 0;
-  this.rotation.y =   intersect.object.parent.rotation.y + rot_y
+  if (snap_area.position){
+    // move object to patch reference point
+    var vector = intersect.object.parent.localToWorld(new THREE.Vector3().copy(snap_area.position) )
+    this.position.copy( vector  );
 
-  this.overlap = this.selector.bboxOverLap()
-  return;
+
+    //rotate if possible
+    var rot_y = (snap_area.rotation)?  snap_area.rotation: 0;
+    this.rotation.y =   intersect.object.parent.rotation.y + rot_y
+
+    this.overlap = this.selector.bboxOverLap()
+    return;
+
+  } else {
+
+    var local_intersection = intersect.object.parent.worldToLocal(intersect.point).toArray()
+
+    var snap_point = [];
+    for (var i = 0; i < local_intersection.length; i++) {
+
+      var temp = Math.floor( local_intersection[i] / 0.3 + 0.001);
+      snap_point[i] = temp * 0.3 + snap_area.offset[i];
+    }
+
+    var position = intersect.object.parent.localToWorld(new THREE.Vector3().fromArray( snap_point ) );
+
+    this.position.copy(position);
+    this.rotation.y = intersect.object.parent.rotation.y + snap_area.rotation;
+
+    this.overlap = this.selector.bboxOverLap();
+    return;
+  }
 }

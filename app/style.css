@@ -13,6 +13,20 @@ body {
   width:250px;
 }
 
+#collapse1 * button{
+  font-size: 10px;
+  text-align: center;
+  padding: 3px;
+  /*background-color: red;*/
+}
+
+#view-modus{
+  position:absolute;
+  right:0px;
+  margin: 10px;
+
+}
+
 .modal {
     overflow-y:auto;
     max-height:90%;

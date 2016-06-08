@@ -13,12 +13,14 @@ var _models_loading = 0;
 var SHADOWS_ENABLED = false;
 
 var block_files = {
-  wall:     {type:"wall",     model:'models/wo_i_600.json',  price:480,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
-  floor:    {type:"floor",    model:'models/floor.json',     price:560,  size:[3.6,0,0],    mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
-  roof:     {type:"roof",     model:'models/roof.json',      price:640,  size:[1.8,1,0],    mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
-  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
-  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  price:640,  size:[0,2.7,0],    mt:[2,1,3],    position:[-1,0,0], rotation:[0,0,0]},
+  wall:     {type:"wall",     model:'models/wo_i_600.json',  price:480,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  floor:    {type:"floor",    model:'models/floor.json',     price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,180,0]},
+  fl_e:    {type:"fl_e",      model:'models/floor_end.json', price:560,  size:[3.6,0,0],    mt:[0],    position:[-1,0,0], rotation:[0,0,0]},
+  roof:     {type:"roof",     model:'models/roof.json',      price:640,  size:[1.8,1,0.3],  mt:[1,2,3],    position:[-1,0,0], rotation:[0,180,0]},
+  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
+  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  price:640,  size:[0,2.7,0],    mt:[1],    position:[-1,0,0], rotation:[0,0,0]},
 }
 
 
@@ -151,7 +153,7 @@ function loadBlocks(){
         _models_loading ++;
 
         // if models are loaded, load the config file
-        json_loader.load( block_files[type].model, modelLoadedCallback(type, 'config/model2.json'));
+        json_loader.load( block_files[type].model, modelLoadedCallback(type, 'config/model1.json'));
       }
   }
 
@@ -168,11 +170,15 @@ function addObject(geometry){
 
   var category = geometry.type.substring(0,2)
 
+  // block = new geometry.class(geometry, selector)
 
   switch (category) {
     case 'fl':
-      block = new Floor(geometry, selector);
-      // block =  new Floor(geometry);
+      if (geometry.type == 'fl_e') {
+        block = new FloorEnd(geometry, selector);
+      }else{
+        block = new Floor(geometry, selector);
+      }
       break;
     case 'wa':
       block = new Wall(geometry, selector);

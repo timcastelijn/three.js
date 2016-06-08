@@ -20,7 +20,13 @@
 	</head>
 	<body>
 		<div id="content">
-			<div class="panel-group" id="accordion">
+      <div id ='view-modus'>
+        <h3>
+          <span><a id="btn-edit" href="javascript:selector.rotateObject('CCW')" class="glyphicon glyphicon-pencil" aria-hidden="true"></a></span>
+          <span><a id="btn-orbit" href="javascript:selector.rotateObject('CW')" class="glyphicon glyphicon-globe" aria-hidden="true"></a></span>
+        </h3>
+      </div>
+      <div class="panel-group" id="accordion">
 	     		<!-- <p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p> -->
   				<div>
 						<h3>
@@ -40,47 +46,36 @@
 
 							  <!-- Nav tabs -->
 							  <ul class="nav nav-tabs" role="tablist">
-							    <li role="presentation" class="active"><a href="#Floors" aria-controls="Floors" role="tab" data-toggle="tab">Floors</a></li>
-							    <li role="presentation"><a href="#Walls" aria-controls="Walls" role="tab" data-toggle="tab">Walls</a></li>
+							    <li role="presentation" class="active"><a href="#floor" aria-controls="floor" role="tab" data-toggle="tab">Floors</a></li>
+							    <li role="presentation"><a href="#wall" aria-controls="wall" role="tab" data-toggle="tab">Walls</a></li>
 							    <li role="presentation"><a href="#roof" aria-controls="roof" role="tab" data-toggle="tab">roof</a></li>
-							    <li role="presentation"><a href="#Windows" aria-controls="Windows" role="tab" data-toggle="tab">Windows</a></li>
+							    <li role="presentation"><a href="#window" aria-controls="window" role="tab" data-toggle="tab">Windows</a></li>
 							  </ul>
 
 							  <!-- Tab panes -->
 							  <div class="tab-content">
-							    <div role="tabpanel" class="tab-pane active" id="Floors">
+							    <div role="tabpanel" class="tab-pane active" id="floor">
 										<div class="container-fluid">
-
-											<div class="row">
-												<div class="col-sm-4">
-													<div class="row"><button type="button" id='btn_add_floor_36' class="btn btn-default">3.6m</button></div>
-												</div>
-												<div class="col-sm-4">
-													<div class="row"><button type="button" id='btn_add_floor_48' class="btn btn-default">4.8m</button></div>
-												</div>
-											</div>
+                      <!-- buttons go here -->
 										</div>
 									</div>
 
-									<div role="tabpanel" class="tab-pane" id="Walls">
+									<div role="tabpanel" class="tab-pane" id="wall">
 										<div class="container-fluid">
-
-											<div class="row"><button type="button" id='btn_add_wall' class="btn btn-default">Wall</button></div>
+                      <!-- buttons go here -->
 										</div>
 									</div>
 
 									<div role="tabpanel" class="tab-pane" id="roof">
 										<div class="container-fluid">
-
-											<div class="row"><button type="button" id='btn_add_roof' class="btn btn-default">Roof</button></div>
-										</div>
+                      <!-- buttons go here -->
+                    </div>
 									</div>
 
-							    <div role="tabpanel" class="tab-pane" id="Windows">
+							    <div role="tabpanel" class="tab-pane" id="window">
 										<div class="container-fluid">
-
-											<div class="row"><button type="button" id='btn_add_window' class="btn btn-default">Window</button></div>
-										</div>
+                      <!-- buttons go here -->
+                    </div>
 							  	</div>
 
 
@@ -88,87 +83,6 @@
 	         		</div>
 	       		</div>
 	     		</div>
-				<!-- <div class="panel panel-default">
-	       	<div class="panel-heading">
-	         	<h4 class="panel-title">
-	           	<a data-toggle="collapse" title="klik hier om de module indeling te kiezen" data-parent="#accordion" href="#collapse2">Opties<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
-	         	</h4>
-	       	</div>
-	       	<div id="collapse2" class="panel-collapse collapse">
-	         	<div class="panel-body">
-	           	<div class="container-fluid">
-	             	<div class="row">
-	               	<div class="col-sm-8">IR-heaters</div>
-	               	<div class="col-sm-4"><input id="numberInputHeaters" style="width:50px;" type="number" name="quantity" min="0" value="6" max="16" onchange='defineHeaterPositions(this.value)'></input></div>
-	             	</div>
-								<div class="row">
-									&nbsp
-	             	</div>
-	             	<div class="row">
-	               	<div class="col-sm-8">Zoutvernevelaar</div>
-	               	<div class="col-sm-4"><input type="checkbox" id="cboxVaporizer"  value='2' onchange='addOption(this.value, this.checked)' /></div>
-	             	</div>
-	             	<div class="row">
-		              <div class="col-sm-8">Rugsteun</div>
-		              <div class="col-sm-4"><input type="checkbox" id="cboxBackrest"  value='3' onchange='addOption(this.value, this.checked)' /></div>
-	             	</div>
-	             	<div class="row">
-	               	<div class="col-sm-8">Aromatherapie</div>
-	               	<div class="col-sm-4"><input type="checkbox" id="cboxAroma"  value='4' onchange='addOption(this.value, this.checked)' /></div>
-	             	</div>
-							</div>
-	         	</div>
-	       	</div>
-	     	</div> -->
-	     	<!-- <div class="panel panel-default">
-	      	<div class="panel-heading">
-	         	<h4 class="panel-title">
-	           	<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Materiaal<i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
-	         	</h4>
-	       	</div>
-	       	<div id="collapse3" class="panel-collapse collapse">
-						<div class="panel-body">
-							<div class='row'>
-								<div class="col-sm-4">
-									Exterieur
-								</div>
-								<div class="col-sm-4">
-									<select id="colorselector1">
-								    <option value="1" data-color="#ffffff">White</option>
-								    <option value="2" data-color="#333333" selected="selected">Black</option>
-								    <option value="3" data-color="#969690">Grey</option>
-								    <option value="4" data-color="#F2E16F">Yellow</option>
-									</select>
-								</div>
-							</div>
-							<div class='row'>
-								<div class="col-sm-4">
-									Interieur
-								</div>
-								<div class="col-sm-4">
-									<select id="colorselector2">
-								    <option value="1" data-color="#ffffff" selected="selected">White</option>
-								    <option value="2" data-color="#333333">Black</option>
-								    <option value="3" data-color="#969690">Grey</option>
-								    <option value="4" data-color="#F2E16F">Yellow</option>
-									</select>
-								</div>
-							</div>
-							<div class='row'>
-								<div class="col-sm-4">
-									Vloer
-								</div>
-								<div class="col-sm-4">
-									<select id="colorselector3">
-								    <option value="1" data-color="#ffffff">White</option>
-								    <option value="2" data-color="#333333">Black</option>
-								    <option value="3" data-color="#C28B6B" selected="selected">Bamboo</option>
-									</select>
-								</div>
-							</div>
-						</div>
-	       	</div>
-	     	</div> -->
 	     	<div class="panel panel-default">
 	      	<div class="panel-heading">
 	         	<h4 class="panel-title">
@@ -293,63 +207,17 @@
 
 	<script src="lib/gui/main.js"></script>
 	<script src="lib/draggable.js"></script>
-	<script src="lib/block.js"></script>
-	<script src="lib/cabine_grid.js"></script>
-	<script src="lib/wall.js"></script>
-	<script src="lib/floor.js"></script>
-	<script src="lib/roof.js"></script>
-	<script src="lib/cell.js"></script>
-	<script src="lib/cap.js"></script>
-	<script src="lib/bench.js"></script>
+	<script src="lib/blocks/block.js"></script>
+	<script src="lib/blocks/wall.js"></script>
+	<script src="lib/blocks/floor.js"></script>
+	<script src="lib/blocks/floor_end.js"></script>
+	<script src="lib/blocks/roof.js"></script>
 	<script src="lib/browser_detector.js"></script>
 	<script src="lib/json_loader.js"></script>
 	<script src="lib/viewer.js"></script>
 
 	<script>
 
-		$('#colorselector1').colorselector({
-          callback: function (value, color, title) {
-						setColor('exterior', color);
-          }
-    });
-		$('#colorselector2').colorselector({
-          callback: function (value, color, title) {
-						setColor('interior', color);
-          }
-    });
-
-		$('#colorselector3').colorselector({
-          callback: function (value, color, title) {
-						setColor('floor', color);
-          }
-    });
-
-		function handleChange(input) {
-			if (input.value < parseInt(input.min)) input.value = parseInt(input.min);
-			if (input.value > parseInt(input.max)) input.value = parseInt(input.max);
-		}
-
-
-
-		function defineHeaterPositions(number){
-			var slots = cabine.walls[2].n;
-			var array = [];
-
-			if (number>slots){
-				number = slots;
-				$('#numberInputHeaters').val(slots);
-			}
-			array.push(0);
-			if (number > 0 ) {
-				//add element 0
-				for(var i=1; i< number; i++){
-						array.push(Math.round(i*slots/number));
-				}
-			}
-			console.log(array);
-
-
-		}
 
 	</script>
 
