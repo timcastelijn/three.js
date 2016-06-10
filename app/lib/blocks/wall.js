@@ -8,8 +8,11 @@ function Wall(object, selector){
 
   var type = object.type;
 
-  var index = getMaterialIndex(type, 'cladding');
-  this.mesh_object.material.materials[index] = new THREE.MeshPhongMaterial({map:texture, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading});
+  var material = getMaterialIndex(type, 'cladding');
+
+  if(material){
+    material.map = texture;
+  }
 
 }
 

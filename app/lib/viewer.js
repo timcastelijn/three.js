@@ -186,7 +186,6 @@ function updateMaterials(){
             console.log("update ", name);
             _material_table[type][name] = config.materials.name;
 
-            
           }
         }
       }

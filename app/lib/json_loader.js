@@ -7,8 +7,6 @@ var modelLoadedCallback = function(type, config_file){
     _material_table[type] = {}
     for (var i = 0; i < materials.length; i++) {
 
-      _material_table[type][materials[i].name] = i;
-      console.log(type, materials[i].name, i);
 
       if (materials[i].opacity<1) {
 
@@ -23,8 +21,12 @@ var modelLoadedCallback = function(type, config_file){
           shading: THREE.FlatShading } );
 
       }else{
-        materials[i] = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+        var name = materials[i].name;
+        materials[i] = new THREE.MeshPhongMaterial( { name:name, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+        _material_table[type][name] = materials[i];
+
       }
+
     }
 
     var material = new THREE.MultiMaterial( materials );
