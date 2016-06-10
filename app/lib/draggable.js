@@ -249,6 +249,8 @@ Selector.prototype.selectObject = function(intersect){
 
   this.selected = intersect.object.parent;
 
+  console.log(this.selected);
+
   this.selected.setMaterial('selected')
 }
 

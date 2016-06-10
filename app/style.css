@@ -14,10 +14,10 @@ body {
 }
 
 #collapse1 * button{
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
   padding: 3px;
-  /*background-color: red;*/
+    /*background-color: red;*/
 }
 
 #view-modus{

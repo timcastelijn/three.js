@@ -30,6 +30,7 @@ function Block(geometry, selector){
   this.geometry = cloneGeometry(_mesh_objects[this.type].geometry);
   this.material.basic = _mesh_objects[this.type].material
   this.mesh_object = new THREE.Mesh(this.geometry, this.material.basic);
+  this.mesh_object.name = "mesh_object";
   this.add(this.mesh_object)
 
   this.size = geometry.size;
@@ -43,12 +44,14 @@ function Block(geometry, selector){
 
 
   this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
+  this.edges.name = "edgesHelper";
   this.add(this.edges);
 
 
   this.addPatches();
 
   var axisHelper = new THREE.AxisHelper( 0.2 );
+  axisHelper.name = 'axisHelper';
   this.add( axisHelper );
 
   // add block to the selector

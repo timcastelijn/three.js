@@ -5,7 +5,7 @@ function updatePriceGui(){
 _button_table = {
   floor:{
     normal:{
-      "l2.4":{button_text:"2.4m", image:'images/label1.jpg', type:"floor", size:[2.4, 0.3, 0.3]},
+      "l2.4":{button_text:"2.4m", type:"floor", size:[2.4, 0.3, 0.3]},
       "l3.6":{button_text:"3.6m", type:"floor", size:[3.6, 0.3, 0.3]},
       "l4.8":{button_text:"4.8m", type:"floor", size:[4.8, 0.3, 0.3]},
       "l5.4":{button_text:"5.4m", type:"floor", size:[5.4, 0.3, 0.3]},
@@ -18,7 +18,7 @@ _button_table = {
   },
   wall:{
     normal:{
-      "h2.7":{button_text:"2.7m", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+      "h2.7":{button_text:"2.7m", image:"images/wo-i-600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
       "h3.0":{button_text:"3.0m", type:"wo_i_600", size:[0.6, 3.0, 0.3]},
     },
     corner_pieces:{
