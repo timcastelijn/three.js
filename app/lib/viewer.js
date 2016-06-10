@@ -4,6 +4,8 @@ var container, stats;
 var camera, controls, scene, scene_geometry, renderer;
 var dragger, selector;
 var _mesh_objects =[];
+var _material_table = {};
+
 var price =0;
 
 var document_edited = false;
@@ -137,6 +139,19 @@ function init() {
 
   loadBlocks();
 
+
+  // var geoi = new THREE.BoxGeometry(1,1,1);
+  // var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
+  // texture.wrapS = THREE.RepeatWrapping;
+  // texture.wrapT = THREE.RepeatWrapping;
+  // texture.repeat.set( 1, 1 );
+  //
+  // var mater3 = new THREE.MeshBasicMaterial( { color: 0xffffff, map:texture} );
+  // var meshi = new THREE.Mesh(geoi, mater3);
+  //
+  // console.log(mater3.color);
+  // scene.add(meshi)
+
   return true;
 }
 
@@ -159,6 +174,27 @@ function loadBlocks(){
 
 }
 
+function updateMaterials(){
+
+  for (var type in _material_table) {
+    if (_material_table.hasOwnProperty(type)) {
+
+      for (var name in _material_table[type]) {
+        if (_material_table[type].hasOwnProperty(name)) {
+
+          if(config.materials.name){
+            console.log("update ", name);
+            _material_table[type][name] = config.materials.name;
+
+            
+          }
+        }
+      }
+
+    }
+  }
+}
+
 function addObject(object, fid){
 
   // create new fabfield-id
@@ -166,16 +202,17 @@ function addObject(object, fid){
 
   if(!config.geometry[fid]){
     // add to config with new id
-    var fid   = object.type + "_" + new Date().getTime();
-    object.fid = fid;
+    fid   = object.type + "_" + new Date().getTime();
 
     config.geometry[fid] = object;
     console.log("addconfig", fid);
   }
+  object.fid = fid;
 
   // create new block
   var type_class = block_files[type].type_class;
   var block = new type_class(object, selector);
+
   block.setTransformations(object.position, object.rotation )
   scene_geometry.add(block);
 

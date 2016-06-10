@@ -22,6 +22,7 @@ function Block(geometry, selector){
 
   this.type     = geometry.type;
   this.name     = geometry.type;
+
   this.fid      = geometry.fid;
 
 

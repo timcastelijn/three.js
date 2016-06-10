@@ -1,5 +1,15 @@
-function Wall(geometry, selector){
-  Block.call( this, geometry, selector );
+function Wall(object, selector){
+  Block.call( this, object, selector );
+
+  var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 1, 1 );
+
+  var type = object.type;
+
+  var index = getMaterialIndex(type, 'cladding');
+  this.mesh_object.material.materials[index] = new THREE.MeshPhongMaterial({map:texture, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading});
 
 }
 

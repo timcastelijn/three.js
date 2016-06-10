@@ -121,6 +121,20 @@ $(function() {
     }
   }
 
+  // material selection
+  /////////////////////
+  function selectMaterial(e){
+    console.log($(this)[0].selectedIndex);
+    if($(this)[0].selectedIndex ==0){
+      config.materials.cladding = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+    }else{
+
+    }
+    updateMaterials();
+
+  }
+
+  $("#select-material").change(selectMaterial)
 
   function saveConfig(event){
 

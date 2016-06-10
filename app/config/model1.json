@@ -1,4 +1,5 @@
 {
+  "materials":{},
   "geometry":{
     "1":{"type":"floor", "position":["0","0","0"], "size":["3.6","0","0"], "rotation":["0","0","0"]},
     "2":{"type":"floor", "position":["0","0","0.3"], "size":["3.6","0","0"], "rotation":["0","0","0"]},

@@ -4,9 +4,12 @@ var modelLoadedCallback = function(type, config_file){
     geometry.computeFaceNormals();
     geometry.computeVertexNormals();
 
-
+    _material_table[type] = {}
     for (var i = 0; i < materials.length; i++) {
-      console.log(materials[i]);
+
+      _material_table[type][materials[i].name] = i;
+      console.log(type, materials[i].name, i);
+
       if (materials[i].opacity<1) {
 
         materials[i] = new THREE.MeshPhongMaterial( {
@@ -19,13 +22,6 @@ var modelLoadedCallback = function(type, config_file){
           vertexColors: THREE.FaceColors,
           shading: THREE.FlatShading } );
 
-      }else if(materials[i].name == "cladding"){
-        var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set( 1, 1 );
-
-        materials[i] = new THREE.MeshPhongMaterial( { map:texture, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
       }else{
         materials[i] = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
       }
@@ -42,4 +38,8 @@ var modelLoadedCallback = function(type, config_file){
       loadConfig(config_file)
     }
   }
+}
+
+function getMaterialIndex(type, name){
+  return _material_table[type][name];
 }
