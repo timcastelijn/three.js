@@ -11,7 +11,6 @@ var price =0;
 var document_edited = false;
 var _models_loading = 0;
 
-
 var SHADOWS_ENABLED = false;
 var _AXIS_HELPERS = true;
 
@@ -21,6 +20,7 @@ var block_files = {
   floor:    {type:"floor",    model:'models/floor.json',     type_class:Floor,    price:560,    mt:[0]     },
   fl_e:     {type:"fl_e",     model:'models/floor_end.json', type_class:FloorEnd, price:560,    mt:[0]     },
   roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,     price:640,    mt:[1,2,3] },
+  ro_e:     {type:"ro_e",     model:'models/ro_e.json',      type_class:RoofEnd,  price:640,    mt:[1,2,3] },
   wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     type_class:Wall,     price:640,    mt:[1]     },
   wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  type_class:Wall,     price:640,    mt:[1]     },
   wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  type_class:Wall,     price:640,    mt:[1]     },
@@ -199,7 +199,6 @@ function updateMaterials(){
 function addObject(object, fid){
 
   // create new fabfield-id
-  console.log(object);
   var type  = object.type;
 
   if(!config.geometry[fid]){

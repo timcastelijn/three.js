@@ -31,6 +31,11 @@ _button_table = {
       "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:30},
       "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:30},
     },
+    "30º end":{
+      "l2.4":{button_text:"3.6m", type:"ro_e", size:[2.4, 1, 0.3], angle:30},
+      "l3.6":{button_text:"3.6m", type:"ro_e", size:[3.6, 1, 0.3], angle:30},
+      "l4.8":{button_text:"3.6m", type:"ro_e", size:[4.8, 1, 0.3], angle:30},
+    },
     "45º":{
       "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:45},
       "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:45},

@@ -19,9 +19,7 @@ Roof.prototype.setMorphtargets = function () {
   var l = this.size[0];
 
   this.mesh_object.morphTargetInfluences[ 4] = 0.3 / Math.cos(angle_rad);
-  console.log(h/l*0.3);
   this.mesh_object.morphTargetInfluences[5] = 0.3 / l * h
-  // this.mesh_object.morphTargetInfluences[ 4] = 1;
 };
 
 
