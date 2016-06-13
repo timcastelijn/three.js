@@ -1,6 +1,21 @@
 function RoofEnd(object, selector){
   Block.call( this, object, selector );
 
+  this.geometry.uvsNeedUpdate = true;
+
+  var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( this.size[0], this.size[1] );
+
+  var type = object.type;
+
+  var material = getMaterialIndex(type, 'cladding');
+
+  if(material){
+    material.map = texture;
+  }
+
 }
 
 RoofEnd.prototype = Object.create(Block.prototype);
@@ -18,9 +33,5 @@ RoofEnd.prototype.setMorphtargets = function () {
 
 
 RoofEnd.prototype.addPatches = function(){
-  this.patches = {},
-  this.snap_areas ={
-
-  }
 
 }

@@ -415,7 +415,7 @@ Selectable.prototype.snap = function(intersect){
   //iterate over faceIndexes
   var snap_areas = this.getSnapAreas(intersect_parent);
 
-  console.log(m_index, snap_areas);
+  // console.log(m_index, snap_areas);
 
   if(snap_areas){
     // this can snap to intersected object

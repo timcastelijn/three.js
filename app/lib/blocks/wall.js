@@ -4,7 +4,7 @@ function Wall(object, selector){
   var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 1, 1 );
+  texture.repeat.set( this.size[0], this.size[1] );
 
   var type = object.type;
 
