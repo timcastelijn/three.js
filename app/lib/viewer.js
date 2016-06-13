@@ -13,6 +13,8 @@ var _models_loading = 0;
 
 
 var SHADOWS_ENABLED = false;
+var _AXIS_HELPERS = true;
+
 
 var block_files = {
   wall:     {type:"wall",     model:'models/wo_i_600.json',  type_class:Wall,     price:480,    mt:[1]     },
@@ -197,7 +199,8 @@ function updateMaterials(){
 function addObject(object, fid){
 
   // create new fabfield-id
-  var type  = object.type
+  console.log(object);
+  var type  = object.type;
 
   if(!config.geometry[fid]){
     // add to config with new id

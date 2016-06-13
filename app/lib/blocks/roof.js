@@ -1,43 +1,34 @@
-function Roof(geometry, selector){
-  Block.call( this, geometry, selector );
+function Roof(object, selector){
+  Block.call( this, object, selector );
 
 }
 
 Roof.prototype = Object.create(Block.prototype);
+
+Roof.prototype.setMorphtargets = function () {
+
+  var angle_rad = this.angle/180*Math.PI;
+
+  this.size[1] =  this.size[0]*Math.tan(angle_rad);
+
+  this.mesh_object.morphTargetInfluences[ 1] = this.size[0];
+  this.mesh_object.morphTargetInfluences[ 2] = this.size[1];
+  this.mesh_object.morphTargetInfluences[ 3] = this.size[2];
+
+  var h = this.size[1];
+  var l = this.size[0];
+
+  this.mesh_object.morphTargetInfluences[ 4] = 0.3 / Math.cos(angle_rad);
+  console.log(h/l*0.3);
+  this.mesh_object.morphTargetInfluences[5] = 0.3 / l * h
+  // this.mesh_object.morphTargetInfluences[ 4] = 1;
+};
+
 
 Roof.prototype.addPatches = function(){
   this.patches = {},
   this.snap_areas ={
 
   }
-
-}
-
-Roof.prototype.updateSize = function(){
-
-
-
-  if(!this.mesh_object.morphTargetInfluences){
-
-    return;
-
-  }
-
-  var temp = this.size[2];
-  this.size[2] = temp * Math.pow(1 + Math.pow((this.size[0]/this.size[1]), 2 ) , 0.5);
-
-
-  for (var i = 0; i < this.size.length; i++) {
-    if(this.size[i]){
-      var size = parseFloat(this.size[i]);
-      this.mesh_object.morphTargetInfluences[ this.mt_index[i] ] = size;
-    }
-  }
-
-  this.updateVertices()
-  this.mesh_object.updateMorphTargets();
-  this.mesh_object.geometry.computeBoundingSphere();
-  this.mesh_object.geometry.computeBoundingBox();
-
 
 }

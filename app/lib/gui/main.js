@@ -26,20 +26,20 @@ _button_table = {
     }
   },
   roof:{
-    "h1.2":{
-      "l1.2_h3.6":{button_text:"3.6m", type:"roof", size:[1.2, 1.2, 0.3]},
-      "l1.8_h2.4":{button_text:"3.6m", type:"roof", size:[1.8, 1.2, 0.3]},
-      "l2.4_h1.2":{button_text:"3.6m", type:"roof", size:[2.4, 1.2, 0.3]},
+    "30º":{
+      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:30},
+      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:30},
+      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:30},
     },
-    "h2.4":{
-      "l1.2_h2.4":{button_text:"3.6m", type:"roof", size:[1.2, 2.4, 0.3]},
-      "l1.8_h2.4":{button_text:"3.6m", type:"roof", size:[1.8, 2.4, 0.3]},
-      "l2.4_h2.4":{button_text:"3.6m", type:"roof", size:[2.4, 2.4, 0.3]},
+    "45º":{
+      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:45},
+      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:45},
+      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:45},
     },
-    "h3.6":{
-      "l1.2_h3.6":{button_text:"3.6m", type:"roof", size:[1.2, 3.6, 0.3]},
-      "l1.8_h3.6":{button_text:"3.6m", type:"roof", size:[1.8, 3.6, 0.3]},
-      "l2.4_h3.6":{button_text:"3.6m", type:"roof", size:[2.4, 3.6, 0.3]},
+    "60º":{
+      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:60},
+      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:60},
+      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:60},
     },
   },
   window:{
@@ -99,7 +99,7 @@ $(function() {
 
               var img = item.image? ('<img src="' + item.image + '" width="35"/>'): name3;
               // create buttons
-              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size}, startBlockAdder )
+              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
 
 
               $col.append($button);
@@ -112,12 +112,20 @@ $(function() {
   }
 
   function startBlockAdder(event){
-    var type = event.data.type;
-    var size = event.data.size;
+
+    var object = {
+      type:event.data.type,
+      size:event.data.size,
+      position:[0,0,0],
+      rotation:[0,0,0],
+      angle:event.data.angle,
+    }
+
+    console.log(object);
 
     if(selector){
-      selector.keep_adding = {type:type, size:size};
-      selector.addBlock(type, size);
+      selector.keep_adding = object;
+      selector.addBlock(object);
     }
   }
 

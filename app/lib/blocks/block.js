@@ -35,9 +35,11 @@ function Block(geometry, selector){
   this.add(this.mesh_object)
 
   this.size = geometry.size;
+  this.angle = geometry.angle;
+
   this.mt_index = block_files[this.type].mt
 
-
+  this.setMorphtargets();
 
   this.updateSize();
 
@@ -51,9 +53,11 @@ function Block(geometry, selector){
 
   this.addPatches();
 
-  var axisHelper = new THREE.AxisHelper( 0.2 );
-  axisHelper.name = 'axisHelper';
-  this.add( axisHelper );
+  if(_AXIS_HELPERS){
+    var axisHelper = new THREE.AxisHelper( 0.2 );
+    axisHelper.name = 'axisHelper';
+    this.add( axisHelper );
+  }
 
   // add block to the selector
   this.setSelector(this.mesh_object, selector)
@@ -63,15 +67,10 @@ function Block(geometry, selector){
 Block.prototype = new Selectable();
 Block.prototype.constructor = Block;
 
-
-Block.prototype.updateSize = function(){
-
-
+Block.prototype.setMorphtargets = function () {
 
   if(!this.mesh_object.morphTargetInfluences){
-
     return;
-
   }
 
   for (var i = 0; i < this.mt_index.length; i++) {
@@ -81,6 +80,9 @@ Block.prototype.updateSize = function(){
 
     this.mesh_object.morphTargetInfluences[ i + 1] = size;
   }
+};
+
+Block.prototype.updateSize = function(){
 
   this.updateVertices()
   this.mesh_object.updateMorphTargets();
@@ -101,11 +103,15 @@ Block.prototype.updateMaterials = function(){
 }
 
 Block.prototype.updateVertices = function(){
-
+  var morphTargets = this.mesh_object.geometry.morphTargets;
+  var morphInfluences = this.mesh_object.morphTargetInfluences;
+  // 
+  // if (this instanceof Roof){
+  //   for ( var t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+  //     console.log(t,  morphInfluences[ t ]);
+  //   }
+  // }
   for (var i = 0; i < this.mesh_object.geometry.vertices.length; i++) {
-
-    var morphTargets = this.mesh_object.geometry.morphTargets;
-    var morphInfluences = this.mesh_object.morphTargetInfluences;
 
     var vA = new THREE.Vector3();
     var tempA = new THREE.Vector3();
@@ -113,6 +119,7 @@ Block.prototype.updateVertices = function(){
     var fvA = this.mesh_object.geometry.vertices[ i ]; // the vertex to transform
 
     for ( var t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+
 
         var influence = morphInfluences[ t ];
 

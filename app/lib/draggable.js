@@ -85,15 +85,7 @@ Selector.prototype.deleteObject=function(object){
     this.selected = null;
   }
   if(object){
-    scene_geometry.remove(object);
-
-    // remove all children of selected from selectables
-    for(var i =0; i<object.children_meshes.length; i++){
-      var selected_index = this.selectables.indexOf(object.children_meshes[i]);
-      this.selectables.splice(selected_index, 1)
-    }
-
-    delete config.geometry[object.fid];
+    object.delete();
 
     price -= block_files[object.type].price;
     updatePriceGui()
@@ -301,11 +293,9 @@ Selector.prototype.updateConfig=function(event){
 
 
 
-Selector.prototype.addBlock=function(type, size){
+Selector.prototype.addBlock=function(object){
 
-    var object = {type:type, size:size, position:[0,0,0], rotation:[0,0,0]}
-    var block = addObject(object)
-
+    var block = addObject(object);
 
     this.selected = block;
     this.dragged = block;
@@ -337,7 +327,7 @@ Selector.prototype.onMouseUp=function(event){
     } else {
       // placement succesful
       if(this.keep_adding){
-        this.addBlock(this.keep_adding.type, this.keep_adding.size);
+        this.addBlock(this.keep_adding);
       }
     }
 
@@ -451,6 +441,21 @@ Selectable.prototype.moveOverPlane = function(){
     this.position.copy( intersects[ 0 ].point );
 
   }
+}
+
+Selectable.prototype.delete = function(){
+
+  scene_geometry.remove(this);
+
+  // remove all children of selected from selectables
+  for(var i =0; i<this.children_meshes.length; i++){
+    var selected_index = this.selector.selectables.indexOf(this.children_meshes[i]);
+    this.selector.selectables.splice(selected_index, 1)
+  }
+
+  delete config.geometry[this.fid];
+
+
 }
 
 
