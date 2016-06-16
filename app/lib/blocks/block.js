@@ -105,7 +105,7 @@ Block.prototype.updateMaterials = function(){
 Block.prototype.updateVertices = function(){
   var morphTargets = this.mesh_object.geometry.morphTargets;
   var morphInfluences = this.mesh_object.morphTargetInfluences;
-  // 
+  //
   // if (this instanceof Roof){
   //   for ( var t = 0, tl = morphTargets.length; t < tl; t ++ ) {
   //     console.log(t,  morphInfluences[ t ]);
@@ -137,9 +137,9 @@ Block.prototype.updateVertices = function(){
 }
 
 Block.prototype.setTransformations = function(position, rotation){
-  this.position.set(parseFloat(position[0]),parseFloat(position[1]),parseFloat(position[2]));
+  this.position.set( position[0] , position[1], position[2]);
 
-  this.rotation.set(0, parseFloat(rotation[1])/180*Math.PI, 0);
+  this.rotation.set(rotation[0], rotation[1]/180*Math.PI, rotation[2]/180*Math.PI);
 }
 
 Block.prototype.addPatches = function(){

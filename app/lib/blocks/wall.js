@@ -1,22 +1,20 @@
 function Wall(object, selector){
   Block.call( this, object, selector );
 
-  var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( this.size[0], this.size[1] );
-
-  var type = object.type;
-
-  var material = getMaterialIndex(type, 'cladding');
-
-  if(material){
-    material.map = texture;
-  }
-
 }
 
 Wall.prototype = Object.create(Block.prototype);
+
+
+Wall.prototype.setMorphtargets = function () {
+
+
+  var n = (this.size[0] == 0.6)? 1: 0;
+
+  this.mesh_object.morphTargetInfluences[ 1] = n;
+  this.mesh_object.morphTargetInfluences[ 2] = this.size[1];
+
+};
 
 Wall.prototype.addPatches = function(){
   this.patches = {

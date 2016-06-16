@@ -3,18 +3,6 @@ function RoofEnd(object, selector){
 
   this.geometry.uvsNeedUpdate = true;
 
-  var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( this.size[0], this.size[1] );
-
-  var type = object.type;
-
-  var material = getMaterialIndex(type, 'cladding');
-
-  if(material){
-    material.map = texture;
-  }
 
 }
 

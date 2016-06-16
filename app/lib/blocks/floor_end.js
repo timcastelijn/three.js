@@ -59,15 +59,15 @@ FloorEnd.prototype.delete = function(){
 FloorEnd.prototype.addPatches = function(){
   this.snap_areas ={
     wo:{
-      4:{position_min:[0.3, 0.3, 0], position_max:[this.size[0] - 0.3, 0.3, 0.0], offset:[0.3, 0,0], rotation:- 0.5 * Math.PI }
+      patch_wall3:{position_min:[0.3, 0.3, 0], position_max:[this.size[0] - 0.3, 0.3, 0.0], offset:[0.3, 0,0], rotation:- 0.5 * Math.PI }
     },
     wo_oc:{
-      1:{position:new THREE.Vector3(this.size[0],0.3,0.3), rotation:Math.PI},
-      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:0},
+      patch_wall1:{position:[0, 0.3, 0],                rotation:[0,0,0]},
+      patch_wall2:{position:[this.size[0], 3.0, 0 ],  rotation:[0, 0,Math.PI]},
     },
     ro:{
       1:{position:new THREE.Vector3(this.size[0],0.3,0.3), rotation:Math.PI},
-      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:0},
+      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:Math.PI/3},
     }
 
   }

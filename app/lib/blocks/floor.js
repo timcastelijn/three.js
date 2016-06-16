@@ -27,12 +27,12 @@ Floor.prototype.addPatches = function(){
   },
   this.snap_areas ={
     wo:{
-      1:{position:new THREE.Vector3(this.size[0],0.3,0.3), rotation:Math.PI},
-      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:0}
+      patch_wall2:{position:[this.size[0], 0.3, 0.3 ],  rotation:[0, Math.PI, 0] },
+      patch_wall1:{position:[0, 0.3, 0],                rotation:[0,0,0]}
     },
     ro:{
-      1:{position:new THREE.Vector3(this.size[0],0.3,0.3), rotation:Math.PI},
-      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:0}
+      patch_wall2:{position:[this.size[0],0.3,0.3], rotation:[0, Math.PI, 0] },
+      patch_wall1:{position:[0, 0.3, 0],            rotation:[0, 0, 0] }
     },
     // fl:{
     //   // 2:{position:new THREE.Vector3(0, 0.0, 0.3)}

@@ -139,11 +139,26 @@ $(function() {
   function selectMaterial(e){
     console.log($(this)[0].selectedIndex);
     if($(this)[0].selectedIndex ==0){
-      config.materials.cladding = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+      _materials.cladding.map = textures.aluminium;
+
     }else{
+      _materials.cladding.map = textures.wood
 
     }
-    updateMaterials();
+
+    _materials.cladding.map.wrapS = THREE.RepeatWrapping
+    _materials.cladding.map.wrapT = THREE.RepeatWrapping
+    _materials.cladding.map.repeat.set(1,1);
+    console.log(_materials.cladding.map);
+    // scene_geometry.traverse(function(child){
+    //   if(child.mesh_object){
+    //
+    //     // console.log(child.mesh_object);
+    //     child.mesh_object.geometry.uvsNeedUpdate = true;
+    //     child.mesh_object.material.materials[3];
+    //
+    //   }
+    // });
 
   }
 

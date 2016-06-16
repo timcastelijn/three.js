@@ -408,27 +408,23 @@ Selectable.prototype.getSnapAreas = function(intersect_parent){
 }
 Selectable.prototype.snap = function(intersect){
 
-  var intersect_parent = intersect.object.parent;
 
+  var intersect_parent = intersect.object.parent;
   var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
 
-  //iterate over faceIndexes
+  // get snap_areas and the id of the intersected face
   var snap_areas = this.getSnapAreas(intersect_parent);
+  var patch_id = _patch_table[intersect_parent.type][m_index];
 
-  // console.log(m_index, snap_areas);
+  console.log(patch_id);
 
-  if(snap_areas){
-    // this can snap to intersected object
-    for (index in snap_areas) {
-      if(m_index == index){
-        this.moveToArea(snap_areas[index], intersect)
-        return true
-      }
-    }
-  }else {
-    return false;
+  if(snap_areas && snap_areas[patch_id]){
+
+    this.moveToArea(snap_areas[patch_id], intersect)
+    return true;
   }
   this.position.copy(intersect.point)
+
 }
 
 Selectable.prototype.moveOverPlane = function(){
@@ -464,14 +460,17 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
 
 
   if (snap_area.position){
+
     // move object to patch reference point
-    var vector = intersect.object.parent.localToWorld(new THREE.Vector3().copy(snap_area.position) )
+    var vector = intersect.object.parent.localToWorld(new THREE.Vector3().fromArray(snap_area.position) );
     this.position.copy( vector  );
 
-
     //rotate if possible
-    var rot_y = (snap_area.rotation)?  snap_area.rotation: 0;
-    this.rotation.y =   intersect.object.parent.rotation.y + rot_y
+    var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
+    // this.rotation.copy(vec_rot);
+    this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
+
+    console.log(vector, vec_rot);
 
     this.overlap = this.selector.bboxOverLap()
     return;

@@ -3,8 +3,7 @@ var browser_ok = browser_detector.detect()
 var container, stats;
 var camera, controls, scene, scene_geometry, renderer;
 var dragger, selector;
-var _mesh_objects =[];
-var _material_table = {};
+var _mesh_objects =[], _patch_table ={};
 
 var price =0;
 
@@ -15,27 +14,40 @@ var SHADOWS_ENABLED = false;
 var _AXIS_HELPERS = true;
 
 
+textures = {}
+
+textures.wood = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
+textures.wood.wrapS = THREE.RepeatWrapping;
+textures.wood.wrapT = THREE.RepeatWrapping;
+textures.wood.repeat.set( 1,1 );
+
+textures.aluminium = new THREE.TextureLoader().load( "textures/dots.jpg" );
+textures.aluminium.wrapS = THREE.RepeatWrapping;
+textures.aluminium.wrapT = THREE.RepeatWrapping;
+textures.aluminium.repeat.set( 1,1 );
+
+
+
+var _materials = {
+  cladding:new THREE.MeshPhongMaterial( { map:textures.wood, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ),
+  glass:new THREE.MeshPhongMaterial( {color: 0xeeeeff, shininess:0.5, reflectivity:0.2, transparent:true, opacity:0.2, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ),
+  basic:new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } )
+}
+
 var block_files = {
-  wall:     {type:"wall",     model:'models/wo_i_600.json',  type_class:Wall,     price:480,    mt:[1]     },
-  floor:    {type:"floor",    model:'models/floor.json',     type_class:Floor,    price:560,    mt:[0]     },
-  fl_e:     {type:"fl_e",     model:'models/floor_end.json', type_class:FloorEnd, price:560,    mt:[0]     },
+  floor:    {type:"floor",    model:'models/fl.json',     type_class:Floor,    price:560,    mt:[0]     },
+  fl_e:     {type:"fl_e",     model:'models/fl_e.json',   type_class:FloorEnd, price:560,    mt:[0]     },
   roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,     price:640,    mt:[1,2,3] },
   ro_e:     {type:"ro_e",     model:'models/ro_e.json',      type_class:RoofEnd,  price:640,    mt:[1,2,3] },
-  wo_oc:    {type:"wo_oc",    model:'models/wo-oc.json',     type_class:Wall,     price:640,    mt:[1]     },
-  wo_i_300: {type:"wo_i_300", model:'models/wo-i-300.json',  type_class:Wall,     price:640,    mt:[1]     },
-  wo_i_600: {type:"wo_i_600", model:'models/wo_i_600.json',  type_class:Wall,     price:640,    mt:[1]     },
-  wo_w_900: {type:"wo_w_900", model:'models/wo-w-900.json',  type_class:Wall,     price:640,    mt:[1]     },
+  wo_oc:    {type:"wo_oc",    model:'models/wo_oc.json',     type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_300: {type:"wo_i_300", model:'models/wo_i.json',      type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i.json',      type_class:Wall,     price:640,    mt:[1,2]     },
+  wo_w_900: {type:"wo_w_900", model:'models/wo_w_900.json',  type_class:Wall,     price:640,    mt:[2,1]     },
 }
 
 
 var config = {}
 
-var colors = {
-  exterior:"#333333",
-  interior:"#ffffff",
-  floor:"#C28B6B",
-  bamboo:"#C28B6B",
-}
 
 if (browser_ok){
 
@@ -58,7 +70,7 @@ function init() {
   camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.05, 100 );
   camera.position.set( 0, 1.5, 2.5 );
 
-  scene.add( new THREE.AmbientLight( 0x707070 ) );
+  scene.add( new THREE.AmbientLight( 0x888888 ) );
 
 
 
@@ -142,17 +154,13 @@ function init() {
   loadBlocks();
 
 
+
   // var geoi = new THREE.BoxGeometry(1,1,1);
-  // var texture = new THREE.TextureLoader().load( "textures/underlayment.jpg" );
-  // texture.wrapS = THREE.RepeatWrapping;
-  // texture.wrapT = THREE.RepeatWrapping;
-  // texture.repeat.set( 1, 1 );
+  // var meshi = new THREE.Mesh(geoi, mi.mat);
   //
-  // var mater3 = new THREE.MeshBasicMaterial( { color: 0xffffff, map:texture} );
-  // var meshi = new THREE.Mesh(geoi, mater3);
-  //
-  // console.log(mater3.color);
   // scene.add(meshi)
+
+
 
   return true;
 }
@@ -176,25 +184,7 @@ function loadBlocks(){
 
 }
 
-function updateMaterials(){
 
-  for (var type in _material_table) {
-    if (_material_table.hasOwnProperty(type)) {
-
-      for (var name in _material_table[type]) {
-        if (_material_table[type].hasOwnProperty(name)) {
-
-          if(config.materials.name){
-            console.log("update ", name);
-            _material_table[type][name] = config.materials.name;
-
-          }
-        }
-      }
-
-    }
-  }
-}
 
 function addObject(object, fid){
 
@@ -242,6 +232,14 @@ function clearScene(){
   selector = new Selector(camera, controls);
 }
 
+function convertFloat(object){
+  for (var i = 0; i < 3; i++) {
+    object.position[i] = parseFloat(object.position[i]);
+    object.rotation[i] = parseFloat(object.rotation[i]);
+  }
+}
+
+
 function loadConfig(filename){
   $.ajaxSetup({ mimeType: "text/plain" });
   // $.ajaxSetup({ mimeType: "application/json" });
@@ -254,12 +252,21 @@ function loadConfig(filename){
     for (var fid in data.geometry) {
         if (data.geometry.hasOwnProperty(fid)) {
 
+          convertFloat(data.geometry[fid])
+
           // for each entry add an object
           addObject(data.geometry[fid], fid);
-
-
         }
     }
+
+    for (var id in data.materials) {
+        if (data.materials.hasOwnProperty(id)) {
+
+          data.materials[id];
+        }
+    }
+
+
     camera.position.set(-3,5,7)
     controls.target = new THREE.Vector3(1.6,2.5,1.8);
     // zoomAll();
