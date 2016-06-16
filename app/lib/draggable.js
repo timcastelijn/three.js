@@ -135,14 +135,34 @@ Selector.prototype.moveDraggedObject = function(){
   }
 }
 
+
+Selector.prototype.highlightPatches=function(){
+
+  var dragged_type = this.dragged.type;
+
+  // for (var i = 0; i < this.snap_objects.length; i++) {
+  //   var object = this.snap_objects[i];
+  //   var type = object.parent.type;
+  //
+  //
+  //
+  //   var index = _patch_table[type][]
+  //
+  //   object.material.materials[index] =
+  //
+  // }
+}
+
 Selector.prototype.startDrag=function(){
   // only start dragging when moving mouse with button down
 
   if (this.mouse_down && this.intersected) {
     if(this.selected && !this.dragged){
       // make selected object the dragged object
+      console.log('start drag');
       this.dragged = this.selected;
       this.forgetSelection();
+      //this.highlightPatches();
     }
   }
 }
@@ -406,8 +426,9 @@ Selectable.prototype.getSnapAreas = function(intersect_parent){
 
   return intersect_parent.snap_areas[category];
 }
-Selectable.prototype.snap = function(intersect){
 
+// tries to snap the object
+Selectable.prototype.snap = function(intersect){
 
   var intersect_parent = intersect.object.parent;
   var m_index = intersect.object.geometry.faces[intersect.faceIndex].materialIndex;
@@ -419,7 +440,6 @@ Selectable.prototype.snap = function(intersect){
   console.log(patch_id);
 
   if(snap_areas && snap_areas[patch_id]){
-
     this.moveToArea(snap_areas[patch_id], intersect)
     return true;
   }
@@ -467,7 +487,6 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
 
     //rotate if possible
     var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
-    // this.rotation.copy(vec_rot);
     this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
 
     console.log(vector, vec_rot);
@@ -489,7 +508,10 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     var position = intersect.object.parent.localToWorld(new THREE.Vector3().fromArray( snap_point ) );
 
     this.position.copy(position);
-    this.rotation.y = intersect.object.parent.rotation.y + snap_area.rotation;
+
+    //rotate if possible
+    var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
+    this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
 
     this.overlap = this.selector.bboxOverLap();
     return;
