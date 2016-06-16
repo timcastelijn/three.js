@@ -126,7 +126,8 @@ $(function() {
       angle:event.data.angle,
     }
 
-    console.log(object);
+    //delete currently dragged object
+    selector.deleteObject(selector.dragged);
 
     if(selector){
       selector.keep_adding = object;
