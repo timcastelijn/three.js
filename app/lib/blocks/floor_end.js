@@ -56,6 +56,8 @@ FloorEnd.prototype.delete = function(){
 
 }
 
+
+
 FloorEnd.prototype.addPatches = function(){
   this.snap_areas ={
     wo:{

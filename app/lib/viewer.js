@@ -4,11 +4,13 @@ var container, stats;
 var camera, controls, scene, scene_geometry, renderer;
 var dragger, selector;
 var _mesh_objects =[], _patch_table ={};
+var _blocks = [];
 
 var price =0;
 
 var document_edited = false;
 var _models_loading = 0;
+var _view_open = false
 
 var SHADOWS_ENABLED = false;
 var _AXIS_HELPERS = true;
@@ -72,8 +74,6 @@ function init() {
 
   scene.add( new THREE.AmbientLight( 0x888888 ) );
 
-
-
   var light = new THREE.PointLight( 0xffffff, 0.5 );
   light.position.set( -10, 10, 10 );
 
@@ -121,6 +121,9 @@ function init() {
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 
+  controls.target_ball = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color:0xff0000}));
+  controls.target_ball.position.copy(controls.target)
+  scene.add(controls.target_ball)
 
 
   // add information tag
@@ -308,9 +311,45 @@ function animate() {
 
 }
 
+function checkVisible() {
+
+  if(_view_open){
+    if (_blocks.length > 0){
+      // check all outer walls
+      var camera_dir = new THREE.Vector3().copy(camera.getWorldDirection());
+      // var camera_dir = new THREE.Vector3(1,0,0);
+
+      for (var i = 0; i < _blocks.length; i++) {
+        var block = _blocks[i];
+        if(!(block instanceof Floor)){
+          var dot_product = camera_dir.dot(block.getNormal());
+          if (dot_product > 0 ){
+            block.visible = false;
+          } else {
+            block.visible = true;
+          }
+        }
+      }
+      // if a wall faces the camera, hide it
+
+    }
+  } else{
+    for (var i = 0; i < _blocks.length; i++) {
+      var block = _blocks[i];
+      if(!(block instanceof Floor)){
+          block.visible = true;
+      }
+    }
+  }
+
+
+}
+
 function render() {
 
   controls.update();
+
+  checkVisible();
 
   renderer.render( scene, camera );
 

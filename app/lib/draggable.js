@@ -469,6 +469,13 @@ Selectable.prototype.delete = function(){
     this.selector.selectables.splice(selected_index, 1)
   }
 
+  // remove from _blocks
+  var selected_index = _blocks.indexOf(this);
+  _blocks.splice(selected_index, 1)
+
+
+
+
   delete config.geometry[this.fid];
 
 

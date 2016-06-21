@@ -57,6 +57,12 @@ _button_table = {
 
 $(function() {
 
+  $('#view-toggle').find('a').click(function(e){
+    _view_open = $(this).attr('value')=='true'? true: false;
+    console.log(_view_open);
+  })
+
+
   // toggle arrow when operating accodion
   function toggleChevron(e) {
       $(e.target)

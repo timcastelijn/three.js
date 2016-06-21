@@ -19,6 +19,12 @@ RoofEnd.prototype.setMorphtargets = function () {
 
 };
 
+RoofEnd.prototype.getNormal = function () {
+  var end = this.localToWorld(new THREE.Vector3(0,0,-1))
+  var begin = this.localToWorld(new THREE.Vector3(0,0,0))
+
+  return end.sub(begin);
+};
 
 RoofEnd.prototype.addPatches = function(){
 

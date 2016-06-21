@@ -62,6 +62,7 @@ function Block(geometry, selector){
   // add block to the selector
   this.setSelector(this.mesh_object, selector)
 
+  _blocks.push(this);
 }
 
 Block.prototype = new Selectable();
@@ -80,6 +81,13 @@ Block.prototype.setMorphtargets = function () {
 
     this.mesh_object.morphTargetInfluences[ i + 1] = size;
   }
+};
+
+Block.prototype.getNormal = function () {
+  var end = this.localToWorld(new THREE.Vector3(1,0,0))
+  var begin = this.localToWorld(new THREE.Vector3(0,0,0))
+
+  return end.sub(begin);
 };
 
 Block.prototype.updateSize = function(){
