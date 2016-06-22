@@ -19,17 +19,15 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-			<div id="content">
-      <div id ='view-modus'>
-        <h3>
-          <span><a id="btn-edit" href="javascript:selector.rotateObject('CCW')" class="glyphicon glyphicon-pencil" aria-hidden="true"></a></span>
-          <span><a id="btn-orbit" href="javascript:selector.rotateObject('CW')" class="glyphicon glyphicon-globe" aria-hidden="true"></a></span>
-        </h3>
-      </div>
+		<div id="content">
+			<div id='messages'>message:</div>
       <div class="panel-group" id="accordion">
 	     		<!-- <p>Stel je eigen <strong>cabine</strong> samen. <strong>Sleep</strong> de sliders om de dimensies aan te passen en <strong>selecteer</strong> de gewenste opties.</p> -->
   				<div>
 						<h3>
+							<span><a id="btn-edit" href="javascript:;" class="glyphicon glyphicon-pencil" aria-hidden="true"></a></span>
+							<span><a id="btn-orbit" href="javascript:;" class="glyphicon glyphicon-globe" aria-hidden="true"></a></span>
+
 							<span><a id="btn-rotate-CCW" href="javascript:selector.rotateObject('CCW')" class="glyphicon glyphicon-repeat" aria-hidden="true"></a></span>
 							<span><a id="btn-rotate-CW" href="javascript:selector.rotateObject('CW')" class="glyphicon glyphicon-repeat" aria-hidden="true"></a></span>
 							<span><a href="javascript:selector.deleteObject()" class="glyphicon glyphicon-trash" aria-hidden="true"></a></span>
@@ -56,6 +54,7 @@
 						    <li role="presentation"><a href="#wall" aria-controls="wall" role="tab" data-toggle="tab">Walls</a></li>
 						    <li role="presentation"><a href="#roof" aria-controls="roof" role="tab" data-toggle="tab">roof</a></li>
 						    <li role="presentation"><a href="#window" aria-controls="window" role="tab" data-toggle="tab">Windows</a></li>
+						    <li role="presentation"><a href="#interior" aria-controls="interior" role="tab" data-toggle="tab">Interior</a></li>
 						  </ul>
 
 						  <!-- Tab panes -->
@@ -79,6 +78,12 @@
 								</div>
 
 						    <div role="tabpanel" class="tab-pane" id="window">
+									<div class="container-fluid">
+                    <!-- buttons go here -->
+                  </div>
+						  	</div>
+
+						    <div role="tabpanel" class="tab-pane" id="interior">
 									<div class="container-fluid">
                     <!-- buttons go here -->
                   </div>
@@ -253,6 +258,8 @@
 	<script src="../examples/js/Detector.js"></script>
 	<script src="../src/extras/helpers/AxisHelper.js"></script>
 	<script src="../src/extras/helpers/EdgesHelper.js"></script>
+
+	<script src="lib/extensions/number.js"></script>
 
 	<script src="lib/gui/main.js"></script>
 	<script src="lib/gui/login.js"></script>

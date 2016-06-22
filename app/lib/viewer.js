@@ -37,14 +37,16 @@ var _materials = {
 }
 
 var block_files = {
-  floor:    {type:"floor",    model:'models/fl.json',     type_class:Floor,    price:560,    mt:[0]     },
-  fl_e:     {type:"fl_e",     model:'models/fl_e.json',   type_class:FloorEnd, price:560,    mt:[0]     },
-  roof:     {type:"roof",     model:'models/roof.json',      type_class:Roof,     price:640,    mt:[1,2,3] },
-  ro_e:     {type:"ro_e",     model:'models/ro_e.json',      type_class:RoofEnd,  price:640,    mt:[1,2,3] },
-  wo_oc:    {type:"wo_oc",    model:'models/wo_oc.json',     type_class:Wall,     price:640,    mt:[1]     },
-  wo_i_300: {type:"wo_i_300", model:'models/wo_i.json',      type_class:Wall,     price:640,    mt:[1]     },
-  wo_i_600: {type:"wo_i_600", model:'models/wo_i.json',      type_class:Wall,     price:640,    mt:[1,2]     },
-  wo_w_900: {type:"wo_w_900", model:'models/wo_w_900.json',  type_class:Wall,     price:640,    mt:[2,1]     },
+  floor:    {type:"floor",    model:'models/fl.json',         type_class:Floor,    price:560,    mt:[0]     },
+  fl_e:     {type:"fl_e",     model:'models/fl_e.json',       type_class:FloorEnd, price:560,    mt:[0]     },
+  fl_filler:{type:"fl_filler",model:'models/fl_filler.json',  type_class:Floor,    price:560,    mt:[0]     },
+  roof:     {type:"roof",     model:'models/roof.json',       type_class:Roof,     price:640,    mt:[1,2,3] },
+  ro_e:     {type:"ro_e",     model:'models/ro_e.json',       type_class:RoofEnd,  price:640,    mt:[1,2,3] },
+  wo_oc:    {type:"wo_oc",    model:'models/wo_oc.json',      type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_300: {type:"wo_i_300", model:'models/wo_i.json',       type_class:Wall,     price:640,    mt:[1]     },
+  wo_i_600: {type:"wo_i_600", model:'models/wo_i.json',       type_class:Wall,     price:640,    mt:[1,2]     },
+  wo_w_900: {type:"wo_w_900", model:'models/wo_w_900.json',   type_class:Wall,     price:640,    mt:[1,0]     },
+  wi_i:     {type:"wi_i",     model:'models/wi_i.json',       type_class:Block,     price:640,    mt:[1,0]     },
 }
 
 
@@ -121,8 +123,9 @@ function init() {
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,0.8,0)
 
-  controls.target_ball = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color:0xff0000}));
+  controls.target_ball = new THREE.Mesh(new THREE.SphereGeometry(0.05), new THREE.MeshBasicMaterial({color:0xff0000}));
   controls.target_ball.position.copy(controls.target)
+  controls.target_ball.visible = false;
   scene.add(controls.target_ball)
 
 
@@ -191,6 +194,9 @@ function loadBlocks(){
 
 function addObject(object, fid){
 
+
+  console.log(object);
+
   // create new fabfield-id
   var type  = object.type;
 
@@ -198,7 +204,7 @@ function addObject(object, fid){
     // add to config with new id
     fid   = object.type + "_" + new Date().getTime();
 
-    config.geometry[fid] = object;
+    config.geometry[fid] =  jQuery.extend(true, {}, object);
     console.log("addconfig", fid);
   }
   object.fid = fid;
@@ -238,7 +244,7 @@ function clearScene(){
 function convertFloat(object){
   for (var i = 0; i < 3; i++) {
     object.position[i] = parseFloat(object.position[i]);
-    object.rotation[i] = parseFloat(object.rotation[i]);
+    object.rotation[i] = parseFloat(object.rotation[i])/180*Math.PI;
   }
 }
 
@@ -313,7 +319,10 @@ function animate() {
 
 function checkVisible() {
 
-  if(_view_open){
+  if(_view_open ){
+    controls.target_ball.visible = true;
+    controls.target_ball.position.copy(controls.target)
+
     if (_blocks.length > 0){
       // check all outer walls
       var camera_dir = new THREE.Vector3().copy(camera.getWorldDirection());
@@ -321,28 +330,29 @@ function checkVisible() {
 
       for (var i = 0; i < _blocks.length; i++) {
         var block = _blocks[i];
-        if(!(block instanceof Floor)){
+        if(block.position.y > controls.target.y){
+          block.setVisible(false);
+        } else{
+          var block_outer_wall = (block instanceof Wall) || (block instanceof Roof) || (block instanceof RoofEnd);
           var dot_product = camera_dir.dot(block.getNormal());
-          if (dot_product > 0 ){
-            block.visible = false;
+          if(block_outer_wall && dot_product >0){
+            block.setVisible(false);
           } else {
-            block.visible = true;
+            block.setVisible(true, "comment");
           }
         }
-      }
-      // if a wall faces the camera, hide it
-
-    }
-  } else{
-    for (var i = 0; i < _blocks.length; i++) {
-      var block = _blocks[i];
-      if(!(block instanceof Floor)){
-          block.visible = true;
       }
     }
   }
 
+}
 
+function showAllBlocks(){
+  for (var i = 0; i < _blocks.length; i++) {
+    var block = _blocks[i];
+    block.setVisible(true);
+  }
+  controls.target_ball.visible = false;
 }
 
 function render() {
@@ -350,6 +360,7 @@ function render() {
   controls.update();
 
   checkVisible();
+
 
   renderer.render( scene, camera );
 

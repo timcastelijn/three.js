@@ -23,7 +23,7 @@ Wall.prototype.addPatches = function(){
   },
   this.snap_areas ={
     fl:{
-      floor_patch:{position_min:[0, 2.5, 0], position_max:[this.size[0], 2.5, 0], offset:[0.0, 0, 0.0], rotation:[0,0,0] }
+      floor_patch:{position_min:[0, this.size[1], 0], position_max:[0, this.size[1], this.size[0]], offset:[0.0, 0, 0.0], rotation:[0,0,0] }
     }
   }
 

@@ -2,6 +2,16 @@ function updatePriceGui(){
   $('#label_price').text(price);
 }
 
+function guiLog(message){
+    if( message){
+      $( "#messages").html(message);
+    }else {
+      // $( "#messages").html('hold "Alt" to navigate');
+      $( "#messages").html('message:');
+    }
+}
+
+
 _button_table = {
   floor:{
     normal:{
@@ -14,6 +24,9 @@ _button_table = {
       "l2.4":{button_text:"2.4m", type:"fl_e", size:[2.4, 0.3, 0.3]},
       "l3.6":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
       "l4.8":{button_text:"4.8m", type:"fl_e", size:[4.8, 0.3, 0.3]},
+    },
+    fillers:{
+      "filler":{button_text:"2.4m", type:"fl_filler", size:[2.4, 0.3, 0.3]},
     },
   },
   wall:{
@@ -52,6 +65,16 @@ _button_table = {
       "h2.7":{button_text:"3.6m", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
     }
   },
+  interior:{
+    "0.3m":{
+      "h2.7":{button_text:"3.6m", type:"wi_i", size:[0.3, 2.7, 0.1]},
+      "h3.0":{button_text:"3.6m", type:"wi_i", size:[0.3, 3.0, 0.1]},
+    },
+    "0.6m":{
+      "h2.7":{button_text:"3.6m", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "h3.0":{button_text:"3.6m", type:"wi_i", size:[0.6, 3.0, 0.1]},
+    },
+  },
 }
 
 
@@ -59,7 +82,13 @@ $(function() {
 
   $('#view-toggle').find('a').click(function(e){
     _view_open = $(this).attr('value')=='true'? true: false;
-    console.log(_view_open);
+
+    if( !_view_open){
+      showAllBlocks()
+    }
+
+    guiLog('open view selected, place the red dot inside the area ou want to edit')
+
   })
 
 
@@ -235,5 +264,6 @@ $(function() {
       });
     }
   });
+
 
 });

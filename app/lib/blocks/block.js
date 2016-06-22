@@ -68,6 +68,20 @@ function Block(geometry, selector){
 Block.prototype = new Selectable();
 Block.prototype.constructor = Block;
 
+Block.prototype.setVisible = function (value, comment) {
+
+
+  if(value && !this.visible){
+    this.visible = value;
+    this.setSelector(this.mesh_object, selector);
+
+  }else if (!value && this.visible) {
+
+    this.visible = value;
+    this.selector.selectables.splice(this.selector.selectables.indexOf(this.mesh_object), 1)
+  }
+}
+
 Block.prototype.setMorphtargets = function () {
 
   if(!this.mesh_object.morphTargetInfluences){
@@ -147,7 +161,7 @@ Block.prototype.updateVertices = function(){
 Block.prototype.setTransformations = function(position, rotation){
   this.position.set( position[0] , position[1], position[2]);
 
-  this.rotation.set(rotation[0], rotation[1]/180*Math.PI, rotation[2]/180*Math.PI);
+  this.rotation.set(rotation[0], rotation[1], rotation[2]);
 }
 
 Block.prototype.addPatches = function(){

@@ -28,9 +28,10 @@ FloorEnd.prototype.addSlabs = function(){
 
       this.add(mesh);
 
-      var edges = new THREE.EdgesHelper( mesh, 0x000000 );
+      var edges = new THREE.EdgesHelper( mesh.clone(), 0x000000 );
+
       edges.name = "edgesHelper";
-      scene_geometry.add(edges);
+      mesh.add(edges);
 
       this.slab_edges.push(edges);
     }

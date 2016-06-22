@@ -5,6 +5,17 @@ body {
   overflow: hidden;
 }
 
+#messages{
+  margin:10px;
+  padding:10px;
+  background-color: white;
+  opacity: 0.5;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width:20%;
+}
+
 #accordion{
   position: absolute;
   top: 0px;

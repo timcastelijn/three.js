@@ -82,7 +82,7 @@ Selector.prototype.deleteObject=function(object){
 
   if (this.selected){
     object = this.selected;
-    this.selected = null;
+    this.forgetSelection();
   }
   if(object){
     object.delete();
@@ -95,19 +95,14 @@ Selector.prototype.deleteObject=function(object){
 }
 
 Selector.prototype.rotateObject=function(dir){
-  if (this.selected){
-
-    //rotate selected object
-    var rotation  = (dir=="CW")?  -Math.PI/2: Math.PI/2;
-    this.selected.rotation.y += rotation;
-
-    //update config file
-    config.geometry[this.selected.fid].rotation += (rotation /Math.PI * 180);
-
-  } else if(this.dragged){
+  if (this.dragged){
+    console.log(this.dragged.rotation)
     //rotate selected object
     var rotation  = (dir=="CW")?  -Math.PI/2: Math.PI/2;
     this.dragged.rotation.y += rotation;
+    if(this.keep_adding){
+      this.keep_adding.rotation[1] = this.dragged.rotation.y
+    }
   } else{
     console.log('nothing selected');
   }
@@ -118,6 +113,8 @@ Selector.prototype.add=function(object){
 }
 
 Selector.prototype.moveDraggedObject = function(){
+  container.style.cursor = 'move';
+
 
   for(var i=0; i<this.snap_objects.length;i++){
     this.snap_objects[i].parent.setMaterial('basic');
@@ -153,19 +150,7 @@ Selector.prototype.highlightPatches=function(){
   // }
 }
 
-Selector.prototype.startDrag=function(){
-  // only start dragging when moving mouse with button down
 
-  if (this.mouse_down && this.intersected) {
-    if(this.selected && !this.dragged){
-      // make selected object the dragged object
-      console.log('start drag');
-      this.dragged = this.selected;
-      this.forgetSelection();
-      //this.highlightPatches();
-    }
-  }
-}
 
 Selector.prototype.onMouseMove=function(event){
 
@@ -174,7 +159,6 @@ Selector.prototype.onMouseMove=function(event){
 
   this.raycaster.setFromCamera( this.mouse, this.camera );
 
-  this.startDrag();
 
   if ( this.dragged ) {
     this.moveDraggedObject();
@@ -249,6 +233,8 @@ Selector.prototype.calculateBBVolumes=function(event){
 
 
 Selector.prototype.forgetSelection = function(){
+  guiLog()
+
   if (this.selected) {
     this.selected.setMaterial("basic")
     this.selected = null;
@@ -256,10 +242,15 @@ Selector.prototype.forgetSelection = function(){
 }
 
 Selector.prototype.selectObject = function(intersect){
+
+
   //forget previous selection
   this.forgetSelection();
 
+
   this.selected = intersect.object.parent;
+
+  guiLog('selected "' + this.selected.fid+ '".<br> press "Escape" to clear selection, "Delete" to delete object');
 
   console.log(this.selected);
 
@@ -267,32 +258,33 @@ Selector.prototype.selectObject = function(intersect){
 }
 
 
+Selector.prototype.getSelection=function(){
+  //ready to select an object
+  this.raycaster.setFromCamera( this.mouse, this.camera );
+
+  var intersects = this.raycaster.intersectObjects( this.selectables );
+
+  if ( intersects.length > 0 ) {
+
+    this.controls.enabled = false;
+
+    this.selectObject(intersects[0]);
+
+    this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
+
+    this.setSnapObjects()
+    this.calculateBBVolumes()
+
+  }else{
+    this.forgetSelection()
+  }
+}
 Selector.prototype.onMouseDown=function(event){
 
   switch ( event.button ) {
     case 0: // left
         if(!this.dragged){
-          //ready to select an object
-          this.mouse_down = true;
-          this.raycaster.setFromCamera( this.mouse, this.camera );
-
-          var intersects = this.raycaster.intersectObjects( this.selectables );
-
-          if ( intersects.length > 0 ) {
-
-            this.controls.enabled = false;
-
-            this.selectObject(intersects[0]);
-
-            this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
-
-            this.setSnapObjects()
-            this.calculateBBVolumes()
-
-            container.style.cursor = 'move';
-          }else{
-            this.forgetSelection()
-          }
+          this.getSelection()
         }
         break;
     case 1: // middle
@@ -302,12 +294,14 @@ Selector.prototype.onMouseDown=function(event){
   }
 }
 
-Selector.prototype.updateConfig=function(event){
+Selector.prototype.updateConfig=function(){
   var fid = this.dragged.fid;
+  console.log(this.dragged.position);
 
-  console.log(this.dragged, fid);
   config.geometry[fid].position = [this.dragged.position.x, this.dragged.position.y, this.dragged.position.z];
-  config.geometry[fid].rotation = [0, this.dragged.rotation.y/Math.PI *180, 0];
+
+  var rotation = this.dragged.rotation.toArray()
+  config.geometry[fid].rotation = [rotation[0]/Math.PI *180, rotation[1]/Math.PI *180, rotation[2]/Math.PI *180];
 
 }
 
@@ -346,12 +340,18 @@ Selector.prototype.onMouseUp=function(event){
       }
     } else {
       // placement succesful
+
+      console.log('keep adding', this.keep_adding.rotation);
+
+      this.updateConfig()
+
       if(this.keep_adding){
+        console.log('keep adding', this.keep_adding.rotation);
         this.addBlock(this.keep_adding);
+        return
       }
     }
 
-    this.updateConfig()
     this.dragged.overlap = false;
     this.dragged = null;
   }
@@ -410,21 +410,24 @@ Selectable.prototype.setSelector = function(mesh_object, selector){
 
   this.children_meshes = getChildMeshes(this);
 
-
   //traverse over children and add parent to draggables under child identifier
   this.selector.selectables.push(mesh_object);
 
 }
 
+// try to find specific category and otherwise return first two letters
 Selectable.prototype.getSnapAreas = function(intersect_parent){
-  var category;
-  if(intersect_parent.snap_areas[this.type]){
-    category = this.type
-  }else{
-    category = this.type.substring(0,2)
-  }
+  if(intersect_parent.snap_areas){
+    var category;
 
-  return intersect_parent.snap_areas[category];
+    if(intersect_parent.snap_areas[this.type]){
+      category = this.type
+    }else{
+      category = this.type.substring(0,2)
+    }
+
+    return intersect_parent.snap_areas[category];
+  }
 }
 
 // tries to snap the object
@@ -437,7 +440,7 @@ Selectable.prototype.snap = function(intersect){
   var snap_areas = this.getSnapAreas(intersect_parent);
   var patch_id = _patch_table[intersect_parent.type][m_index];
 
-  console.log(patch_id);
+  // console.log(patch_id);
 
   if(snap_areas && snap_areas[patch_id]){
     this.moveToArea(snap_areas[patch_id], intersect)
@@ -508,8 +511,14 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     var snap_point = [];
     for (var i = 0; i < local_intersection.length; i++) {
 
-      var temp = Math.floor( local_intersection[i] / 0.3 + 0.001);
+      var temp = Math.round( local_intersection[i] / 0.3 + 0.001);
       snap_point[i] = temp * 0.3 + snap_area.offset[i];
+
+      // clamp value within snap bounds
+
+
+      snap_point[i] = Math.min(Math.max(snap_point[i], snap_area.position_min[i]), snap_area.position_max[i])
+
     }
 
     var position = intersect.object.parent.localToWorld(new THREE.Vector3().fromArray( snap_point ) );
@@ -517,8 +526,10 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     this.position.copy(position);
 
     //rotate if possible
-    var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
-    this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
+    if(snap_area.rotation){
+      var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
+      this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
+    }
 
     this.overlap = this.selector.bboxOverLap();
     return;
