@@ -279,12 +279,27 @@ Selector.prototype.getSelection=function(){
     this.forgetSelection()
   }
 }
+
+
+Selector.prototype.tryDrag = function() {
+
+  if(this.mouse_down && this.selected ){
+    this.dragged = this.selected;
+    this.forgetSelection()
+  }
+}
+
 Selector.prototype.onMouseDown=function(event){
 
   switch ( event.button ) {
     case 0: // left
+        this.mouse_down = true;
+
         if(!this.dragged){
           this.getSelection()
+
+          clearTimeout(this.timer)
+          this.timer = setTimeout( ()=>{console.log('try'); this.tryDrag() }, 1000);
         }
         break;
     case 1: // middle
@@ -313,7 +328,6 @@ Selector.prototype.addBlock=function(object){
 
     this.selected = block;
     this.dragged = block;
-    this.mouse_down = true;
     this.intersected = block;
     this.setSnapObjects()
     this.calculateBBVolumes()
@@ -329,6 +343,8 @@ Selector.prototype.onMouseUp=function(event){
   this.mouse_down = false;
   this.controls.enabled = true;
 
+  clearTimeout(this.timer)
+
   // only if object was dragged
   if ( this.dragged ) {
     if (this.dragged.overlap){
@@ -341,12 +357,9 @@ Selector.prototype.onMouseUp=function(event){
     } else {
       // placement succesful
 
-      console.log('keep adding', this.keep_adding.rotation);
-
       this.updateConfig()
 
       if(this.keep_adding){
-        console.log('keep adding', this.keep_adding.rotation);
         this.addBlock(this.keep_adding);
         return
       }
@@ -440,7 +453,7 @@ Selectable.prototype.snap = function(intersect){
   var snap_areas = this.getSnapAreas(intersect_parent);
   var patch_id = _patch_table[intersect_parent.type][m_index];
 
-  // console.log(patch_id);
+  console.log(patch_id);
 
   if(snap_areas && snap_areas[patch_id]){
     this.moveToArea(snap_areas[patch_id], intersect)
