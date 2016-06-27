@@ -47,6 +47,7 @@ var block_files = {
   wo_i_600: {type:"wo_i_600", model:'models/wo_i.json',       type_class:Wall,     price:640,    mt:[1,2]     },
   wo_w_900: {type:"wo_w_900", model:'models/wo_w_900.json',   type_class:Wall,     price:640,    mt:[1,0]     },
   wi_i:     {type:"wi_i",     model:'models/wi_i.json',       type_class:Block,     price:640,    mt:[1,0]     },
+  sc_3000:  {type:"sc_3000",  model:'models/sc_3000.json',    type_class:Staircase,  price:640,    mt:[1,0]     },
 }
 
 
