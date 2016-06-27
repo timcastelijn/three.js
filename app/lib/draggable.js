@@ -311,8 +311,6 @@ Selector.prototype.onMouseDown=function(event){
 
 Selector.prototype.updateConfig=function(){
   var fid = this.dragged.fid;
-  console.log(this.dragged.position);
-
   config.geometry[fid].position = [this.dragged.position.x, this.dragged.position.y, this.dragged.position.z];
 
   var rotation = this.dragged.rotation.toArray()
