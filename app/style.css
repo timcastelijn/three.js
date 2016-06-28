@@ -21,13 +21,29 @@ body {
   top: 0px;
   left: 0px;
   margin: 10px;
-  width:250px;
+  width:20%;
+}
+
+.container-fluid{
+  gutter-width:5px;
+}
+
+#collapse1 * .col-xs-6{
+  padding: 3px;
+    /*background-color: red;*/
+}
+
+#collapse1 * img{
+  width:100%;
+    /*background-color: red;*/
 }
 
 #collapse1 * button{
   font-size: 12px;
   text-align: center;
-  padding: 3px;
+  padding: 0px;
+  border-width: 1px;
+  border-color: #e1e1e1;
     /*background-color: red;*/
 }
 
