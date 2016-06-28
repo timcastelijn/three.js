@@ -46,7 +46,7 @@ function Block(geometry, selector){
 
 
 
-  this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x000000 );
+  this.edges = new THREE.EdgesHelper( this.mesh_object.clone(), 0x888888);
   this.edges.name = "edgesHelper";
   this.add(this.edges);
 

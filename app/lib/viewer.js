@@ -32,6 +32,7 @@ textures.aluminium.repeat.set( 1,1 );
 
 var _materials = {
   cladding:new THREE.MeshPhongMaterial( { map:textures.wood, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ),
+  cladding:new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ),
   glass:new THREE.MeshPhongMaterial( {color: 0xeeeeff, shininess:0.5, reflectivity:0.2, transparent:true, opacity:0.2, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ),
   basic:new THREE.MeshPhongMaterial( { color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } )
 }
