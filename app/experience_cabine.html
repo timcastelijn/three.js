@@ -52,14 +52,14 @@
 					  </svg>
           </div> -->
           <div id="view-selector">
+						<div class="col-sm-4">
+							<button id='btn-view-interior' value=1 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="interior view"><i class="glyphicon glyphicon-eye-open"></i> <i class="glyphicon glyphicon-log-in"/></i></button>
+						</div>
             <div class="col-sm-4">
-              <button id='btn-view-exterior' value=0 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="exterior view"><i class="glyphicon glyphicon-log-out"></i></button>
+              <button id='btn-view-exterior' value=0 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="exterior view"><i class="glyphicon glyphicon-log-out"></i> <i class="glyphicon glyphicon-eye-open"></i></button>
             </div>
             <div class="col-sm-4">
-              <button id='btn-view-interior' value=1 type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="interior view"><i class="glyphicon glyphicon-log-in"/></i></button>
-            </div>
-            <div class="col-sm-4">
-  					  <button id='btn-info' type="button" class="btn btn-default" data-toggle="modal" data-target="#helpModal"><i class="glyphicon glyphicon-question-sign"/></i></button>
+  					  <button id='btn-info' type="button" class="btn btn-default" data-toggle="modal" title="help" data-target="#helpModal"><i class="glyphicon glyphicon-question-sign"/></i></button>
             </div>
             <p>&nbsp</p>
 					</div>
@@ -74,11 +74,11 @@
 	       		<div id="collapse1" class="panel-collapse collapse in">
 	         		<div class="panel-body">
 								<div class="container-fluid">
-		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="width" min="97" max="300" value="124" /></div>
+		             	<div class="row" id='label-width'>Breedte: <input class="number-dim" id="number-width" type="number" name="width" min="97" max="240" value="124" /></div>
 		              <div class="row"><input id='slider-width' class="slider_100" type="range" name="width" value="124" min="10" max="240"  data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="depth" min="97" max="300" value="140" /></div>
+		             	<div class="row" id='label-depth'>Diepte: <input class="number-dim" id="number-depth" type="number" name="depth" min="97" max="240" value="140" /></div>
 			            <div class="row"><input id='slider-depth' class="slider_100" type="range" name="depth" value="140" min="10" max="240" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
-		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="height" min="154" max="300" value="200" /></div>
+		             	<div class="row" id='label-height'>Hoogte: <input class="number-dim" id="number-height" type="number" name="height" min="190" max="240" value="200" /></div>
 		              <div class="row"><input id='slider-height' class="slider_100" type="range" name="height" value="200" min="10" max="240" data-toggle="tooltip" title="sleep om de lengte aan te passen" delay="{show: 500, hide: 100}" /></div>
 								</div>
 	         		</div>
