@@ -2,6 +2,16 @@ function updatePriceGui(){
   $('#label_price').text(price);
 }
 
+function guiLog(message){
+    if( message){
+      $( "#messages").html(message);
+    }else {
+      // $( "#messages").html('hold "Alt" to navigate');
+      $( "#messages").html('message:');
+    }
+}
+
+
 _button_table = {
   floor:{
     normal:{
@@ -15,14 +25,17 @@ _button_table = {
       "l3.6":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
       "l4.8":{button_text:"4.8m", type:"fl_e", size:[4.8, 0.3, 0.3]},
     },
+    fillers:{
+      "filler":{button_text:"2.4m", type:"fl_filler", size:[2.4, 0.3, 0.3]},
+    },
   },
   wall:{
     normal:{
-      "h2.7":{button_text:"2.7m", image:"images/wo-i-600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
-      "h3.0":{button_text:"3.0m", type:"wo_i_600", size:[0.6, 3.0, 0.3]},
+      "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
+      "w600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
     },
-    corner_pieces:{
-      "h2.7":{button_text:"2.7m", type:"wo_oc", size:[0.6, 2.7, 0.3]},
+    "corner pieces":{
+      "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
     }
   },
   roof:{
@@ -49,13 +62,34 @@ _button_table = {
   },
   window:{
     all:{
-      "h2.7":{button_text:"3.6m", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+      "w600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+      "w900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+    }
+  },
+  interior:{
+    normal:{
+      "w300":{button_text:"3.6m", image:"images/wi_i_300.jpg", type:"wi_i", size:[0.3, 2.7, 0.1]},
+      "w600":{button_text:"3.6m", image:"images/wi_i_600.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "t":{button_text:"3.6m", image:"images/wi_t.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "x":{button_text:"3.6m", image:"images/wi_x.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
     }
   },
 }
 
 
 $(function() {
+
+  $('#view-toggle').find('a').click(function(e){
+    _view_open = $(this).attr('value')=='true'? true: false;
+
+    if( !_view_open){
+      showAllBlocks()
+    }
+
+    guiLog('open view selected, place the red dot inside the area ou want to edit')
+
+  })
+
 
   // toggle arrow when operating accodion
   function toggleChevron(e) {
@@ -97,12 +131,12 @@ $(function() {
             if (subcategory.hasOwnProperty(name3)) {
 
               var $col = $('<div/>', {
-                 class: "col-sm-4",
+                 class: "col-xs-6",
               });
 
               var item = subcategory[name3];
 
-              var img = item.image? ('<img src="' + item.image + '" width="35"/>'): name3;
+              var img = item.image? ('<img src="' + item.image + '"/>'): name3;
               // create buttons
               var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
 
@@ -229,5 +263,6 @@ $(function() {
       });
     }
   });
+
 
 });

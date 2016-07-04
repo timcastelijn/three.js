@@ -28,9 +28,10 @@ FloorEnd.prototype.addSlabs = function(){
 
       this.add(mesh);
 
-      var edges = new THREE.EdgesHelper( mesh, 0x000000 );
+      var edges = new THREE.EdgesHelper( mesh.clone(), 0x000000 );
+
       edges.name = "edgesHelper";
-      scene_geometry.add(edges);
+      mesh.add(edges);
 
       this.slab_edges.push(edges);
     }
@@ -56,20 +57,22 @@ FloorEnd.prototype.delete = function(){
 
 }
 
+
+
 FloorEnd.prototype.addPatches = function(){
   this.snap_areas ={
     wo:{
-      patch_wall3:{position_min:[0.3, 0.3, 0], position_max:[this.size[0] - 0.3, 0.3, 0.0], offset:[0.3, 0,0], rotation:- 0.5 * Math.PI }
+      patch_wall3:{position_min:[0.3, 0.3, 0], position_max:[this.size[0] - 0.3, 0.3, 0.0], offset:[0.3, 0,0], rotation:[0, - 0.5 * Math.PI, 0] }
     },
     wo_oc:{
       patch_wall1:{position:[0, 0.3, 0],                rotation:[0,0,0]},
       patch_wall2:{position:[this.size[0], 3.0, 0 ],  rotation:[0, 0,Math.PI]},
     },
-    ro:{
-      1:{position:new THREE.Vector3(this.size[0],0.3,0.3), rotation:Math.PI},
-      3:{position:new THREE.Vector3(0, 0.3, 0), rotation:Math.PI/3},
+    ro_e:{
+      patch_wall1:{position:[this.size[0], 0.3, 0.3],   rotation:[0, Math.PI, 0]},
+      patch_wall2:{position:[this.size[0], 0.3, 0.3 ],  rotation:[0, Math.PI, 0]},
+      patch_wall3:{position:[this.size[0], 0.3, 0.3 ],  rotation:[0, Math.PI, 0]},
     }
-
   }
 
 }

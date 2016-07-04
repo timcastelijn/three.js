@@ -7,24 +7,6 @@ Floor.prototype = Object.create(Block.prototype);
 
 
 Floor.prototype.addPatches = function(){
-  this.patches = {
-      2:{types:["wall", "roof"], position:new THREE.Vector3(this.width,0.3,0.3), rotation:Math.PI},
-      3:{types:["wall", "roof"], position:new THREE.Vector3(this.width,0.3,0.3), rotation:Math.PI},
-      14:{types:["wall", "roof"], position:new THREE.Vector3(0, 0.3, 0)},
-      15:{types:["wall", "roof"], position:new THREE.Vector3(0, 0.3, 0)},
-      18:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      19:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      30:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      31:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      6:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      7:{types:["floor"], position:new THREE.Vector3(0, 0.0, 0.3)},
-      10:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-      11:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-      34:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-      35:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-      22:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-      23:{types:["floor"], position:new THREE.Vector3(this.width, 0.0, 0.0), rotation:Math.PI},
-  },
   this.snap_areas ={
     wo:{
       patch_wall2:{position:[this.size[0], 0.3, 0.3 ],  rotation:[0, Math.PI, 0] },
@@ -33,6 +15,9 @@ Floor.prototype.addPatches = function(){
     ro:{
       patch_wall2:{position:[this.size[0],0.3,0.3], rotation:[0, Math.PI, 0] },
       patch_wall1:{position:[0, 0.3, 0],            rotation:[0, 0, 0] }
+    },
+    wi:{
+      patch_wall3:{position_min:[0.6, 0.3, 0], position_max:[this.size[0] - 0.6, 0.3, 0.3], offset:[0.0, 0,0] }
     },
     // fl:{
     //   // 2:{position:new THREE.Vector3(0, 0.0, 0.3)}
