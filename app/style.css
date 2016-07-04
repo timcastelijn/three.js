@@ -24,6 +24,12 @@ body {
   width:20%;
 }
 
+#accordion * .panel-body{
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+
 .container-fluid{
   gutter-width:5px;
 }
