@@ -30,6 +30,20 @@ function Selector(camera, controls){
   this.plane.material.visible = false;
   scene.add( this.plane );
 
+
+  // //create screen-intersection plane
+  // this.screen_plane = new THREE.Mesh(
+  //   new THREE.PlaneBufferGeometry( 20, 20, 8, 8 ),
+  //   new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
+  // );
+  // // rotate plane to xz orientation
+  // this.screen_plane.rotation.x = Math.PI * -0.5;
+  // this.screen_plane.material.visible = false;
+  // scene.add( this.screen_plane );
+
+
+
+
   renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
   renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
   renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
@@ -133,21 +147,40 @@ Selector.prototype.moveDraggedObject = function(){
 }
 
 
-Selector.prototype.highlightPatches=function(){
+Selector.prototype.highlightPatches=function(boolean){
 
-  var dragged_type = this.dragged.type;
+  // check the dragged type
+  if(boolean){
+    this.highlights = []
 
-  // for (var i = 0; i < this.snap_objects.length; i++) {
-  //   var object = this.snap_objects[i];
-  //   var type = object.parent.type;
-  //
-  //
-  //
-  //   var index = _patch_table[type][]
-  //
-  //   object.material.materials[index] =
-  //
-  // }
+    for (var i = 0; i < _blocks.length; i++) {
+      // if (_blocks[i] != this.dragged){
+        var block = _blocks[i];
+
+          var category = this.dragged.type.substring(0,2)
+          if(block.snap_areas && block.snap_areas[this.dragged.type]){
+            category = this.dragged.type;
+          }
+
+          // console.log(category, block.patch_materials);
+          if(block.patch_materials && block.patch_materials[category]){
+            console.log(block.type, category, block.patch_materials)
+
+            block.patch_materials[category].color.set("#70CF7B")
+            this.highlights.push(block.patch_materials[category].color  )
+          }
+        }
+      // }
+
+
+  }else{
+    console.log("unhighlight");
+    console.log(this.highlights);
+    for (var j = 0; j <this.highlights.length; j++) {
+      this.highlights[j].set("#ffffff");
+
+    }
+  }
 }
 
 
@@ -161,6 +194,7 @@ Selector.prototype.onMouseMove=function(event){
 
 
   if ( this.dragged ) {
+
     this.moveDraggedObject();
     return;
   }
@@ -211,13 +245,14 @@ Selector.prototype.bboxOverLap=function(){
 
 
 Selector.prototype.setSnapObjects = function(){
+
   //clone array
   this.snap_objects = this.selectables.slice(0);
 
   // remove all children of selected from snap objects
   for(var i =0; i<this.selected.children_meshes.length; i++){
     var selected_index = this.snap_objects.indexOf(this.selected.children_meshes[i]);
-    this.snap_objects.splice(selected_index, 1)
+    this.snap_objects.splice(selected_index, 1);
   }
 }
 
@@ -273,6 +308,7 @@ Selector.prototype.getSelection=function(){
     this.selected.previous_position = new THREE.Vector3().copy( this.selected.position);
 
     this.setSnapObjects()
+
     this.calculateBBVolumes()
 
   }else{
@@ -286,6 +322,9 @@ Selector.prototype.tryDrag = function() {
   if(this.mouse_down && this.selected ){
     this.dragged = this.selected;
     this.forgetSelection()
+
+    this.dragged.scale.set(1.1 ,1.1 ,1.1 );
+    setTimeout( ()=>{ this.dragged.scale.set(1,1,1);     }, 20);
   }
 }
 
@@ -299,7 +338,7 @@ Selector.prototype.onMouseDown=function(event){
           this.getSelection()
 
           clearTimeout(this.timer)
-          this.timer = setTimeout( ()=>{console.log('try'); this.tryDrag() }, 1000);
+          this.timer = setTimeout( ()=>{console.log('trydrag'); this.tryDrag() }, 1000);
         }
         break;
     case 1: // middle
@@ -328,9 +367,13 @@ Selector.prototype.addBlock=function(object){
     this.dragged = block;
     this.intersected = block;
     this.setSnapObjects()
+
+    this.highlightPatches(true);
     this.calculateBBVolumes()
 }
 Selector.prototype.stopAdding=function(){
+    this.highlightPatches(false);
+
     this.keep_adding = null;
     this.deleteObject(this.dragged);
     this.dragged.overlap = false;

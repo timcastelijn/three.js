@@ -57,7 +57,7 @@ Selectable.prototype.snap = function(intersect){
   var snap_areas = this.getSnapAreas(intersect_parent);
   var patch_id = _patch_table[intersect_parent.type][m_index];
 
-  console.log(patch_id);
+  console.log(this.fid, snap_areas, patch_id);
 
   if(snap_areas && snap_areas[patch_id]){
     this.moveToArea(snap_areas[patch_id], intersect)

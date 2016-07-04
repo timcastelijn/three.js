@@ -8,16 +8,12 @@ var modelLoadedCallback = function(type, config_file){
     if(type == 'wo_i_300'){console.log(type, materials);}
 
     _patch_table[type] = {};
-
     for (var i = 0; i < materials.length; i++) {
-      var name = materials[i].name
-      if (_materials[materials[i].name]){
-        materials[i] = _materials[materials[i].name];
-        materials[i].name = name;
-      }else{
-        materials[i] = _materials.basic;
-        materials[i].name = 'basic'
-      }
+      var name = materials[i].name;
+
+      materials[i] = new THREE.MeshPhongMaterial( { name:name, opacity:materials[i].opacity, transparent:materials[i].transparent, color: 0xffffff, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } )
+      // console.log(name, materials[i].name);
+
       _patch_table[type][i] = name;
     }
 

@@ -53,6 +53,8 @@ function Block(geometry, selector){
 
   this.addPatches();
 
+  this.setPatchMaterials();
+
   if(_AXIS_HELPERS){
     var axisHelper = new THREE.AxisHelper( 0.2 );
     axisHelper.name = 'axisHelper';
@@ -167,6 +169,47 @@ Block.prototype.setTransformations = function(position, rotation){
 Block.prototype.addPatches = function(){
     console.log('cannot add placeholders for abstract class "block"');
 }
+
+Block.prototype.setPatchMaterials = function(){
+
+  if (!this.snap_areas) {
+    return false;
+  }
+
+  // create new table
+  this.patch_materials = {};
+
+  for (var type_name in this.snap_areas) {
+    if (this.snap_areas.hasOwnProperty(type_name) ) {
+
+        var snap_area = this.snap_areas[type_name];
+
+
+        // set the material in a table
+        for (var patch_name in snap_area) {
+          if (snap_area.hasOwnProperty(patch_name)) {
+
+            // for each material
+            for (var i = 0; i < this.mesh_object.material.materials.length; i++) {
+              var material = this.mesh_object.material.materials[i];
+              // console.log(this.fid, material.name);
+
+              if(this.type == 'fl_filler'){
+                console.log(material.name, patch_name);
+              }
+
+              if (material.name == patch_name) {
+                this.patch_materials[type_name] =  material ;
+              }
+            }
+          }
+        }
+    }
+  }
+
+}
+
+
 
 Block.prototype.addBlock = function(){
 
