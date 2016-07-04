@@ -82,6 +82,10 @@ function init() {
   var light = new THREE.PointLight( 0xffffff, 0.5 );
   light.position.set( -10, 10, 10 );
 
+  var light2 = new THREE.SpotLight( 0xffffff, 0.5 );
+  light2.position.set( 10, 10, -10 );
+  scene.add( light2 );
+
   if (SHADOWS_ENABLED){
     light.castShadow = true;
 
@@ -94,9 +98,7 @@ function init() {
     light.shadow.mapSize.width = 2048;
     light.shadow.mapSize.height = 2048;
 
-    var light2 = new THREE.SpotLight( 0xffffff, 0.5 );
-    light2.position.set( 2, 3, 5 );
-    scene.add( light2 );
+
   }
 
   scene.add( light );

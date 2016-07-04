@@ -166,7 +166,7 @@ Selector.prototype.highlightPatches=function(boolean){
           if(block.patch_materials && block.patch_materials[category]){
             console.log(block.type, category, block.patch_materials)
 
-            block.patch_materials[category].color.set("#70CF7B")
+            block.patch_materials[category].color.set("#E1E6B9")
             this.highlights.push(block.patch_materials[category].color  )
           }
         }
@@ -175,7 +175,6 @@ Selector.prototype.highlightPatches=function(boolean){
 
   }else{
     console.log("unhighlight");
-    console.log(this.highlights);
     for (var j = 0; j <this.highlights.length; j++) {
       this.highlights[j].set("#ffffff");
 
@@ -380,37 +379,44 @@ Selector.prototype.stopAdding=function(){
     this.dragged = null;
 }
 
+Selector.prototype.stopDrag=function(){
+
+  if (this.dragged.overlap || !this.dragged.snapped){
+    // placement failed
+    if (this.dragged.previous_position){
+      this.dragged.position.copy(  this.dragged.previous_position );
+    }else{
+      return
+    }
+  } else {
+    // placement succesful
+
+    this.updateConfig()
+
+    if(this.keep_adding){
+      this.addBlock(this.keep_adding);
+      return
+    }
+  }
+
+  this.dragged.overlap = false;
+  this.dragged = null;
+
+}
+
 Selector.prototype.onMouseUp=function(event){
   this.mouse_down = false;
   this.controls.enabled = true;
 
+  // reset drag timer
   clearTimeout(this.timer)
 
   // only if object was dragged
   if ( this.dragged ) {
-    if (this.dragged.overlap){
-      // placement failed
-      if (this.dragged.previous_position){
-        this.dragged.position.copy(  this.dragged.previous_position );
-      }else{
-        return
-      }
-    } else {
-      // placement succesful
-
-      this.updateConfig()
-
-      if(this.keep_adding){
-        this.addBlock(this.keep_adding);
-        return
-      }
-    }
-
-    this.dragged.overlap = false;
-    this.dragged = null;
+    this.stopDrag();
   }
 
-  //reset to basic material
+  //reset snap objects to basic material
   for(var i =0; i<this.snap_objects.length; i++){
     this.snap_objects[i].parent.setMaterial('basic')
   }

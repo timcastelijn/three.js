@@ -61,8 +61,10 @@ Selectable.prototype.snap = function(intersect){
 
   if(snap_areas && snap_areas[patch_id]){
     this.moveToArea(snap_areas[patch_id], intersect)
+    this.snapped = true;
     return true;
   }
+  this.snapped = false;
   this.position.copy(intersect.point)
 
 }
