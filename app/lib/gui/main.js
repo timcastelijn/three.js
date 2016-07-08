@@ -138,7 +138,7 @@ $(function() {
 
               var img = item.image? ('<img src="' + item.image + '"/>'): name3;
               // create buttons
-              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').click({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
+              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').mousedown({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
 
 
               $col.append($button);

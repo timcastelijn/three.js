@@ -219,6 +219,103 @@ Selector.prototype.updateDebugSpheres = function(bb){
   this.dragged.sphere_max.visible = true;
 }
 
+function triIntersect(t1, t2){
+
+  var n2 = t2[1].sub(t2[0]).cross( t2[2].sub(t2[0]) )
+  var d2 = n2.negate().dot(t2[0])
+
+  // calculate distance to plane
+  for (var i = 0; i < 3; i++) {
+    dv1[i] = n2.dot(t1[i]).add(d2)
+  }
+
+  // if dv1 all signs are equal and not 0 triangle lies completely on one side of the plane, there is no intersection
+  dv10dv11 = dv1[0] * dv1[1];
+  dv10dv12 = dv1[0] * dv1[2];
+
+  // same sign on all of them + not equal 0 ?
+  if (dv10dv11 > 0.0 && dv10dv12 > 0.0){
+      // no intersection occurs
+      return false;
+  }
+
+  var n1 = t1[1].sub(t1[0]).cross( t1[2].sub(t1[0]) )
+  var d1 = n1.negate().dot(t1[0])
+
+  // calculate distance to plane
+  for (var i = 0; i < 3; i++) {
+    dv2[i] = n1.dot(t1[i]).add(d1)
+  }
+
+  // if dv1 all signs are equal and not 0 triangle lies completely on one side of the plane, there is no intersection
+  dv20dv21 = dv2[0] * dv2[1];
+  dv20dv22 = dv2[0] * dv2[2];
+
+  // same sign on all of them + not equal 0 ?
+  if (dv20dv21 > 0.0 && dv20dv22 > 0.0){
+      // no intersection occurs
+      return false;
+  }
+
+  // compute direction of intersection line
+  dd = n1.cross( n2);
+
+  // calculate distance to intersection line
+  for (var i = 0; i < 3; i++) {
+    pv1[i] = dd.dot(t1[i])
+  }
+
+}
+
+// Selector.prototype.bboxOverLap=function(){
+//
+//
+//   var others  = this.snap_objects;
+//   var ray = new THREE.Raycaster();
+//
+//   for (var m = 0; m < others.length; m++) {
+//     var object = others[m];
+//     var intersect = true;
+//
+//     for (var i = 0; i < this.dragged.mesh_object.geometry.vertices.length; i++) {
+//       var vertex = this.dragged.mesh_object.geometry.vertices[i].clone();
+//       var globalvertex = this.dragged.localToWorld(vertex);
+//
+//       var directions = [
+//         [1,0,0],
+//         [0,1,0],
+//         [0,0,1],
+//       ]
+//
+//       var intersect = []
+//       for (var j = 0; j < 3; j++) {
+//
+//         var dir_pos = new THREE.Vector3().fromArray(directions[j]);
+//
+//         ray.set(globalvertex, dir_pos)
+//         var intersect_pos = ray.intersectObject( object ).length > 0;
+//
+//         var dir_neg = dir_pos.negate();
+//
+//         ray.set(globalvertex, dir_neg)
+//         var intersect_neg = ray.intersectObject( object ).length > 0;
+//
+//         intersect[j] = (intersect_pos || intersect_neg);
+//
+//       }
+//
+//       if(intersect[0] && intersect[1] && intersect[2]){
+//         object.material = this.materials.prohibited;
+//         console.log("intersect");
+//         return true;
+//       }
+//     }
+//
+//   }
+//
+//   return false
+// }
+
 Selector.prototype.bboxOverLap=function(){
 
   var bb      =  new THREE.Box3().setFromObject(this.dragged)//.mesh_object.geometry.boundingBox;
