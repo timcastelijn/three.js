@@ -21,7 +21,7 @@ function Cell(size, flip){
   // offset pivot to corner
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( this.flip * this.width / 2, size[1] / 2 , face_thickness/2 + size[2] /2) );
 
-  this.mesh_exterior = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.mesh_exterior = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: colors.exterior, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ) );
 
   this.add(this.mesh_exterior);
 

@@ -421,10 +421,11 @@ Wall.prototype.addCorner = function(){
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( MODULE_THICKNESS/4, this.height/2, MODULE_THICKNESS/4 ));
 
   this.corner_mesh = []
+  var material = new THREE.MeshPhongMaterial( { color: colors.exterior, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } )
 
-  this.corner_mesh[0] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-  this.corner_mesh[1] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
-  this.corner_mesh[2] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.corner_mesh[0] = new THREE.Mesh( geometry, material );
+  this.corner_mesh[1] = new THREE.Mesh( geometry, material );
+  this.corner_mesh[2] = new THREE.Mesh( geometry, material );
   this.corner_mesh[3] = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: "#333333" } ) );
 
   this.updateCornerPosition();
