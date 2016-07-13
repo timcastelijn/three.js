@@ -194,9 +194,6 @@ Block.prototype.setPatchMaterials = function(){
               var material = this.mesh_object.material.materials[i];
               // console.log(this.fid, material.name);
 
-              if(this.type == 'fl_filler'){
-                console.log(material.name, patch_name);
-              }
 
               if (material.name == patch_name) {
                 this.patch_materials[type_name] =  material ;

@@ -146,6 +146,8 @@ Selector.prototype.highlightPatches=function(boolean){
 
   // check the dragged type
   if(boolean){
+
+    console.log('highlight the patches');
     this.highlights = []
 
     for (var i = 0; i < _blocks.length; i++) {
@@ -159,7 +161,6 @@ Selector.prototype.highlightPatches=function(boolean){
 
           // console.log(category, block.patch_materials);
           if(block.patch_materials && block.patch_materials[category]){
-            console.log(block.type, category, block.patch_materials)
 
             block.patch_materials[category].color.set("#E1E6B9")
             this.highlights.push(block.patch_materials[category].color  )
@@ -169,7 +170,10 @@ Selector.prototype.highlightPatches=function(boolean){
 
 
   }else{
-    console.log("unhighlight");
+    if(!this.highlights) return;
+
+    console.log('unhighlight the patches');
+
     for (var j = 0; j <this.highlights.length; j++) {
       this.highlights[j].set("#ffffff");
 
@@ -470,9 +474,11 @@ Selector.prototype.stopAdding=function(){
     this.highlightPatches(false);
 
     this.keep_adding = null;
-    this.deleteObject(this.dragged);
-    this.dragged.overlap = false;
-    this.dragged = null;
+    if (this.dragged){
+      this.deleteObject(this.dragged);
+      this.dragged.overlap = false;
+      this.dragged = null;
+    }
 }
 
 Selector.prototype.stopDrag=function(){
