@@ -14,60 +14,66 @@ function guiLog(message){
 
 _button_table = {
   floor:{
-    normal:{
-      "l2.4":{button_text:"2.4m", type:"floor", size:[2.4, 0.3, 0.3]},
-      "l3.6":{button_text:"3.6m", type:"floor", size:[3.6, 0.3, 0.3]},
-      "l4.8":{button_text:"4.8m", type:"floor", size:[4.8, 0.3, 0.3]},
-      "l5.4":{button_text:"5.4m", type:"floor", size:[5.4, 0.3, 0.3]},
+    options:{
+      length:{
+        "2.4":{state:""},
+        "3.6":{state:""},
+        "4.8":{state:"checked"},
+        "5.4":{state:""},
+      },
     },
-    end_pieces:{
-      "l2.4":{button_text:"2.4m", type:"fl_e", size:[2.4, 0.3, 0.3]},
-      "l3.6":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
-      "l4.8":{button_text:"4.8m", type:"fl_e", size:[4.8, 0.3, 0.3]},
-    },
-    fillers:{
+    elements:{
+      "normal":{button_text:"2.4m", type:"floor", size:[2.4, 0.3, 0.3]},
+      "end piece":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
       "filler":{button_text:"2.4m", type:"fl_filler", size:[2.4, 0.3, 0.3]},
     },
   },
   wall:{
-    normal:{
-      "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
-      "w600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+    options:{
+      height:{
+        "2.7":{size:[-1,2.7,-1] ,state:"checked"},
+        "3.0":{size:[-1,3.0,-1] ,state:""},
+      },
     },
-    "corner pieces":{
-      "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
+    elements:{
+        "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
+        "w600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+        "corner piece":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
     }
   },
   roof:{
-    "30º":{
-      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:30},
-      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:30},
-      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:30},
+    options:{
+      length:{
+        "1.2":{size:[1.2,-1,-1] ,state:"checked"},
+        "1.8":{size:[1.8,-1,-1] ,state:""},
+        "2.4":{size:[2.4,-1,-1] ,state:""},
+        "2.7":{size:[2.7,-1,-1] ,state:""},
+      },
+      angle:{
+        "30º":{angle:30 ,state:""},
+        "45º":{angle:45 ,state:"checked"},
+        "60º":{angle:60 ,state:""},
+      }
     },
-    "30º end":{
-      "l2.4":{button_text:"3.6m", type:"ro_e", size:[2.4, 1, 0.3], angle:30},
-      "l3.6":{button_text:"3.6m", type:"ro_e", size:[3.6, 1, 0.3], angle:30},
-      "l4.8":{button_text:"3.6m", type:"ro_e", size:[4.8, 1, 0.3], angle:30},
-    },
-    "45º":{
-      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:45},
-      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:45},
-      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:45},
-    },
-    "60º":{
-      "l1.2":{button_text:"3.6m", type:"roof", size:[1.2, 1, 0.6], angle:60},
-      "l1.8":{button_text:"3.6m", type:"roof", size:[1.8, 1, 0.6], angle:60},
-      "l2.4":{button_text:"3.6m", type:"roof", size:[2.4, 1, 0.6], angle:60},
-    },
-  },
-  window:{
-    all:{
-      "w600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
-      "w900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+    elements:{
+        "roof":{button_text:"2.7m", type:"roof", size:[2.4, 1, 0.6], angle:45},
+        "roof end":{button_text:"2.7m", type:"ro_e", size:[2.4, 1, 0.3], angle:45},
     }
   },
+  // window:{
+  //   all:{
+  //     "w600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+  //     "w900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+  //   }
+  // },
   interior:{
-    normal:{
+    options:{
+      height:{
+        "2.7":{size:[-1,2.7,-1] ,state:"checked"},
+        "3.0":{size:[-1,3.0,-1] ,state:""},
+      },
+    },
+    elements:{
       "w300":{button_text:"3.6m", image:"images/wi_i_300.jpg", type:"wi_i", size:[0.3, 2.7, 0.1]},
       "w600":{button_text:"3.6m", image:"images/wi_i_600.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
       "t":{button_text:"3.6m", image:"images/wi_t.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
@@ -101,49 +107,89 @@ $(function() {
   $('#accordion').on('hidden.bs.collapse', toggleChevron);
   $('#accordion').on('shown.bs.collapse', toggleChevron);
 
+  function addRow(text, target){
+    var $row = $('<div/>', {
+      text: text,
+      class: "row",
+    });
+    target.append($row);
+  }
 
+  function addRowRadios(table, target){
+    var $row = $('<div/>', {
+      class: "row",
+    });
 
-  for (var name in _button_table) {
-    if (_button_table.hasOwnProperty(name)) {
-      //floor
-      var category = _button_table[name];
+    var $form = $('<form/>', {
+       role: "form",
+    });
 
-      for (var name2 in category) {
-        if (category.hasOwnProperty(name2)) {
+    for (var radio_name in table) {
+      var radio = table[radio_name];
 
-          var $row = $('<div/>', {
-            text: name2,
-            class: "row",
-          });
+      var $radio= $('<label class="radio-inline"><input type="radio" name="optradio" '+ radio.state +'>' + radio_name +'</label>').change({category:category, parameters:radio}, setShapeParameters) //.mousedown({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
+      $form.append($radio);
+    }
+    $row.append($form)
+    target.append($row);
+  }
 
-          var $row2 = $('<div/>', {
-             class: "row",
-          });
+  function addRowButtons(table, target){
+    var $row = $('<div/>', {
+      class: "row",
+    });
 
-          $("#collapse1").find("#"+name).find('.container-fluid').append($row);
-          $("#collapse1").find("#"+name).find('.container-fluid').append($row2);
+    for (var button_name in table) {
 
+      var $col = $('<div/>', {
+         class: "col-xs-6",
+      });
 
-          //normal
-          var subcategory = category[name2];
+      var item = table[button_name];
 
-          for (var name3 in subcategory) {
-            if (subcategory.hasOwnProperty(name3)) {
+      var img = item.image? ('<img src="' + item.image + '"/>'): button_name;
+      // create buttons
+      var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ button_name +'</p>').mousedown({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
 
-              var $col = $('<div/>', {
-                 class: "col-xs-6",
-              });
+      $col.append($button);
+      $row.append($col);
+    }
+    target.append($row);
+  }
 
-              var item = subcategory[name3];
+  for (var category in _button_table) {
 
-              var img = item.image? ('<img src="' + item.image + '"/>'): name3;
-              // create buttons
-              var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ name3 +'</p>').mousedown({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
+      var controls = _button_table[category];
 
+      var target = $("#collapse1").find("#"+category).find('.container-fluid');
 
-              $col.append($button);
-              $row2.append($col);
-            }
+      for (var option_name in controls.options){
+
+        addRow(option_name, target);
+        addRowRadios(controls.options[option_name], target);
+      }
+
+      addRowButtons(controls.elements, target)
+
+      // for (var element_type in controls.elements) {
+      //   addRow(element_type, target);
+      //   addRowButtons(controls.elements[element_type], target)
+      // }
+
+  }
+
+  function setShapeParameters(event){
+    console.log(event.data.parameters);
+
+    var size  = event.data.parameters.size;
+    var cat   = event.data.category;
+
+    if(size){
+      for (var i = 0; i < 3; i++) {
+        if (size[i] != -1){
+          for (button_name in _button_table[cat].elements){
+            var button = _button_table[cat].elements[button_name];
+            button.size[i] = size[i];
           }
         }
       }
