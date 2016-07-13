@@ -6,17 +6,17 @@ function Wall(object, selector){
 Wall.prototype = Object.create(Block.prototype);
 
 
-Wall.prototype.setMorphtargets = function () {
-
-
-  var n = (this.size[0] == 0.6)? 1: 0;
-
-  // console.log(this.type, this.mesh_object.material.materials);
-
-  this.mesh_object.morphTargetInfluences[ 1] = n;
-  this.mesh_object.morphTargetInfluences[ 2] = this.size[1];
-
-};
+// Wall.prototype.setMorphtargets = function () {
+//
+//
+//   var n = (this.size[0] == 0.6)? 1: 0;
+//
+//   // console.log(this.type, this.mesh_object.material.materials);
+//
+//   this.mesh_object.morphTargetInfluences[ 1] = n;
+//   this.mesh_object.morphTargetInfluences[ 2] = this.size[1];
+//
+// };
 
 Wall.prototype.addPatches = function(){
   this.patches = {

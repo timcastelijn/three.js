@@ -16,16 +16,16 @@ _button_table = {
   floor:{
     options:{
       length:{
-        "2.4":{state:""},
-        "3.6":{state:""},
-        "4.8":{state:"checked"},
-        "5.4":{state:""},
+        "2.4":{size:[2.4, -1, -1], state:""},
+        "3.6":{size:[3.6, -1, -1], state:""},
+        "4.8":{size:[4.8, -1, -1], state:"checked"},
+        "5.4":{size:[5.4, -1, -1], state:""},
       },
     },
     elements:{
-      "normal":{button_text:"2.4m", image:"images/fl.jpg", type:"floor", size:[2.4, 0.3, 0.3]},
-      "end piece":{button_text:"3.6m", image:"images/fl_e.jpg", type:"fl_e", size:[3.6, 0.3, 0.3]},
-      "filler":{button_text:"2.4m", image:"images/fl_filler.jpg", type:"fl_filler", size:[2.4, 0.3, 0.3]},
+      "normal":{image:"images/fl.jpg", type:"floor", size:[4.8, 0.3, 0.3]},
+      "end piece":{image:"images/fl_e.jpg", type:"fl_e", size:[4.8, 0.3, 0.3]},
+      "filler":{image:"images/fl_filler.jpg", type:"fl_filler", size:[0.3, 0.3, 0.3]},
     },
   },
   wall:{
@@ -36,11 +36,12 @@ _button_table = {
       },
     },
     elements:{
-        "wall 300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
-        "wall 600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
-        "corner piece":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
-        "window 600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
-        "window 900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+      "wall 300":{ image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
+      "wall 600":{ image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+      "corner piece":{ image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
+      "window 600":{ image:"images/wo_w_600.jpg", type:"wo_w_600", size:[0.9, 2.7, 0.3]},
+      "window 900":{ image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+      "door 900":{ image:"images/wo_d_900.jpg", type:"wo_d_900", size:[0.9, 2.7, 0.3]},
     }
   },
   roof:{
@@ -58,16 +59,10 @@ _button_table = {
       }
     },
     elements:{
-        "roof":{button_text:"2.7m", image:"images/ro_600.jpg", type:"roof", size:[2.4, 1, 0.6], angle:45},
-        "roof end":{button_text:"2.7m", image:"images/ro_e.jpg", type:"ro_e", size:[2.4, 1, 0.3], angle:45},
+        "roof":{image:"images/ro_600.jpg", type:"roof", size:[2.4, 1, 0.6], angle:45},
+        "roof end":{image:"images/ro_e.jpg", type:"ro_e", size:[2.4, 1, 0.3], angle:45},
     }
   },
-  // window:{
-  //   all:{
-  //     "w600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
-  //     "w900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
-  //   }
-  // },
   interior:{
     options:{
       height:{
@@ -76,10 +71,10 @@ _button_table = {
       },
     },
     elements:{
-      "w300":{button_text:"3.6m", image:"images/wi_i_300.jpg", type:"wi_i", size:[0.3, 2.7, 0.1]},
-      "w600":{button_text:"3.6m", image:"images/wi_i_600.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
-      "t":{button_text:"3.6m", image:"images/wi_t.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
-      "x":{button_text:"3.6m", image:"images/wi_x.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "w300":{image:"images/wi_i_300.jpg", type:"wi_i", size:[0.3, 2.7, 0.1]},
+      "w600":{image:"images/wi_i_600.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "t":{image:"images/wi_t.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
+      "x":{image:"images/wi_x.jpg", type:"wi_i", size:[0.6, 2.7, 0.1]},
     }
   },
 }
@@ -151,6 +146,7 @@ $(function() {
 
       var img = item.image? ('<img src="' + item.image + '"/>'): button_name;
       // create buttons
+
       var $button= $('<button class="btn btn-default">' + img + '</button><p>'+ button_name +'</p>').mousedown({type:item.type, size:item.size, angle:item.angle}, startBlockAdder )
 
       $col.append($button);
@@ -181,21 +177,31 @@ $(function() {
   }
 
   function setShapeParameters(event){
-    console.log(event.data.parameters);
 
     var size  = event.data.parameters.size;
+    var angle  = event.data.parameters.angle;
+
     var cat   = event.data.category;
 
-    if(size){
-      for (var i = 0; i < 3; i++) {
-        if (size[i] != -1){
-          for (button_name in _button_table[cat].elements){
-            var button = _button_table[cat].elements[button_name];
+
+    for (button_name in _button_table[cat].elements){
+      var button = _button_table[cat].elements[button_name];
+
+      // if(angle){
+      //   button.angle = angle
+      // }
+
+      if(size){
+        for (var i = 0; i < 3; i++) {
+          if (size[i] != -1){
             button.size[i] = size[i];
           }
         }
       }
+
+
     }
+    console.log(button);
   }
 
   function startBlockAdder(event){
@@ -207,6 +213,8 @@ $(function() {
       rotation:[0,0,0],
       angle:event.data.angle,
     }
+
+    console.log(object);
 
     //delete currently dragged object
     selector.deleteObject(selector.dragged);
