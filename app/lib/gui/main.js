@@ -23,9 +23,9 @@ _button_table = {
       },
     },
     elements:{
-      "normal":{button_text:"2.4m", type:"floor", size:[2.4, 0.3, 0.3]},
-      "end piece":{button_text:"3.6m", type:"fl_e", size:[3.6, 0.3, 0.3]},
-      "filler":{button_text:"2.4m", type:"fl_filler", size:[2.4, 0.3, 0.3]},
+      "normal":{button_text:"2.4m", image:"images/fl.jpg", type:"floor", size:[2.4, 0.3, 0.3]},
+      "end piece":{button_text:"3.6m", image:"images/fl_e.jpg", type:"fl_e", size:[3.6, 0.3, 0.3]},
+      "filler":{button_text:"2.4m", image:"images/fl_filler.jpg", type:"fl_filler", size:[2.4, 0.3, 0.3]},
     },
   },
   wall:{
@@ -36,9 +36,11 @@ _button_table = {
       },
     },
     elements:{
-        "w300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
-        "w600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
+        "wall 300":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_i_300", size:[0.3, 2.7, 0.3]},
+        "wall 600":{button_text:"2.7m", image:"images/wo_i_600.jpg", type:"wo_i_600", size:[0.6, 2.7, 0.3]},
         "corner piece":{button_text:"2.7m", image:"images/wo_i_300.jpg", type:"wo_oc", size:[0.6, 2.7, 0.3]},
+        "window 600":{button_text:"3.6m", image:"images/wo_w_600.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
+        "window 900":{button_text:"3.6m", image:"images/wo_w_900.jpg", type:"wo_w_900", size:[0.9, 2.7, 0.3]},
     }
   },
   roof:{
@@ -56,8 +58,8 @@ _button_table = {
       }
     },
     elements:{
-        "roof":{button_text:"2.7m", type:"roof", size:[2.4, 1, 0.6], angle:45},
-        "roof end":{button_text:"2.7m", type:"ro_e", size:[2.4, 1, 0.3], angle:45},
+        "roof":{button_text:"2.7m", image:"images/ro_600.jpg", type:"roof", size:[2.4, 1, 0.6], angle:45},
+        "roof end":{button_text:"2.7m", image:"images/ro_e.jpg", type:"ro_e", size:[2.4, 1, 0.3], angle:45},
     }
   },
   // window:{
