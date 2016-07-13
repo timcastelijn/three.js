@@ -31,15 +31,10 @@ function Selector(camera, controls){
   scene.add( this.plane );
 
 
-  // //create screen-intersection plane
-  // this.screen_plane = new THREE.Mesh(
-  //   new THREE.PlaneBufferGeometry( 20, 20, 8, 8 ),
-  //   new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
-  // );
-  // // rotate plane to xz orientation
-  // this.screen_plane.rotation.x = Math.PI * -0.5;
+  //create screen-intersection plane
+  this.screen_plane = new THREE.Plane();
+  // rotate plane to xz orientation
   // this.screen_plane.material.visible = false;
-  // scene.add( this.screen_plane );
 
 
 
@@ -204,6 +199,10 @@ Selector.prototype.onMouseMove=function(event){
     // intersected object changes
     if ( this.intersected != intersects[ 0 ].object ) {
       this.intersected = intersects[ 0 ].object;
+
+      this.screen_plane.setFromNormalAndCoplanarPoint(
+        this.camera.getWorldDirection( this.screen_plane.normal ),
+        this.intersected.position );
     }
     container.style.cursor = 'pointer';
   } else {

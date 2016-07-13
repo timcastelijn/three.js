@@ -78,6 +78,15 @@ Selectable.prototype.moveOverPlane = function(){
     // this.dragged.moveTo(intersects[ 0 ].point);
     this.position.copy( intersects[ 0 ].point );
 
+  }else {
+    var intersection = new THREE.Vector3();
+
+    if ( this.selector.raycaster.ray.intersectPlane( this.selector.screen_plane, intersection ) ) {
+
+      // this.dragged.moveTo(intersects[ 0 ].point);
+      this.position.copy( intersection );
+
+    }
   }
 }
 
