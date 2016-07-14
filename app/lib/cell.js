@@ -32,7 +32,7 @@ function Cell(size, flip){
   geometry2.applyMatrix( new THREE.Matrix4().makeTranslation( this.flip * this.interior_width / 2, this.interior_height / 2 , face_thickness/2  ) );
 
 
-  this.mesh_interior_clad = new THREE.Mesh( geometry2, new THREE.MeshLambertMaterial( { color: colors.interior } ) );
+  this.mesh_interior_clad = new THREE.Mesh( geometry2, new THREE.MeshPhongMaterial( { color: colors.interior, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } ) );
   this.mesh_interior_clad.position.set(CELL_CREASE/2, CELL_CREASE/2 , 0);
   this.mesh_interior = this.mesh_interior_clad
   this.type = 0;

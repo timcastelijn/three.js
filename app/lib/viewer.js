@@ -194,11 +194,11 @@ function init() {
 function loadConfig(){
 
   //define materials
-  _models.aromatherapy.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  _models.backrest.mesh.material                  = new THREE.MeshPhongMaterial( { color: colors.backrest, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  _models.heater.mesh.material.materials[0]       = new THREE.MeshPhongMaterial( { color: "#111111", shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  _models.heater.mesh.material.materials[1]       = new THREE.MeshPhongMaterial( { color: colors.interior, shininess:0, reflectivity:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  _models.vaporizer.mesh.material.materials[0]    = new THREE.MeshPhongMaterial( { color: "#D4D2E7", shininess:0.5, reflectivity:0.3, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.aromatherapy.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.interior, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.backrest.mesh.material                  = new THREE.MeshPhongMaterial( { color: colors.backrest, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.heater.mesh.material.materials[0]       = new THREE.MeshPhongMaterial( { color: "#111111",  morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.heater.mesh.material.materials[1]       = new THREE.MeshPhongMaterial( { color: colors.interior, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  _models.vaporizer.mesh.material.materials[0]    = new THREE.MeshPhongMaterial( { color: "#D4D2E7", reflectivity:0.8, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   //create cabine
   cabine = new CabineGrid(1.24, 2.0, 1.4);

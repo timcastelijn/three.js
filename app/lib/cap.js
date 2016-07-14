@@ -10,7 +10,7 @@ function Cap(width, depth){
 
   this.mesh.material.materials[0] = new THREE.MeshPhongMaterial( { color: colors.exterior, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
   this.mesh.material.materials[1] = new THREE.MeshPhongMaterial( { color: "#333333", shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-  this.mesh.material.materials[2] = new THREE.MeshPhongMaterial( { color: colors.floor, shininess:0, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+  this.mesh.material.materials[2] = new THREE.MeshPhongMaterial( { color: colors.floor, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
   this.add(this.mesh )
 

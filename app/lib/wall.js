@@ -466,9 +466,9 @@ Wall.prototype.addDoorPlate = function(){
 
   geometry.applyMatrix( new THREE.Matrix4().makeTranslation( this.door_plate_thickness/2, this.height/2, MODULE_THICKNESS/2 ));
 
-  this.door_plate_mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.door_plate_mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: colors.exterior } ) );
 
-  this.door_plate_mesh2 = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: colors.exterior } ) );
+  this.door_plate_mesh2 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: colors.exterior } ) );
 
   this.updateDoorPlatePos()
 
