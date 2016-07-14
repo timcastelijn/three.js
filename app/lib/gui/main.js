@@ -276,7 +276,7 @@ $(function() {
           console.log('sending')
         },
         success: function(data) {
-          console.log("succes", data);
+          console.log("succes:", data);
         },
         failure: function(data) {
           console.log("failure", data);
@@ -298,8 +298,6 @@ $(function() {
   // handle form submit
   $("#myform").on("submit", function(e) {
     if($('#myform').valid()){
-
-      cabine.getCellLayout();
 
       //prevent default redirecting to '*.php'
       e.preventDefault();
