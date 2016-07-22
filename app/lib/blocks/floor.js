@@ -33,7 +33,8 @@ Floor.prototype.moveOverPlane = function(){
 
     // this.dragged.moveTo(intersects[ 0 ].point);
     var position = new THREE.Vector3().copy(intersects[0].point).divideScalar( 0.3 ).round().multiplyScalar( 0.3 ).add(new THREE.Vector3(0,0,0))//.addScalar( 0.15 );
-    console.log(position);
     this.position.copy( position );
+
+    this.is_floor_on_plane = true;
   }
 }

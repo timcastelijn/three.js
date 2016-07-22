@@ -27,17 +27,13 @@ function Selector(camera, controls){
   );
   // rotate plane to xz orientation
   this.plane.rotation.x = Math.PI * -0.5;
-  this.plane.material.visible = false;
+  // this.plane.material.visible = false;
   scene.add( this.plane );
-
 
   //create screen-intersection plane
   this.screen_plane = new THREE.Plane();
   // rotate plane to xz orientation
   // this.screen_plane.material.visible = false;
-
-
-
 
   renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
   renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -133,7 +129,8 @@ Selector.prototype.moveDraggedObject = function(){
   if ( intersects.length > 0 ) {
     // intersected object change
     // this.defineSnapPoint(intersects[0], this.parent_lookup[intersects[0].object.id]);
-    this.dragged.snap(intersects[0])
+
+    this.dragged.snap(intersects[0]);
   } else {
 
     this.dragged.moveOverPlane();
@@ -199,6 +196,7 @@ Selector.prototype.onMouseMove=function(event){
 
   //else
   var intersects = this.raycaster.intersectObjects( this.selectables );
+
   if ( intersects.length > 0 ) {
     // intersected object changes
     if ( this.intersected != intersects[ 0 ].object ) {
@@ -222,7 +220,60 @@ Selector.prototype.updateDebugSpheres = function(bb){
   this.dragged.sphere_max.visible = true;
 }
 
+Selector.prototype.meshOverlap = function(){
+
+  var m1      =  this.dragged.mesh_object
+  var others  =   this.snap_objects;
+
+  // this.updateDebugSpheres(bb)
+
+  for(var i =0; i<others.length; i++){
+    meshMeshIntersect(m1, others[i])
+
+  }
+
+}
+
+function meshMeshIntersect(m1, m2){
+  var vertex_names = ['a', 'b', 'c'];
+
+  for (var i = 0; i < m1.geometry.faces.length; i++) {
+    var vertex_indices = m1.geometry.faces[i]
+
+    // get global face A vertexes
+    var face_a = []
+    for (var j = 0; j < 3; j++) {
+      var index = vertex_indices[vertex_names[j]]
+      face_a[j] = m1.parent.localToWorld( m1.geometry.vertices[index] )
+    }
+    console.log(face_a);
+
+    // for (var j = 0; j < m2.geometry.faces.length; j++) {
+    //
+    //
+    //   var vertex_indices_b = m2.geometry.faces[j]
+    //
+    //   // get global face B vertexes
+    //   var face_b = []
+    //   for (var k = 0; k < 3; k++) {
+    //     var name = vertex_indices_b[vertex_names[k]]
+    //     face_b[k] = m2.parent.localToWorld( m2.geometry.vertices[vertex_indices[k]] )
+    //   }
+    //
+    //   // intersect faceA with faceB
+    //   console.log(face_a, face_b);
+    //   if ( triIntersect(face_a, face_b)){
+    //     return true;
+    //   }
+    //
+    // }
+  }
+
+  return false;
+}
+
 function triIntersect(t1, t2){
+
 
   var n2 = t2[1].sub(t2[0]).cross( t2[2].sub(t2[0]) )
   var d2 = n2.negate().dot(t2[0])
@@ -254,70 +305,48 @@ function triIntersect(t1, t2){
   dv20dv21 = dv2[0] * dv2[1];
   dv20dv22 = dv2[0] * dv2[2];
 
+  // if all signs are positive, triangle lies on outside
+
   // same sign on all of them + not equal 0 ?
   if (dv20dv21 > 0.0 && dv20dv22 > 0.0){
       // no intersection occurs
       return false;
   }
 
+
+
   // compute direction of intersection line
   dd = n1.cross( n2);
 
-  // calculate distance to intersection line
-  for (var i = 0; i < 3; i++) {
-    pv1[i] = dd.dot(t1[i])
+  // compute and index to the largest component of D
+  max = Math.Abs(dd.X);
+  index = "X";
+  bb = Math.Abs(dd.Y);
+  cc = Math.Abs(dd.Z);
+  if (bb > max) { max = bb; index = "Y"; }
+  if (cc > max) { max = cc; index = "Z"; }
+
+
+  // this is the simplified projection onto L
+  vp0 = t1[0][index];
+  vp1 = t1[1][index];
+  vp2 = t1[2][index];
+
+  up0 = t2[0][index];
+  up1 = t2[0][index];
+  up2 = t2[0][index];
+
+  t11 = vp0 + ( vp1 - vp0 ) * ( dv1[0] / (dv1[0] - dv1[1]) );
+  t12 = vp1 + ( vp2 - vp1 ) * ( dv1[1] / (dv1[1] - dv1[2]) );
+  t21 = up0 + ( up1 - up0 ) * ( dv2[0] / (dv2[0] - dv2[1]) );
+  t22 = up1 + ( up2 - up1 ) * ( dv2[1] / (dv2[1] - dv2[2]) );
+
+  if ((t21>t11 && t21 <t12 )||( t22>t11 && t22 <t12 )){
+    return true
   }
 
 }
 
-// Selector.prototype.bboxOverLap=function(){
-//
-//
-//   var others  = this.snap_objects;
-//   var ray = new THREE.Raycaster();
-//
-//   for (var m = 0; m < others.length; m++) {
-//     var object = others[m];
-//     var intersect = true;
-//
-//     for (var i = 0; i < this.dragged.mesh_object.geometry.vertices.length; i++) {
-//       var vertex = this.dragged.mesh_object.geometry.vertices[i].clone();
-//       var globalvertex = this.dragged.localToWorld(vertex);
-//
-//       var directions = [
-//         [1,0,0],
-//         [0,1,0],
-//         [0,0,1],
-//       ]
-//
-//       var intersect = []
-//       for (var j = 0; j < 3; j++) {
-//
-//         var dir_pos = new THREE.Vector3().fromArray(directions[j]);
-//
-//         ray.set(globalvertex, dir_pos)
-//         var intersect_pos = ray.intersectObject( object ).length > 0;
-//
-//         var dir_neg = dir_pos.negate();
-//
-//         ray.set(globalvertex, dir_neg)
-//         var intersect_neg = ray.intersectObject( object ).length > 0;
-//
-//         intersect[j] = (intersect_pos || intersect_neg);
-//
-//       }
-//
-//       if(intersect[0] && intersect[1] && intersect[2]){
-//         object.material = this.materials.prohibited;
-//         console.log("intersect");
-//         return true;
-//       }
-//     }
-//
-//   }
-//
-//   return false
-// }
 
 Selector.prototype.bboxOverLap=function(){
 
@@ -483,7 +512,8 @@ Selector.prototype.stopAdding=function(){
 
 Selector.prototype.stopDrag=function(){
 
-  if (this.dragged.overlap || !this.dragged.snapped){
+
+  if ( (this.dragged.overlap || !this.dragged.snapped) && !this.dragged.is_floor_on_plane ){
     // placement failed
     if (this.dragged.previous_position){
       this.dragged.position.copy(  this.dragged.previous_position );
@@ -499,10 +529,14 @@ Selector.prototype.stopDrag=function(){
       this.addBlock(this.keep_adding);
       return
     }
+    this.dragged.overlap = false;
+
+    this.dragged.is_floor_on_plane = false;
+
   }
 
-  this.dragged.overlap = false;
   this.dragged = null;
+
 
 }
 

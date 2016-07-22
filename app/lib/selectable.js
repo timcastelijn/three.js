@@ -127,9 +127,12 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
     this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
 
-    console.log(vector, vec_rot);
+    // if ( this.selector.bboxOverLap() ){
+    //   this.overlap = this.selector.meshOverlap()
+    // }
 
-    this.overlap = this.selector.bboxOverLap()
+    this.overlap = this.selector.bboxOverLap();
+
     return;
 
   } else {
