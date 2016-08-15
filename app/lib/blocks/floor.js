@@ -35,6 +35,10 @@ Floor.prototype.moveOverPlane = function(){
     var position = new THREE.Vector3().copy(intersects[0].point).divideScalar( 0.3 ).round().multiplyScalar( 0.3 ).add(new THREE.Vector3(0,0,0))//.addScalar( 0.15 );
     this.position.copy( position );
 
-    this.is_floor_on_plane = true;
+    // set to snapped, so it will accept placement position at mouseup
+    this.snapped = true;
+
+    // check collisions
+    this.overlap = this.selector.bboxOverLap();
   }
 }

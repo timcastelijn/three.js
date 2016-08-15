@@ -76,7 +76,8 @@ Selectable.prototype.moveOverPlane = function(){
   if ( intersects.length > 0 ) {
 
     // this.dragged.moveTo(intersects[ 0 ].point);
-    this.position.copy( intersects[ 0 ].point );
+    var position = new THREE.Vector3().copy(intersects[0].point).divideScalar( 0.3 ).round().multiplyScalar( 0.3 ).add(new THREE.Vector3(0,0,0))//.addScalar( 0.15 );
+    this.position.copy( position );
 
   }else {
     var intersection = new THREE.Vector3();
@@ -127,11 +128,11 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     var vec_rot = new THREE.Vector3().fromArray(snap_area.rotation).add(intersect.object.parent.rotation);
     this.rotation.set(vec_rot.x, vec_rot.y, vec_rot.z);
 
-    // if ( this.selector.bboxOverLap() ){
-    //   this.overlap = this.selector.meshOverlap()
-    // }
-
     this.overlap = this.selector.bboxOverLap();
+
+    // if ( this.overlap ){
+    //   this.overlap = this.selector.meshOverlap(this.overlap)
+    // }
 
     return;
 
@@ -146,8 +147,6 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
       snap_point[i] = temp * 0.3 + snap_area.offset[i];
 
       // clamp value within snap bounds
-
-
       snap_point[i] = Math.min(Math.max(snap_point[i], snap_area.position_min[i]), snap_area.position_max[i])
 
     }
@@ -163,6 +162,7 @@ Selectable.prototype.moveToArea = function(snap_area, intersect){
     }
 
     this.overlap = this.selector.bboxOverLap();
+    console.log(this.overlap);
     return;
   }
 }

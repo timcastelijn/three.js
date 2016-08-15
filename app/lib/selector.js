@@ -21,6 +21,8 @@ function Selector(camera, controls){
   }
 
   //create intersection plane
+
+
   this.plane = new THREE.Mesh(
     new THREE.PlaneBufferGeometry( 20, 20, 8, 8 ),
     new THREE.MeshBasicMaterial( { visible: true, wireframe: true } )
@@ -220,17 +222,16 @@ Selector.prototype.updateDebugSpheres = function(bb){
   this.dragged.sphere_max.visible = true;
 }
 
-Selector.prototype.meshOverlap = function(){
+Selector.prototype.meshOverlap = function(other){
 
   var m1      =  this.dragged.mesh_object
-  var others  =   this.snap_objects;
 
   // this.updateDebugSpheres(bb)
 
-  for(var i =0; i<others.length; i++){
-    meshMeshIntersect(m1, others[i])
 
-  }
+  // console.log(m1, other);
+  return meshMeshIntersect(m1, other)
+
 
 }
 
@@ -246,27 +247,28 @@ function meshMeshIntersect(m1, m2){
       var index = vertex_indices[vertex_names[j]]
       face_a[j] = m1.parent.localToWorld( m1.geometry.vertices[index] )
     }
-    console.log(face_a);
+    // console.log(face_a);
 
-    // for (var j = 0; j < m2.geometry.faces.length; j++) {
-    //
-    //
-    //   var vertex_indices_b = m2.geometry.faces[j]
-    //
-    //   // get global face B vertexes
-    //   var face_b = []
-    //   for (var k = 0; k < 3; k++) {
-    //     var name = vertex_indices_b[vertex_names[k]]
-    //     face_b[k] = m2.parent.localToWorld( m2.geometry.vertices[vertex_indices[k]] )
-    //   }
-    //
-    //   // intersect faceA with faceB
-    //   console.log(face_a, face_b);
-    //   if ( triIntersect(face_a, face_b)){
-    //     return true;
-    //   }
-    //
-    // }
+    for (var j = 0; j < m2.geometry.faces.length; j++) {
+
+
+      var vertex_indices_b = m2.geometry.faces[j]
+
+      // get global face B vertexes
+      var face_b = []
+      for (var k = 0; k < 3; k++) {
+        var name = vertex_indices_b[vertex_names[k]]
+        face_b[k] = m2.parent.localToWorld( m2.geometry.vertices[name] )
+      }
+
+      // intersect faceA with faceB
+      // console.log(face_a, face_b);
+      if ( triIntersect(face_a, face_b)){
+        console.log('true');
+        return true;
+      }
+
+    }
   }
 
   return false;
@@ -279,8 +281,9 @@ function triIntersect(t1, t2){
   var d2 = n2.negate().dot(t2[0])
 
   // calculate distance to plane
+  var dv1=[]
   for (var i = 0; i < 3; i++) {
-    dv1[i] = n2.dot(t1[i]).add(d2)
+    dv1[i] = n2.dot(t1[i]) + (d2)
   }
 
   // if dv1 all signs are equal and not 0 triangle lies completely on one side of the plane, there is no intersection
@@ -297,8 +300,9 @@ function triIntersect(t1, t2){
   var d1 = n1.negate().dot(t1[0])
 
   // calculate distance to plane
+  var dv2=[];
   for (var i = 0; i < 3; i++) {
-    dv2[i] = n1.dot(t1[i]).add(d1)
+    dv2[i] = n1.dot(t1[i]) + d1
   }
 
   // if dv1 all signs are equal and not 0 triangle lies completely on one side of the plane, there is no intersection
@@ -319,10 +323,10 @@ function triIntersect(t1, t2){
   dd = n1.cross( n2);
 
   // compute and index to the largest component of D
-  max = Math.Abs(dd.X);
+  max = Math.abs(dd.X);
   index = "X";
-  bb = Math.Abs(dd.Y);
-  cc = Math.Abs(dd.Z);
+  bb = Math.abs(dd.Y);
+  cc = Math.abs(dd.Z);
   if (bb > max) { max = bb; index = "Y"; }
   if (cc > max) { max = cc; index = "Z"; }
 
@@ -342,9 +346,10 @@ function triIntersect(t1, t2){
   t22 = up1 + ( up2 - up1 ) * ( dv2[1] / (dv2[1] - dv2[2]) );
 
   if ((t21>t11 && t21 <t12 )||( t22>t11 && t22 <t12 )){
-    return true
+    // return true
   }
 
+  return true;
 }
 
 
@@ -365,7 +370,7 @@ Selector.prototype.bboxOverLap=function(){
 
     if (volume>0.1){
       this.snap_objects[i].material = this.materials.prohibited;
-      return true;
+      return this.snap_objects[i];
     };
   }
   return false
@@ -415,7 +420,7 @@ Selector.prototype.selectObject = function(intersect){
 
   guiLog('selected "' + this.selected.fid+ '".<br> press "Escape" to clear selection, "Delete" to delete object');
 
-  console.log(this.selected);
+  // console.log(this.selected);
 
   this.selected.setMaterial('selected')
 }
@@ -513,26 +518,25 @@ Selector.prototype.stopAdding=function(){
 Selector.prototype.stopDrag=function(){
 
 
-  if ( (this.dragged.overlap || !this.dragged.snapped) && !this.dragged.is_floor_on_plane ){
-    // placement failed
+  if (this.dragged.overlap || !this.dragged.snapped ){
+    // placement failed, move back to previously known position
     if (this.dragged.previous_position){
       this.dragged.position.copy(  this.dragged.previous_position );
     }else{
+      // no previous_position, keep object in hand
       return
     }
   } else {
-    // placement succesful
-
+    // placement succesful, update registry and prepare to add new block
     this.updateConfig()
 
     if(this.keep_adding){
       this.addBlock(this.keep_adding);
       return
     }
+
+
     this.dragged.overlap = false;
-
-    this.dragged.is_floor_on_plane = false;
-
   }
 
   this.dragged = null;
