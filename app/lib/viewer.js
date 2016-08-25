@@ -148,8 +148,10 @@ function init() {
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = false;
+  controls.enablePan = false;
   controls.rotateSpeed = 0.25;
   controls.target = new THREE.Vector3(0,1,0)
+  controls.maxDistance = 5;
 
   var scroll_timer = new ScrollTimer(controls);
 
@@ -203,16 +205,6 @@ function loadConfig(){
   //create cabine
   cabine = new CabineGrid(1.24, 2.0, 1.4);
   scene.add(cabine);
-
-  //EYE sprite
-  // var map = new THREE.TextureLoader().load( "images/eye.png" );
-  // var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
-  // var sprite = new THREE.Sprite( material );
-  // sprite.scale.x = 0.2;
-  // sprite.scale.y = 0.2;
-  // sprite.position.y = 1
-  // sprite.scale.z = 0.2;
-  // scene.add( sprite );
 
 }
 
